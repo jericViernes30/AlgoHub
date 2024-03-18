@@ -96,3 +96,42 @@ function editSchedule(data) {
     // Show the edit_schedule div
     editScheduleDiv.classList.remove('hidden');
 }
+
+function proceed(data){
+    var proceed = document.getElementById('proceed')
+    var body = document.getElementById('body');
+    proceed.classList.remove('hidden')
+
+    if(!proceed.classList.contains('hidden')){
+        body.style.filter = 'blur(2px)'
+    } else {
+        body.style.filter = 'blur(0px)'
+    }
+
+    const rowData = JSON.parse(data);
+    const proceedDiv = document.getElementById('proceed');
+    
+    proceedDiv.querySelector('input[name="student_name"]').value = rowData.childs_name;
+    proceedDiv.querySelector('input[name="parent_name"]').value = rowData.parents_name;
+    proceedDiv.querySelector('input[name="age"]').value = rowData.age;
+    proceedDiv.querySelector('input[name="contact_number"]').value = rowData.contact_number;
+    proceedDiv.querySelector('input[name="email_address"]').value = rowData.email_address;
+}
+function closeProceedForm(){
+    var proceeed_form = document.getElementById('proceed');
+    var body = document.getElementById('body');
+    proceeed_form.classList.add('hidden')
+    body.style.filter = 'blur(0px)'
+}
+
+function showAddIlSched(){
+    var add_form = document.getElementById('il_sched');
+    var body = document.getElementById('body');
+    add_form.classList.toggle('hidden')
+    
+    if(!add_form.classList.contains('hidden')){
+        body.style.filter = 'blur(2px)'
+    } else {
+        body.style.filter = 'blur(0px)'
+    }
+}

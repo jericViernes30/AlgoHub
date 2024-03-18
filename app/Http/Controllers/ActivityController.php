@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models;
 use App\Models\AvailableCourse;
+use App\Models\ILSchedule;
 use App\Models\Course;
+use App\Models\ILStudents;
 use App\Models\SchedulesList;
-use Illuminate\Console\Scheduling\Schedule;
 
 ;
 
@@ -29,17 +29,38 @@ class ActivityController extends Controller
     }
 
     public function il_schedule(){
-        $scheduling = SchedulesList::all();
-        return view('Admin/il_schedule', ['scheduling' => $scheduling]);
-    }  
+        $sched = ILSchedule::all();
+
+        $courses = AvailableCourse::all();
+        $sched->transform(function ($time) {
+            $time_slot = "{$time->from} to {$time->to}";
+            $time->time_slot = $time_slot;
+            
+            return $time;
+        });
+
+        return view('Admin/il_schedule', ['schedule' => $sched], ['courses' => $courses]);
+    }
+
+    // public function il_schedule(){
+    //     $sched = ILSchedule::all();
+    //     $il_schedule = ILSchedule::where('code', 'IL-4305')->with('il_students')->first();
+
+    //     // Access the related students
+    //     $students = $il_schedule->il_students;
+
+    //     return view('Admin/il_schedule', ['classes' => $students, 'schedule' => $sched]);
+    // }
+    
 
     public function teacher_login(){
         return view('welcome');
     }
 
     public function for_scheduling(){
+        $course = AvailableCourse::all();
         $scheduling = SchedulesList::all();
-        return view('Admin/for_scheduling', ['scheduling' => $scheduling]);
+        return view('Admin/for_scheduling', ['scheduling' => $scheduling, 'course' => $course]);
     }
 
     public function add_client(Request $request){
@@ -84,5 +105,146 @@ class ActivityController extends Controller
         
         // Redirect back to the current page
         return redirect()->route('admin.schedule.for_scheduling');
+    }
+
+    public function getSchedules($course)
+    {
+        $schedules = ILSchedule::where('course', $course)->get(['code', 'to', 'from', 'day', 'mm', 'dd']);
+
+        // Create a new variable $time_slot to store formatted 'from' and 'to' times
+        $schedules->transform(function ($schedule) {
+            // Format 'from' and 'to' times as "12:30 PM" and "1:30 PM" (assuming they are already in the correct format)
+            $time_slot = "{$schedule->from} to {$schedule->to} | {$schedule->mm} {$schedule->dd} - {$schedule->day}";
+            $schedule->time_slot = $time_slot;
+            
+            return $schedule;
+        });
+
+        // Pluck the transformed data to get the desired format
+        $plucked_schedules = $schedules->pluck('code', 'time_slot');
+
+        return response()->json($plucked_schedules);
+    }
+
+    public function proceedToIl(Request $request){
+
+        $student = $request->validate([
+            'code' => 'required',
+            'course' => 'required',
+            'student_name' => 'required',
+            'parent_name' => 'required',
+            'age' => 'required',
+            'contact_number' => 'required',
+            'email_address' => 'required',
+            'status' => 'nullable'
+        ]);
+    
+        $student['status'] = $request->input('status', 'Pending');
+        $childsName = $request->input('childs_name');
+        
+        // Find the schedule by childs_name
+        $studentStatus = SchedulesList::where('childs_name', $request->input('student_name'))->first();
+    
+        // Check if a record is found before attempting to update
+        if ($studentStatus) {
+            $studentStatus->update([
+                'status' => 'Scheduled'
+            ]);
+        }
+    
+        ILStudents::create($student);
+    
+        return redirect()->route('admin.schedule.for_scheduling');
+    }
+
+    public function openIl($code){
+        $sched = ILSchedule::all();
+        $il_schedule = ILSchedule::where('code', $code)->with('il_students')->first();
+
+        $sched->transform(function ($time) {
+            $time_slot = "{$time->from} to {$time->to}";
+            $time->time_slot = $time_slot;
+            
+            return $time;
+        });
+        
+        // Access the related students
+        $students = $il_schedule->il_students;
+
+        return view('Admin/admin_show_il_class', [
+            'il_schedule' => $il_schedule,
+            'students' => $students,
+            'sched' => $sched
+        ]);
+    }
+
+    public function sample(){
+        $course = AvailableCourse::all();
+        return view('Admin/admin_sample', ['course' => $course]);
+    }
+    
+    public function fetchData(Request $request)
+    {
+        $course = $request->input('selectedValue');
+        
+        // Fetch data based on the selected dropdown value
+        $data = ILSchedule::where('course', $course)->get();
+
+        return response()->json($data);
+    }
+
+    public function addIlSchedule(Request $request){
+        $ilCode = ILSchedule::where('course', $request->input('course'))->latest('id')->first();
+        $course = $request->input('course');
+        $words = explode(' ', $course); // Split the string into words
+        $firstLetters = '';
+
+        foreach ($words as $word) {
+            $firstLetters .= strtoupper(substr($word, 0, 1)); // Get the first letter of each word and convert it to uppercase
+        }
+
+        echo $firstLetters; // Output the first letters of each word
+        
+        if ($ilCode) {
+            $code = $ilCode->code; // Assuming code is in the format "CK-001"
+            $lastDigit = (int)substr($code, -1); // Extract the last digit as an integer
+            $newLastDigit = $lastDigit + 1; // Add 1 to the last digit
+            $newCode = substr($code, 0, -1) . $newLastDigit; // Replace the last digit with the new one
+            $newSchedule['code'] = $newCode;
+        } else {
+            // Handle case where no matching record is found
+            echo "No matching record found for the given course.";
+        }
+        $from = $request->input('from_a') . ':' . $request->input('from_b') . ' ' . $request->input('from_tm');
+        $to = $request->input('to_a') . ':' . $request->input('to_b') . ' ' . $request->input('to_tm');
+
+        $newSchedule = $request->validate([
+            'code' => 'nullable',
+            'course' => 'required',
+            'teacher' => 'required',
+            'mm' => 'required',
+            'dd' => 'required',
+            'day' => 'required',
+            'from' => 'nullable',
+            'to' => 'nullable'
+        ]);
+
+        if ($ilCode) {
+            $code = $ilCode->code; // Assuming code is in the format "CK-001"
+            $lastDigit = (int)substr($code, -1); // Extract the last digit as an integer
+            $newLastDigit = $lastDigit + 1; // Add 1 to the last digit
+            $newCode = substr($code, 0, -1) . $newLastDigit; // Replace the last digit with the new one
+            $newSchedule['code'] = $newCode;
+        } else {
+            // Handle case where no matching record is found
+            echo "No matching record found for the given course.";
+            $newSchedule['code'] = $firstLetters . '- 001';
+        }
+        $newSchedule['from'] = $from;
+        $newSchedule['to'] = $to;
+
+        ILSchedule::create($newSchedule);
+
+        return redirect(route('admin.il_schedule'));
     }
 }

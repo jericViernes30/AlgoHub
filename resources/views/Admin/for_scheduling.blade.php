@@ -3,7 +3,8 @@
 <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="{{ asset('js/scripts.js') }}"></script>
@@ -41,50 +42,67 @@
   </style>
 </head>
 <body class="bg-[#ececec]">
+    {{-- PROCEED FORM --}}
     <div id="proceed" class="hidden w-2/6 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm z-10">
         <div class="w-full flex flex-col bg-[#f9f7fc] rounded-xl">
             <div class="w-full flex justify-between bg-[#833ae0] p-4 rounded-tl-xl rounded-tr-xl">
-                <p class="text-white">Update client data</p>
-                <button onclick="closeUpdateForm()" class="text-white flex items-center gap-2">
+                <p class="text-white">Select course and teacher for Introductory Lesson</p>
+                <button onclick="closeProceedForm()" class="text-white flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="14" height="14" fill="#f9f9f9"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
                 </button>
             </div>
             <div class="w-full px-16 py-4">
-                <form action="{{route('admin.update_client')}}" method="POST">
+                <form action="{{route('admin.proceed')}}" method="POST">
                     @csrf
-                    <div class="w-full flex gap-2 items-center mb-2">
-                        <label for="" class="font-semibold">Status</label>
-                        <select class="px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none" name="status" id="">
-                            <option value="Pending">Pending</option>
-                            <option value="Scheduled">Scheduled</option>
+                    <div class="w-full flex flex-col gap-1 mb-4">
+                        <label for="" class="font-medium">Choose a Subject</label>
+                        <select name="course" id="" class="w-full px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none text-center">
+                            <option disabled selected>-- Select a course --</option>
+                            @foreach ($course as $c)
+                                <option value="{{$c->course_name}}">{{$c->course_name}}</option>
+                            @endforeach
                         </select>
                     </div>
-                    <div class="w-full flex flex-col">
-                        <label for="" class="mb-1 font-semibold">Parent's Name</label>
-                        <input type="text" name="parents_name" class="w-full rounded-md px-2 py-1 mb-3 border border-[#a9a9a9] focus:border-[#833ae0] outline-none">
+                    <script>
+                        $(document).ready(function() {
+                            $('select[name="course"]').on('change', function() {
+                                var course = $(this).val();
+                                if (course) {
+                                    $.ajax({
+                                        url: '{{ route("admin.get_schedules", ":course") }}'.replace(':course', course),
+                                        type: "GET",
+                                        dataType: "json",
+                                        success: function(data) {
+                                            var selectCode = $('select[name="code"]');
+                                            selectCode.empty();
+                                            if ($.isEmptyObject(data)) {
+                                                selectCode.append('<option disabled selected>No schedule yet</option>');
+                                            } else {
+                                                $.each(data, function(time_slot, code) {
+                                                    selectCode.append('<option value="' + code + '">' + time_slot + '</option>');
+                                                });
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    $('select[name="code"]').empty().append('<option disabled selected>Select a Schedule</option>');
+                                }
+                            });
+                        });
+                    </script>                    
+                    <div class="w-full flex flex-col gap-1 mb-4">
+                        <label for="" class="font-medium">Select Schedule</label>
+                        <select name="code" id="" class="w-full px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none text-center">
+                            <option disabled selected>Select a Schedule</option>
+                        </select>
                     </div>
-                    <div class="w-full flex items-center gap-2">
-                        <div class="w-4/5 flex flex-col">
-                            <label for="" class="mb-1 font-semibold">Child's Name</label>
-                            <input type="text" name="childs_name" class="w-full rounded-md px-2 py-1 mb-3 border border-[#a9a9a9] focus:border-[#833ae0] outline-none">
-                        </div>
-                        <div class="w-1/5 flex flex-col">
-                            <label for="" class="mb-1 font-semibold">Age</label>
-                            <input type="text" name="age" class="w-full rounded-md px-2 py-1 mb-3 border border-[#a9a9a9] focus:border-[#833ae0] outline-none">
-                        </div>
-                    </div>
-                    <div class="w-full flex items-center gap-2">
-                        <div class="w-1/2 flex flex-col mb-1">
-                            <label for="" class="mb-1 font-semibold">Contact Number</label>
-                            <input type="text" name="contact_number" class="w-full rounded-md px-2 py-1 mb-3 border border-[#a9a9a9] focus:border-[#833ae0] outline-none">
-                        </div>
-                        <div class="w-1/2 flex flex-col mb-1">
-                            <label for="" class="mb-1 font-semibold ">Email Address</label>
-                            <input type="email" name="email_address" class="w-full rounded-md px-2 py-1 mb-3 border border-[#a9a9a9] focus:border-[#833ae0] outline-none">
-                        </div>
-                    </div>
+                    <input type="hidden" name="student_name">
+                    <input type="hidden" name="parent_name">
+                    <input type="hidden" name="age">
+                    <input type="hidden" name="contact_number">
+                    <input type="hidden" name="email_address">
                     <div class="w-full flex items-center gap-3 justify-end">
-                        <button type="submit" class="w-1/4 py-2 bg-[#833ae0] text-white rounded-md">Save</button>
+                        <button type="submit" class="w-1/4 py-2 bg-[#833ae0] text-white rounded-md">Continue</button>
                     </div>
                 </form>
             </div>
@@ -298,7 +316,7 @@
                                 </td>
                                 <td class="w-1/5 p-2 text-center">
                                     <div class="flex items-center justify-center gap-3">
-                                        <a href="#">
+                                        <a href="#" onclick="proceed('{{ json_encode($for_scheduling) }}')">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="13" height="13"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>
                                         </a>
                                         <a href="#" onclick="editSchedule('{{ json_encode($for_scheduling) }}')">
@@ -313,7 +331,6 @@
                         @endforeach
                     </table>
                 </div>
-                
             </div>
         </div>
     </div>
