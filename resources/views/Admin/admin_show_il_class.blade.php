@@ -4,6 +4,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="{{ asset('js/scripts.js') }}"></script>
@@ -40,8 +41,109 @@
       }
   </style>
 </head>
-<body class="bg-[#ececec]">
-    <div class="w-full h-screen flex flex-col">
+<body class="bg-[#ececec] relative">
+    {{-- PROCEED --}}
+    <div id="proceed" class="hidden w-2/6 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm z-10">
+        <div class="w-full flex flex-col bg-[#f9f7fc] rounded-xl">
+            <div class="w-full flex justify-between bg-[#833ae0] p-4 rounded-tl-xl rounded-tr-xl">
+                <p class="text-white">Select schedule for Enrollment</p>
+                <button onclick="closeProceedForm()" class="text-white flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="14" height="14" fill="#f9f9f9"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                </button>
+            </div>
+            <div class="w-full px-16 py-4">
+                
+                <form action="{{ route('admin.add_to_sched') }}" method="GET">
+                    <script>
+                        $(document).ready(function(){
+                            var course = "{{$il_schedule->course}}"
+                            $.ajax({
+                                url: '{{ route("admin.get_course_sched", ":course") }}'.replace(':course', course),
+                                type:"GET",
+                                dataType: 'json',
+                                success: function(data){
+                                    var selectSchedule = $('select[name="day"]')
+                                    selectSchedule.empty()
+                                    if($.isEmptyObject(data)){
+                                        selectSchedule.append('<option disabled selected>No schedule yet</option>')
+                                    } else {
+                                        $.each(data, function(time_slot, day) {
+                                            var time = ''
+                                            switch(time_slot){
+                                                case 'first':
+                                                    time = "11:00 AM to 1:00 PM"
+                                                    break
+                                                case 'second':
+                                                    time = "1:00 PM to 3:00 PM"
+                                                    break
+                                                case 'third':
+                                                    time = "3:00 PM to 5:00 PM"
+                                                    break
+                                                case 'fourth':
+                                                    time = "5:00 PM to 7:00 PM"
+                                                    break
+                                                default:
+                                                    time = 'Unknown Day';
+                                                    break;
+                                            }
+                                            selectSchedule.append('<option value="' + day  + '">' + day + ' - ' + time  + '</option>');
+                                        });
+                                    }
+                                }
+                            })
+                        })
+                    </script>
+                    @csrf
+                    <div class="w-full flex flex-col gap-1 mb-4">
+                        <label for="">Select schedule</label>
+                        <select name="day" id="" class="w-full px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none text-center">
+                            <option disabled selected>-- Select schedule --</option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="course_name" value="{{$il_schedule->course}}">
+                    <input type="hidden" name="student_name">
+                    <button class="float-right w-1/4 py-2 bg-[#833ae0] text-white rounded-md">
+                        Proceed
+                    </button>
+                </form>
+                {{-- <form action="" method="GET">
+                    <script>
+                        $(document).ready(function(){
+                            var course = "{{$il_schedule->course}}";
+                            $.ajax({
+                                url: '{{ route("admin.get_course_sched", ":course") }}'.replace(':course', course),
+                                type: "GET",
+                                dataType: 'json',
+                                success: function(data){
+                                    var selectSchedule = $('select[name="sched"]');
+                                    selectSchedule.empty();
+                                    if($.isEmptyObject(data)){
+                                        selectSchedule.append('<option disabled selected>No schedule yet</option>');
+                                    } else {
+                                        $.each(data, function(day, time) {
+                                            selectSchedule.append('<option value="' + time + '">' + day + ' - ' + time + '</option>');
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                    </script>
+                    @csrf
+                    <div class="w-full flex flex-col gap-1 mb-4">
+                        <label for="">Select schedule</label>
+                        <select name="sched" id="" class="w-full px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none text-center">
+                            <option disabled selected>-- Select schedule --</option>
+                        </select>
+                    </div>
+                    <button type="submit">
+                        PROCEED
+                    </button>
+                </form> --}}
+                
+            </div>
+        </div>
+    </div>
+    <div id="body" class="w-full h-screen flex flex-col">
         <div class="w-full bg-[#833ae0] flex py-2">
             <div class="w-4/5 mx-auto flex justify-between">
                 <input type="search" name="search" placeholder="Search" class="px-2 py-1 rounded-xl w-1/3">
@@ -182,7 +284,7 @@
                                                 </div>
                                             </td>
                                             <td class="w-1/5 p-2">
-                                                <button class="px-2 py-1 bg-[#833ae0] text-white rounded-sm text-xs">Proceed</button>
+                                                <button onclick="proceedToEnrollment('{{ json_encode($student) }}')" class="px-2 py-1 bg-[#833ae0] text-white rounded-sm text-xs">Proceed</button>
                                             </td>
                                         </tr>
                                     @endforeach

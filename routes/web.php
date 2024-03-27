@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "web" middleware group. Make something great!
 |
-*/
+ */
 
 Route::get('/', function () {
     return view('welcome');
@@ -33,15 +33,20 @@ Route::get('/admin/schedules/delete_client/{parent_name}', [ActivityController::
 Route::get('admin/get-schedules/{course}', [ActivityController::class, 'getSchedules'])->name('admin.get_schedules');
 Route::post('/admin/proceed-to-il', [ActivityController::class, 'proceedToIl'])->name('admin.proceed');
 
-Route::get('/admin/open_il/{code}',[
-    ActivityController::class, 'openIl'
+Route::get('/admin/open_il/{code}', [
+    ActivityController::class, 'openIl',
 ])->name('admin.open_il');
 
 Route::get('/admin_sample', [
-    ActivityController::class, 'sample'
+    ActivityController::class, 'sample',
 ])->name('admin.sample');
 
 Route::get('admin/fetch-data', [ActivityController::class, 'fetchData'])->name('admin.fetch_data');
 
 Route::post('admin/add_il_schedule', [ActivityController::class, 'addIlSchedule'])->name('admin.add_il_schedule');
 
+Route::get('admin/get_course_sched/{course}', [ActivityController::class, 'showClassSched'])->name('admin.get_course_sched');
+
+Route::GET('admin/add_to_schedule', [ActivityController::class, 'addToSched'])->name('admin.add_to_sched');
+
+Route::get('admin/schedules/class_enrollees/{course}/{sched}/{time_slot}', [ActivityController::class, 'viewClassEnrollees'])->name('admin.view_class_enrollees');

@@ -56,7 +56,7 @@
                     @csrf
                     <div class="w-full flex flex-col gap-1 mb-4">
                         <label for="" class="font-medium">Choose a Subject</label>
-                        <select name="course" id="" class="w-full px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none text-center">
+                        <select name="course" id="course_select" class="w-full px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none text-center">
                             <option disabled selected>-- Select a course --</option>
                             @foreach ($course as $c)
                                 <option value="{{$c->course_name}}">{{$c->course_name}}</option>
@@ -65,7 +65,7 @@
                     </div>
                     <script>
                         $(document).ready(function() {
-                            $('select[name="course"]').on('change', function() {
+                            $('#course_select').on('change', function() {
                                 var course = $(this).val();
                                 if (course) {
                                     $.ajax({

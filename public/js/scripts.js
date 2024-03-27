@@ -28,9 +28,14 @@ function studentsDropdown(){
     }
 }
 
-function scheduleDropdown(){``
+function scheduleDropdown(){
     var schedulesDiv = document.getElementById("schedules");
     schedulesDiv.classList.toggle("hidden");
+}
+
+function officeDropdown(){
+    var officeDiv = document.getElementById("office");
+    officeDiv.classList.toggle("hidden");
 }
 
 function showAddForm(){
@@ -134,4 +139,22 @@ function showAddIlSched(){
     } else {
         body.style.filter = 'blur(0px)'
     }
+
+}
+
+function proceedToEnrollment(data){
+    var proceed = document.getElementById('proceed');
+    var body = document.getElementById('body');
+    proceed.classList.toggle('hidden')
+
+    if(!proceed.classList.contains('hidden')){
+        body.style.filter = 'blur(2px)'
+    } else {
+        body.style.filter = 'blur(0px)' 
+    }
+
+    const rowData = JSON.parse(data);
+    const proceedDiv = document.getElementById('proceed');
+    
+    proceedDiv.querySelector('input[name="student_name"]').value = rowData.student_name;
 }

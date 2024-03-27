@@ -40,7 +40,7 @@
       }
   </style>
 </head>
-<body class="bg-[#ececec] relative">
+<body class="bg-[#ececec] relative text-sm">
     <div id="add_form" class="hidden w-2/6 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm z-10">
         <div class="w-full flex flex-col bg-[#F2EBFB] rounded-xl">
             <div class="w-full flex justify-between bg-[#833ae0] p-4 rounded-tl-xl rounded-tr-xl">
@@ -119,7 +119,7 @@
                 <input type="search" name="search" placeholder="Search" class="px-2 py-1 rounded-xl w-1/3">
                 <div class="flex items-center justify-center">
                     <button class="rounded-xl px-2 py-1 bg-[#F2EBFB] flex gap-1 items-center justify-center">
-                        <p>Hi, Jeric James!</p>
+                        <p>Admin</p>
                         <span>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="12" height="12"><path d="M201.4 342.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 274.7 86.6 137.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
                         </span>
@@ -216,7 +216,7 @@
                                                 case "Visual Programming":
                                                     parentDiv.classList.add("bg-orange-300");
                                                     break;
-                                                case "Game Design":
+                                                case "Game Creation":
                                                     parentDiv.classList.add("bg-red-300");
                                                     break;
                                                 case "Python Start":
@@ -241,12 +241,12 @@
                                 <p>Monday</p>
                                 @foreach ($schedule as $sched)
                                     @if ($sched->day === "Monday" && $sched->time_slot === "first" && $sched->month === "February")
-                                        <div id="" class="div_course flex w-[205px] items-center absolute top-0 left-[150px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="#" id="" class="div_course flex w-[205px] items-center absolute top-0 left-[150px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
                                             </div>
-                                        </div>
+                                        </a>
                                     @endif
                                     
                                     @if ($sched->day === "Monday" && $sched->time_slot === "second")
@@ -268,12 +268,12 @@
                                     @endif
 
                                     @if ($sched->day === "Monday" && $sched->time_slot === "fourth")
-                                        <div id="" class="div_course flex w-[200px] items-center absolute top-0 left-[760px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/Monday/fourth/{{ $sched->course_name }}" id="" class="div_course flex w-[200px] items-center absolute top-0 left-[760px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
                                             </div>
-                                        </div>
+                                        </a>
                                     @endif
 
                                     @if ($sched->day === "Monday" && $sched->time_slot === "fifth")

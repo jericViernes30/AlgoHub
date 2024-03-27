@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('enrolled_students', function (Blueprint $table) {
             $table->id();
             $table->string('student_name');
-            $table->string('course');
-            $table->string('course_date');
-            $table->timestamps();
+            $table->string('course_name');
+            $table->string('day');
+            $table->string('time_slot');
+            $table->dateTime('enrollment_date')->nullable();
         });
     }
 

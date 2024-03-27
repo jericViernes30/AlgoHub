@@ -13,16 +13,25 @@
         @csrf
         <select name="course" id="dropdown">
             <option selected disabled>Please select a course</option>
-            @foreach ($course as $courses)
-                <option value="{{$courses->course_name}}">{{$courses->course_name}}</option>
+            @foreach ($students as $s)
+                <option value="{{$s->time_slot}}">{{$s->time_slot}}</option>
             @endforeach
         </select>
     </form>
     <div id="data-container">
-        
+        @foreach ($courses as $key => $course)
+            @if (isset($students[$key]))
+                <div>
+                    <p>Teacher: {{ $course->teacher }}</p>
+                    <p>Student Name: {{ $students[$key]->student_name }}</p>
+                    <p>Time Slot: {{$course->time_slot}}</p>
+                </div>
+            @endif
+        @endforeach
+
     </div>
 
-   <script>
+   {{-- <script>
     $(document).ready(function(){
         $('#dropdown').change(function(){
             var selectedValue = $(this).val();
@@ -133,7 +142,7 @@
             });
         });
     });
-</script>
+</script> --}}
 
 </body>
 </html>
