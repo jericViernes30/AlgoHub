@@ -41,7 +41,7 @@
       }
   </style>
 </head>
-<body class="bg-[#ececec]">
+<body class="bg-[#ececec] overflow-hidden">
     <div id="il_sched" class="hidden w-1/4 bg-[#833ae0] rounded-lg absolute transform top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm z-10">
         <div class="w-full flex flex-col bg-[#f9f7fc]">
             <div class="w-full flex justify-between bg-[#833ae0] p-4 rounded-tl-xl rounded-tr-xl">
@@ -157,18 +157,18 @@
         </div>
     </div>
     <div id="body" class="w-full h-screen flex flex-col z-0">
-        <div class="w-full bg-[#833ae0] flex py-2">
-            <div class="w-4/5 mx-auto flex justify-between">
+        <div class="w-full bg-[#833ae0] flex py-6">
+            {{-- <div class="w-4/5 mx-auto flex justify-between">
                 <input type="search" name="search" placeholder="Search" class="px-2 py-1 rounded-xl w-1/3">
                 <div class="flex items-center justify-center">
                     <button class="rounded-xl px-2 py-1 bg-[#F2EBFB] flex gap-1 items-center justify-center">
-                        <p>Hi, Jeric James!</p>
+                        <p>Hi, Admin!</p>
                         <span>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="12" height="12"><path d="M201.4 342.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 274.7 86.6 137.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
                         </span>
                     </button>
                 </div>
-            </div>
+            </div> --}}
         </div>
         <div class="w-full flex h-screen bg-[#F2EBFB]">
             <div class="w-1/6 h-full bg-[#f9f9f9] text-sm">
@@ -237,8 +237,42 @@
                             <p class="text-white">Add IL Schedule</p>
                         </button>
                     </div>
-                    <div id="data-container">
-
+                    <div id="data-container" class="h-[500px] overflow-y-scroll">
+                        @foreach ($schedule as $s)
+                            <div onclick="window.location.href='/admin/open_il/{{$s->code}}'" class="w-full border border-[#a9a9a9] rounded-md p-4 mb-2">
+                                <div class="w-full flex items-center gap-2">
+                                    <!-- First Column -->
+                                    <div class="w-1/3">
+                                        <div class="w-full flex items-center gap-2 mb-3">
+                                            <p class="font-semibold text-md">Course:</p>
+                                            <p class="text-md">{{ $s->course }}</p>
+                                        </div>
+                                        <div class="w-full flex items-center gap-2">
+                                            <p class="font-semibold text-md">Teacher:</p>
+                                            <p class="text-md">{{ $s->teacher }}</p>
+                                        </div>
+                                    </div>
+                                    <!-- Second Column -->
+                                    <div class="w-1/3 flex font-semibold gap-2 items-center justify-center">
+                                        <p class="text-md">{{ $s->mm }}</p>
+                                        <p class="text-md">{{ $s->dd }}</p>
+                                        <p>-</p>
+                                        <p class="text-md">{{ $s->day }}</p>
+                                    </div>
+                                    <!-- Third Column -->
+                                    <div class="w-1/3">
+                                        <div class="w-full flex justify-end gap-2 mb-3">
+                                            <p class="font-semibold text-md">Code:</p>
+                                            <p class="text-md">{{ $s->code }}</p>
+                                        </div>
+                                        <div class="w-full flex justify-end gap-2">
+                                            <p class="font-semibold text-md">Time:</p>
+                                            <p class="text-md">{{ $s->from }} - {{ $s->to }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                     <script>
                         $(document).ready(function(){

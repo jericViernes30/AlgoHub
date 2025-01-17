@@ -102,6 +102,7 @@
                     </div>
                     <input type="hidden" name="course_name" value="{{$il_schedule->course}}">
                     <input type="hidden" name="student_name">
+                    <input type="checkbox" name="completed" id=""> <label for="completed">Completed</label>
                     <button class="float-right w-1/4 py-2 bg-[#833ae0] text-white rounded-md">
                         Proceed
                     </button>
@@ -144,18 +145,18 @@
         </div>
     </div>
     <div id="body" class="w-full h-screen flex flex-col">
-        <div class="w-full bg-[#833ae0] flex py-2">
-            <div class="w-4/5 mx-auto flex justify-between">
+        <div class="w-full bg-[#833ae0] flex py-7">
+            {{-- <div class="w-4/5 mx-auto flex justify-between">
                 <input type="search" name="search" placeholder="Search" class="px-2 py-1 rounded-xl w-1/3">
                 <div class="flex items-center justify-center">
                     <button class="rounded-xl px-2 py-1 bg-[#F2EBFB] flex gap-1 items-center justify-center">
-                        <p>Hi, Jeric James!</p>
+                        <p>Hi, Admin!</p>
                         <span>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="12" height="12"><path d="M201.4 342.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 274.7 86.6 137.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
                         </span>
                     </button>
                 </div>
-            </div>
+            </div> --}}
         </div>
         <div class="w-full flex h-screen bg-[#F2EBFB]">
             <div class="w-1/6 h-full bg-[#f9f9f9] text-sm">
@@ -176,15 +177,9 @@
                     </div>
 
                     <div onclick="studentsDropdown()">
-                        <div class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
+                        <a href="{{route('admin.student_list')}}" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
                             <p id="students_dd" class=" w-full py-2 text-[#48494b]">Students</p>
-                            <svg id="arrow1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
-                        </div>
-                        <div id="students" class="hidden">
-                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="" class="py-2 text-[#48494b]">Enrolled</a>
-                            </div>
-                        </div>
+                        </a>
                     </div>
 
                     <div onclick="scheduleDropdown()">
@@ -261,9 +256,14 @@
                                                     case "Pending":
                                                         statusDiv.classList.add("bg-yellow-300");
                                                         break;
-                                                    case "Scheduled":
+                                                    case "Completed":
+                                                        statusDiv.classList.add("bg-blue-300");
+                                                        break;
+                                                    case "Enrolled":
                                                         statusDiv.classList.add("bg-green-300");
                                                         break;
+                                                    statusDiv.classList.add("bg-green-300");
+                                                    break;
                                                     default:
                                                         // Do nothing or add default behavior
                                                         break;
@@ -296,5 +296,15 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            $('table tr').each(function() {
+                var status = $(this).find('#status').text().trim();
+                if (status !== 'Pending') {
+                    $(this).find('button').prop('disabled', true).addClass('bg-gray-400 cursor-not-allowed');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

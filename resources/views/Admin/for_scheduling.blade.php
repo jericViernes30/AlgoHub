@@ -205,7 +205,7 @@
                 <input type="search" name="search" placeholder="Search" class="px-2 py-1 rounded-xl w-1/3">
                 <div class="flex items-center justify-center">
                     <button class="rounded-xl px-2 py-1 bg-[#F2EBFB] flex gap-1 items-center justify-center">
-                        <p>Hi, Jeric James!</p>
+                        <p>Hi, Admin!</p>
                         <span>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="12" height="12"><path d="M201.4 342.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 274.7 86.6 137.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
                         </span>
