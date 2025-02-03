@@ -320,5 +320,13 @@ class ActivityController extends Controller
         return view('Admin/admin_class_details', ['students' => $student_details, 'courses' => $course_details]);
     }
 
+    public function courses(){
+        return view('Admin/admin_courses');
+    }
+    
+    public function TheCodingKnight(){
+        return view('Admin.subjects.coding_knight');
+    }
+
 
 }

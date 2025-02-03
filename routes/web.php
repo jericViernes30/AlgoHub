@@ -32,6 +32,9 @@ Route::post('/admin/schedules/update_client', [ActivityController::class, 'updat
 Route::get('/admin/schedules/delete_client/{parent_name}', [ActivityController::class, 'delete_client'])->name('admin.delete_client');
 Route::get('admin/get-schedules/{course}', [ActivityController::class, 'getSchedules'])->name('admin.get_schedules');
 Route::post('/admin/proceed-to-il', [ActivityController::class, 'proceedToIl'])->name('admin.proceed');
+Route::get('/admin/courses', [ActivityController::class, 'courses'])->name('admin.courses');
+
+Route::get('admin/course/The-Coding-Knight', [ActivityController::class, 'TheCodingKnight'])->name('admin.coding_knight');
 
 Route::get('/admin/open_il/{code}', [
     ActivityController::class, 'openIl',
