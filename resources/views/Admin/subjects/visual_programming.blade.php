@@ -47,7 +47,7 @@
                 <input type="search" name="search" placeholder="Search" class="px-2 py-1 rounded-xl w-1/3">
                 <div class="flex items-center justify-center">
                     <button class="rounded-xl px-2 py-1 bg-[#F2EBFB] flex gap-1 items-center justify-center">
-                        <p>Hi, Jeric James!</p>
+                        <p>Hi, Admin!</p>
                         <span>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="12" height="12"><path d="M201.4 342.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 274.7 86.6 137.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
                         </span>
@@ -58,11 +58,11 @@
         <div class="w-full flex h-screen bg-[#F2EBFB]">
             <div class="w-1/6 h-full bg-[#f9f9f9] text-sm">
                 <div class="w-full mx-auto flex gap-5 items-center mt-28">
-                    <a href="" class="text-[#48494b] px-5 hover:bg-[#F2EBFB] w-full py-2">Dashboard</a>
+                    <a href="" class="text-[#48494b] px-5 bg-[#F2EBFB] border-l-4 rounded-sm border-[#833ae0] w-full py-2">Dashboard</a>
                 </div>
                 <div>
                     <div onclick="courseDropdown()">
-                        <div class="w-full flex items-center justify-around px-5 bg-[#F2EBFB] relative border-l-4 rounded-sm border-[#833ae0] hover:cursor-pointer">
+                        <div class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
                             <p href="" class=" w-full py-2">Courses</p>
                         </div>
                     </div>
@@ -96,52 +96,41 @@
                 </div>
             </div>
             <div class="w-full p-7">
-                <p class="text-2xl font-medium">Courses</p>
-                <div class="w-full flex gap-5 mt-5">
-                    <div class="w-1/2 flex flex-col gap-5">
-                        <div class="w-full">
-                            <div onclick="window.location.href='course/The-Coding-Knight'" class="w-full rounded-md shadow-lg bg-white py-10">
-                                <p class="text-center font-semibold">The Coding Knight</p>
-                            </div>
-                        </div>
-                        <div class="w-full">
-                            <div onclick="alert('Clicked!')" class="w-full rounded-md shadow-lg bg-white py-10">
-                                <p class="text-center font-semibold">Digital Literacy</p>
-                            </div>
-                        </div>
-                        <div class="w-full">
-                            <div onclick="window.location.href='course/Visual-Programming'" class="w-full rounded-md shadow-lg bg-white py-10">
-                                <p class="text-center font-semibold">Visual Programming</p>
-                            </div>
-                        </div>
-                        <div class="w-full">
-                            <div onclick="alert('Clicked!')" class="w-full rounded-md shadow-lg bg-white py-10">
-                                <p class="text-center font-semibold">Game Design</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="w-1/2 flex flex-col gap-5">
-                        <div class="w-full">
-                            <div onclick="alert('Clicked!')" class="w-full rounded-md shadow-lg bg-white py-10">
-                                <p class="text-center font-semibold">Building Websites</p>
-                            </div>
-                        </div>
-                        <div class="w-full">
-                            <div onclick="alert('Clicked!')" class="w-full rounded-md shadow-lg bg-white py-10">
-                                <p class="text-center font-semibold">Python Start (Year 1)</p>
-                            </div>
-                        </div>
-                        <div class="w-full">
-                            <div onclick="alert('Clicked!')" class="w-full rounded-md shadow-lg bg-white py-10">
-                                <p class="text-center font-semibold">Python Start (Year 2)</p>
-                            </div>
-                        </div>
-                        <div class="w-full">
-                            <div onclick="alert('Clicked!')" class="w-full rounded-md shadow-lg bg-white py-10">
-                                <p class="text-center font-semibold">Python Pro (Year 1)</p>
-                            </div>
-                        </div>
-                    </div>
+                <p class="text-2xl font-medium">Course Details - Visual Programming</p>
+                <div class="w-full h-[550px] overflow-auto mt-5">
+                    {{-- module 1 --}}
+                    <p class="w-full px-6 text-sm py-4 bg-[#e7e7e7] text-[#888] uppercase rounded-tl-md rounded-tr-md">Module 1. Introduction</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M1L1. Linear algorithm English</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M1L2. Loops ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M1L3. Initial placement ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M1L4. Events ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M1L5. Project. Personal website ENG</p>
+
+                    {{-- module 2 --}}
+                    <p class="w-full px-6 text-sm py-4 bg-[#e7e7e7] text-[#888] uppercase rounded-tl-md rounded-tr-md">Module 2. Space</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M2L1. Coordinates ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M2L2. Pointing in different directions</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M2L3. Turns and degrees ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M2L4. Messages ENGLISH</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M2L5. Project. Animation ENGLISH</p>
+
+                    {{-- module 3 --}}
+                    <p class="w-full px-6 text-sm py-4 bg-[#e7e7e7] text-[#888] uppercase rounded-tl-md rounded-tr-md">Module 3. Game</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M3L1. Conditions and selection operator English</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M3L2. Changing coordinates English</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M3L3. Procedures English</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M3L4. Game planning English</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M3L5. Game testing English</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M3L6. Game presentation ENG</p>
+
+                    {{-- module 4 --}}
+                    <p class="w-full px-6 text-sm py-4 bg-[#e7e7e7] text-[#888] uppercase rounded-tl-md rounded-tr-md">Module 4. Logic</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M4L1. Logical operators AND, OR, NOT ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M4L2. Conditional loop ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M3L3. Procedures English</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M3L4. Game planning English</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M3L5. Game testing English</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">M3L6. Game presentation ENG</p>
                 </div>
             </div>
         </div>

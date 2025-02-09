@@ -328,5 +328,17 @@ class ActivityController extends Controller
         return view('Admin.subjects.coding_knight');
     }
 
+    public function VisualProgramming(){
+        return view('Admin.subjects.visual_programming');
+    }
+
+    public function teacherDashboard(){
+        return view('Teacher/dashboard');
+    }
+
+    public function classDetail(){
+        return view('Teacher/il_details');
+    }
+
 
 }

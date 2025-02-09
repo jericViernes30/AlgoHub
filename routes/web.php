@@ -35,6 +35,7 @@ Route::post('/admin/proceed-to-il', [ActivityController::class, 'proceedToIl'])-
 Route::get('/admin/courses', [ActivityController::class, 'courses'])->name('admin.courses');
 
 Route::get('admin/course/The-Coding-Knight', [ActivityController::class, 'TheCodingKnight'])->name('admin.coding_knight');
+Route::get('admin/course/Visual-Programming', [ActivityController::class, 'VisualProgramming'])->name('admin.visual_programming');
 
 Route::get('/admin/open_il/{code}', [
     ActivityController::class, 'openIl',
@@ -53,3 +54,7 @@ Route::get('admin/get_course_sched/{course}', [ActivityController::class, 'showC
 Route::GET('admin/add_to_schedule', [ActivityController::class, 'addToSched'])->name('admin.add_to_sched');
 
 Route::get('admin/schedules/class_enrollees/{course}/{sched}/{time_slot}', [ActivityController::class, 'viewClassEnrollees'])->name('admin.view_class_enrollees');
+
+
+Route::get('teacher/dashboard', [ActivityController::class, 'teacherDashboard'])->name('teacher.dashboard');
+Route::get('/teacher/class', [ActivityController::class, 'classDetail'])->name('teacher.classDetail');

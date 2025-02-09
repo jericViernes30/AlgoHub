@@ -122,6 +122,33 @@
                     <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 14. Programming automatic changes in scenes when running a project. ENG</p>
                     <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 15. Creating animation (beginning). The appearance of characters at the start. Recording and using sounds in Scratch. ENG</p>
                     <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 16. Creating animation (finalizing), demonstration of projects, reviewing the module topics. ENG</p>
+                    {{-- module 5 --}}
+                    <p class="w-full px-6 text-sm py-4 bg-[#e7e7e7] text-[#888] uppercase">MODULE 5. Messages</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 17. Messages. ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 18. Using messages in a game. ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 19. Programming buttons using messages. ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 20. Programming buttons to control the character. ENG</p>
+
+                    {{-- module 6 --}}
+                    <p class="w-full px-6 text-sm py-4 bg-[#e7e7e7] text-[#888] uppercase">MODULE 6. Condition (Touch) as an Event</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 21. Touching conditions. ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 22. Sending a message when touching ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 23. Creating a game with animation. Start ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 24. Creating a game with animation. Finalizing ENG</p>
+
+                    {{-- module 7 --}}
+                    <p class="w-full px-6 text-sm py-4 bg-[#e7e7e7] text-[#888] uppercase">MODULE 7. Implementation of Game Mechanics in a Group Choice Project</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 25. Selection and start of implementing a large group project. ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 26. Continuing the implementation of the group's large project. ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 27. Continuing the implementation of the group's project ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 28. Projects presentation ENG</p>
+
+                    {{-- module 8 --}}
+                    <p class="w-full px-6 text-sm py-4 bg-[#e7e7e7] text-[#888] uppercase">Module 8. Selection and Implementation of the Final Project</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 29. Selection and start of work on the final individual project of the course. ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 30. Creating the students' individual projects according to their choice ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 31. Creating the students' individual projects according to their choice ENG</p>
+                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 32. Presentation of final projects. Awarding ENG</p>
                 </div>
             </div>
         </div>

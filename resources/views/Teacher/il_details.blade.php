@@ -82,23 +82,19 @@
                             <p class="w-fit py-1 px-5 text-sm bg-gray-500 rounded-md text-white font-light">Regular</p>
                         </div>
                         <div>
-                            <p class="py-1 mb-1 text-lg">Game Design Group</p>
+                            <p class="py-1 mb-1 text-lg">Game Design Group - IL</p>
                             <p class="py-1 text-xs text-gray-600">Game Design Group MONDAY 5:00 PM</p>
                         </div>
                     </div>
                     <div class="w-full flex gap-24 text-xs text-gray-500">
                         <div>
                             <div class="flex gap-5 mb-2">
-                                <p class="text-right w-[80px]">Group Start</p>
+                                <p class="text-right w-[80px]">IL Start</p>
                                 <p class="">25.11.2024 17:00</p>
                             </div>
                             <div class="flex gap-5 mb-2">
-                                <p class="text-right w-[80px]">Next Lesson</p>
-                                <p class="">25.11.2024 17:00</p>
-                            </div>
-                            <div class="flex gap-5 mb-2">
-                                <p class="text-right w-[80px]">Lessons Had</p>
-                                <p class="">1 of 36</p>
+                                <p class="text-right w-[80px]">Lessons</p>
+                                <p class="">1 of 1</p>
                             </div>
                             <div class="flex gap-5 mb-2">
                                 <p class="text-right w-[80px]">Students</p>
@@ -124,24 +120,35 @@
                 </div>
                 <div class="w-full bg-white rounded-bl-lg rounded-br-lg rounded-tr-lg p-4">
                     <div class="flex items-center font-medium text-blue-950 text-sm mb-4">
-                        <p class="w-[35%]">Last Name</p>
-                        <p class="w-[35%]">First Name</p>
+                        <p class="w-[30%]">Last Name</p>
+                        <p class="w-[30%]">First Name</p>
                         <p class="w-[10%]">Age</p>
                         <p class="w-[20%]">Inquiry Date</p>
+                        <div></div>
                     </div>
                     <hr>
                     <div class="flex items-center my-4">
-                        <p class="w-[35%] text-blue-800">Doelett</p>
-                        <p class="w-[35%] text-blue-800">Johny</p>
+                        <p class="w-[30%] text-blue-800">Doelett</p>
+                        <p class="w-[30%] text-blue-800">Johny</p>
                         <p class="w-[10%]">9</p>
                         <p class="w-[20%]">08/11/2024</p>
+                        <select name="action" id="" class="w-[10%] py-1 border-2 border-gray-300 rounded-md outline-none">
+                            <option disabled selected class="text-center">Action</option>
+                            <option value="complete">Complete</option>
+                            <option value="absent">Absent</option>
+                        </select>
                     </div>
                     <hr>
                     <div class="flex items-center mt-4">
-                        <p class="w-[35%] text-blue-800">William</p>
-                        <p class="w-[35%] text-blue-800">Bruce</p>
+                        <p class="w-[30%] text-blue-800">William</p>
+                        <p class="w-[30%] text-blue-800">Bruce</p>
                         <p class="w-[10%]">10</p>
                         <p class="w-[20%]">13/11/2024</p>
+                        <select name="action" id="" class="w-[10%] py-1 border-2 border-gray-300 rounded-md outline-none">
+                            <option disabled selected class="text-center">Action</option>
+                            <option value="complete">Complete</option>
+                            <option value="absent">Absent</option>
+                        </select>
                     </div>
                 </div>
                 
