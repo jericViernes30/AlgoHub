@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +20,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/admin-create', [ActivityController::class, 'createAdmin'])->name('admin.create');
 Route::get('/admin_login', [ActivityController::class, 'admin_login'])->name('admin.login');
 Route::get('/admin_dashboard', [ActivityController::class, 'admin_dashboard'])->name('admin.dashboard');
 Route::get('/admin_schedule', [ActivityController::class, 'admin_schedule'])->name('admin.schedule');
@@ -58,3 +60,6 @@ Route::get('admin/schedules/class_enrollees/{course}/{sched}/{time_slot}', [Acti
 
 Route::get('teacher/dashboard', [ActivityController::class, 'teacherDashboard'])->name('teacher.dashboard');
 Route::get('/teacher/class', [ActivityController::class, 'classDetail'])->name('teacher.classDetail');
+Route::get('/teacher/create', [TeacherController::class, 'createTeacher'])->name('teacher.create');
+Route::post('/teacher/login', [TeacherController::class, 'loginTeacher'])->name('teacher.login.post');
+Route::get('/teacher/logout', [TeacherController::class, 'logoutTeacher'])->name('teacher.logout');
