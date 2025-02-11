@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('course_name');
             $table->string('teacher');
-            $table->string('month');
+            $table->integer('teacher_id');
             $table->string('day');
             $table->string('time_slot');
         });
