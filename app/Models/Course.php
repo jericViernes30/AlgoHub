@@ -13,7 +13,7 @@ class Course extends Model
     protected $fillable = [
         'course_name',
         'teacher',
-        'month',
+        'teacher_id',
         'day',
         'time_slot'
     ];
