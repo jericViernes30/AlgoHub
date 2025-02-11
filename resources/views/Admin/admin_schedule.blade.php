@@ -63,27 +63,17 @@
                     </div>
                     <div class="flex flex-col w-full mb-5">
                         <label for="" class="mb-1">Teacher</label>
-                        <input type="text" name="teacher" class="rounded-lg w-full py-2 outline-none border border-[#a9a9a9] focus:border-[#833ae0] px-2">
+                        <select name="teacher" id="" class="py-2 outline-none text-center rounded-lg border border-[#a9a9a9] focus:border-[#833ae0]">
+                                <option value="" disabled selected>Select Teacher</option>
+                                @foreach ($teachers as $teacher)
+                                    <option value="{{$teacher->id}}|{{$teacher->first_name}}" class="text-center">
+                                        {{$teacher->first_name}}
+                                    </option>
+                                @endforeach
+                        </select>
                     </div>
                     <div class="flex gap-2 w-full mb-5">
                         <div class="w-1/2 flex flex-col">
-                            <label for="" class="mb-1">Month</label>
-                            <select name="month" class="py-2 outline-none text-center rounded-lg border border-[#a9a9a9] focus:border-[#833ae0]">
-                                <option value="January">January</option>
-                                <option value="February">February</option>
-                                <option value="March">March</option>
-                                <option value="April">April</option>
-                                <option value="May">May</option>
-                                <option value="June">June</option>
-                                <option value="July">July</option>
-                                <option value="August">August</option>
-                                <option value="September">September</option>
-                                <option value="October">October</option>
-                                <option value="November">November</option>
-                                <option value="December">December</option>
-                            </select>
-                        </div>
-                        <div class="w-1/4 flex flex-col">
                             <label for="" class="mb-1">Day</label>
                             <select name="day" id="" class="py-2 outline-none text-center rounded-lg border border-[#a9a9a9] focus:border-[#833ae0]">
                                 <option value="Monday" class="text-center">Monday</option>
@@ -95,7 +85,7 @@
                                 <option value="Sunday">Sunday</option>
                             </select>
                         </div>
-                        <div class="w-1/4 flex flex-col">
+                        <div class="w-1/2 flex flex-col">
                             <label for="" class="mb-1">Time Slot</label>
                             <select name="time_slot" id="" class="py-2 outline-none text-center rounded-lg border border-[#a9a9a9] focus:border-[#833ae0]">
                                 <option value="first">11:00 AM</option>
@@ -221,7 +211,7 @@
                                 </script>
                                 <p>Monday</p>
                                 @foreach ($schedule as $sched)
-                                    @if ($sched->day === "Monday" && $sched->time_slot === "first" && $sched->month === "February")
+                                    @if ($sched->day === "Monday" && $sched->time_slot === "first")
                                         <a href="#" id="" class="div_course flex w-[205px] items-center absolute top-0 left-[150px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
@@ -281,7 +271,7 @@
                                         </a>
                                     @endif
                                     
-                                    @if ($sched->day === "Tuesday" && $sched->time_slot === "first")
+                                    @if ($sched->day === "Tuesday" && $sched->time_slot === "second")
                                         <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" id="" class="div_course flex w-[205px] items-center absolute top-0 left-[355px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
@@ -290,7 +280,7 @@
                                         </a>
                                     @endif
 
-                                    @if ($sched->day === "Tuesday" && $sched->time_slot === "first")
+                                    @if ($sched->day === "Tuesday" && $sched->time_slot === "third")
                                         <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" id="" class="div_course flex w-[200px] items-center absolute top-0 left-[560px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center">{{ $sched->course_name }}</p>
@@ -374,46 +364,48 @@
                                 <p>Thursday</p>
                                 @foreach ($schedule as $sched)
                                     @if ($sched->day === "Thursday" && $sched->time_slot === "first")
-                                        <div id="" class="div_course flex w-[205px] items-center absolute top-0 left-[150px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" id="" class="div_course flex w-[205px] items-center absolute top-0 left-[150px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
                                             </div>
+                                        </a>
                                     @endif
                                     
                                     @if ($sched->day === "Thursday" && $sched->time_slot === "second")
-                                        <div id="" class="div_course flex w-[205px] items-center absolute top-0 left-[355px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" id="" class="div_course flex w-[205px] items-center absolute top-0 left-[355px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
                                             </div>
+                                        </a>
                                     @endif
 
                                     @if ($sched->day === "Thursday" && $sched->time_slot === "third")
-                                        <div id="" class="div_course flex w-[200px] items-center absolute top-0 left-[560px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" id="" class="div_course flex w-[200px] items-center absolute top-0 left-[560px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
                                             </div>
-                                        </div>
+                                        </a>
                                     @endif
 
                                     @if ($sched->day === "Thursday" && $sched->time_slot === "fourth")
-                                        <div id="" class="div_course flex w-[200px] items-center absolute top-0 left-[760px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" class="div_course flex w-[200px] items-center absolute top-0 left-[760px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
                                             </div>
-                                        </div>
+                                        </a>
                                     @endif
 
                                     @if ($sched->day === "Thursday" && $sched->time_slot === "fifth")
-                                        <div id="" class="div_course flex w-[200px] items-center absolute top-0 left-[960px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" class="div_course flex w-[200px] items-center absolute top-0 left-[960px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
                                             </div>
-                                        </div>
+                                        </a>
                                     @endif
                                     
                                 @endforeach
@@ -422,48 +414,48 @@
                                 <p>Friday</p>
                                 @foreach ($schedule as $sched)
                                     @if ($sched->day === "Friday" && $sched->time_slot === "first")
-                                        <div id="" class="div_course flex w-[205px] items-center absolute top-0 left-[150px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" id="" class="div_course flex w-[205px] items-center absolute top-0 left-[150px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
                                             </div>
-                                        </div>
+                                        </a>
                                     @endif
                                     
                                     @if ($sched->day === "Friday" && $sched->time_slot === "second")
-                                        <div id="" class="div_course flex w-[205px] items-center absolute top-0 left-[355px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" id="" class="div_course flex w-[205px] items-center absolute top-0 left-[355px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
                                             </div>
-                                        </div>
+                                        </a>
                                     @endif
 
                                     @if ($sched->day === "Friday" && $sched->time_slot === "third")
-                                        <div id="" class="div_course flex w-[200px] items-center absolute top-0 left-[560px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" id="" class="div_course flex w-[200px] items-center absolute top-0 left-[560px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
                                             </div>
-                                        </div>
+                                        </a>
                                     @endif
 
                                     @if ($sched->day === "Friday" && $sched->time_slot === "fourth")
-                                        <div id="" class="div_course flex w-[200px] items-center absolute top-0 left-[760px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" class="div_course flex w-[200px] items-center absolute top-0 left-[760px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
                                             </div>
-                                        </div>
+                                        </a>
                                     @endif
 
                                     @if ($sched->day === "Friday" && $sched->time_slot === "fifth")
-                                        <div id="" class="div_course flex w-[200px] items-center absolute top-0 left-[960px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" class="div_course flex w-[200px] items-center absolute top-0 left-[960px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
-                                                <p class="text-center" id="course">{{ $sched->course_name }}</p>
-                                                <p class="text-xs font-semibold text-center">{{ $sched->teacher }}/p>
+                                                <p class="text-center">{{ $sched->course_name }}</p>
+                                                <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
                                             </div>
-                                        </div>
+                                        </a>
                                     @endif
                                     
                                 @endforeach
@@ -472,48 +464,48 @@
                                 <p>Saturday</p>
                                 @foreach ($schedule as $sched)
                                     @if ($sched->day === "Saturday" && $sched->time_slot === "first")
-                                        <div id="" class="div_course flex w-[205px] items-center absolute top-0 left-[150px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" id="" class="div_course flex w-[205px] items-center absolute top-0 left-[150px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
                                             </div>
-                                        </div>
+                                        </a>
                                     @endif
                                     
                                     @if ($sched->day === "Saturday" && $sched->time_slot === "second")
-                                        <div id="" class="div_course flex w-[205px] items-center absolute top-0 left-[355px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" id="" class="div_course flex w-[205px] items-center absolute top-0 left-[355px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
                                             </div>
-                                        </div>
+                                        </a>
                                     @endif
 
                                     @if ($sched->day === "Saturday" && $sched->time_slot === "third")
-                                        <div id="" class="div_course flex w-[200px] items-center absolute top-0 left-[560px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" id="" class="div_course flex w-[200px] items-center absolute top-0 left-[560px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
                                             </div>
-                                        </div>
+                                        </a>
                                     @endif
 
                                     @if ($sched->day === "Saturday" && $sched->time_slot === "fourth")
-                                        <div id="" class="div_course flex w-[200px] items-center absolute top-0 left-[760px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" class="div_course flex w-[200px] items-center absolute top-0 left-[760px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
                                             </div>
-                                        </div>
+                                        </a>
                                     @endif
 
                                     @if ($sched->day === "Saturday" && $sched->time_slot === "fifth")
-                                        <div id="" class="div_course flex w-[200px] items-center absolute top-0 left-[960px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" class="div_course flex w-[200px] items-center absolute top-0 left-[960px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
-                                                <p class="text-center" id="course">{{ $sched->course_name }}</p>
+                                                <p class="text-center">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
                                             </div>
-                                        </div>
+                                        </a>
                                     @endif
                                     
                                 @endforeach
