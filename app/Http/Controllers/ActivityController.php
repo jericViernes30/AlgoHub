@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\AvailableCourse;
 use App\Models\Course;
 use App\Models\EnrolledStudent;
 use App\Models\ILSchedule;
 use App\Models\ILStudents;
 use App\Models\SchedulesList;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 
 class ActivityController extends Controller
@@ -16,6 +19,21 @@ class ActivityController extends Controller
     public function admin_login()
     {
         return view('Admin/admin_login');
+    }
+
+    public function createAdmin(Request $request){
+        $password = 'Admin001';
+        $hashedPassword = Hash::make($password);
+
+        $data = [
+            'name' => 'Admin',
+            'password' => $hashedPassword
+        ];
+
+        $create = Admin::create($data);
+        if($create){
+            return view('Admin.admin_login');
+        }
     }
 
     public function admin_dashboard()
@@ -28,7 +46,8 @@ class ActivityController extends Controller
     {
         $schedule = Course::all();
         $courses = AvailableCourse::all();
-        return view('Admin/admin_schedule', ['schedule' => $schedule, 'courses' => $courses]);
+        $teachers = Teacher::all();
+        return view('Admin/admin_schedule', ['schedule' => $schedule, 'courses' => $courses, 'teachers' => $teachers]);
     }
 
     public function il_schedule()
@@ -332,7 +351,10 @@ class ActivityController extends Controller
         return view('Admin.subjects.visual_programming');
     }
 
-    public function teacherDashboard(){
+    public function teacherDashboard(Request $request){
+        if (!$request->session()->has('teacher_id')) {
+            return redirect('/teacher/login');
+        }
         return view('Teacher/dashboard');
     }
 
