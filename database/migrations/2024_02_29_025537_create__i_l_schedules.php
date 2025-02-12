@@ -16,8 +16,6 @@ return new class extends Migration
             $table->string('code');
             $table->string('course');
             $table->string('teacher');
-            $table->string('mm');
-            $table->string('dd');
             $table->string('day');
             $table->string('from');
             $table->string('to');
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('_i_l_schedules');
+        Schema::dropIfExists('all_il_schedules');
     }
 };
