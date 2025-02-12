@@ -17,8 +17,6 @@ class ILSchedule extends Model
         'code',
         'course',
         'teacher',
-        'mm',
-        'dd',
         'day',
         'from',
         'to'
@@ -27,5 +25,10 @@ class ILSchedule extends Model
     public function il_students()
     {
         return $this->hasMany(ILStudents::class, 'code', 'code');
+    }
+
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class, 'teacher', 'id');
     }
 }
