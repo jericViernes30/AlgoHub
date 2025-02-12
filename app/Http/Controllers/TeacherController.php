@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
+use App\Models\EnrolledStudent;
+use App\Models\ILStudents;
 use Illuminate\Http\Request;
 use App\Models\Teacher;
 use Illuminate\Support\Facades\Hash;
@@ -37,6 +40,32 @@ class TeacherController extends Controller
         }
     }
 
+    public function classDetail($code)
+{
+    // Retrieve the class details based on the course ID
+    $class = Course::where('course_ID', $code)->first();
+
+
+    $teacherID = $class->teacher_id;
+    $teacherDetails = Teacher::where('id', $teacherID)->first();
+
+    $students = EnrolledStudent::where('classID', $code)->get();
+
+    return view('Teacher/group_details', [
+        'class' => $class,
+        'teacher' => $teacherDetails,
+        'students' => $students,
+    ]);
+}
+
+
+    public function teacherDashboard(){
+        $teacherID = session('teacher_id');
+        $teacher = Teacher::where('id', $teacherID)->first();
+        $subjects = Course::where('teacher_id', $teacher->id)->get();
+        return view('Teacher.dashboard', ['teacher' => $teacher, 'subjects' => $subjects]);
+    }
+
     public function loginTeacher(Request $request)
     {
         // Validate the incoming request data
@@ -52,7 +81,8 @@ class TeacherController extends Controller
         if ($teacher && Hash::check($request->password, $teacher->password)) {
             // Store teacher info in the session or generate a token
             session(['teacher_id' => $teacher->id]);
-            return view('Teacher.dashboard', ['teacher' => $teacher]);
+            $subjects = Course::where('teacher_id', $teacher->id)->get();
+            return view('Teacher.dashboard', ['teacher' => $teacher, 'subjects' => $subjects]);
 
             return response()->json([
                 'message' => 'Login successful',
