@@ -64,12 +64,12 @@
                 <div>
                     <div onclick="courseDropdown()">
                         <div class="w-full flex items-center justify-around px-5 bg-[#F2EBFB] border-l-4 border-[#833ae0] relative hover:cursor-pointer">
-                            <p href="" class=" w-full py-2">My Classes</p>
+                            <p class=" w-full py-2">My Classes</p>
                             {{-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg> --}}
                         </div>
                         <div id="courses" class="hidden">
                             <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="" class="py-2">Overview</a>
+                                <a href="{{route('teacher.dashboard')}}" class="py-2">Overview</a>
                             </div>
                         </div>
                     </div>
@@ -82,49 +82,41 @@
                         <p class="text-xs">Showing items <span class="text-blue-900 font-bold">1 - 3 </span> of <span class="text-blue-900 font-bold">3</span></p>
                     </div>
                     <div class="w-full flex items-center text-sm mb-2 py-2 font-semibold text-blue-950">
-                        <p class="w-[12%]">Schedule</p>
-                        <p class="w-[8%]">Lesson #</p>
-                        <p class="w-[33%]">Next Lesson</p>
-                        <p class="w-[7%]">Day</p>
+                        <p class="w-[27%]">Schedule</p>
+                        <p class="w-[33%]">Course</p>
                         <p class="w-[20%]">Lesson Teacher</p>
-                        <p class="w-[20%]">Type</p>
+                        <p class="w-[10%]">Students</p>
+                        <p class="w-[10%]">Type</p>
                     </div>
                     <hr>
-                    <div class="w-full flex items-center text-sm mt-4 mb-2 py-2">
-                        <p class="w-[12%]">25.11.2024 17:00</p>
-                        <p class="w-[8%]">1</p>
-                        <div class="w-[33%]">
-                            <p>M1 L1 Roblox.com vs Roblox Studio</p>
-                            <p class="text-xs">Game Design 2021/2022 M1 L1</p>
-                        </div>
-                        <p class="w-[7%]">Mon</p>
-                        <p class="w-[20%]">TICAR MA ALMIRA</p>
-                        <p class="w-fit bg-green-400 px-2 py-1 rounded-sm text-xs font-semibold">Regular</p>
-                    </div>
-                    <hr>
-                    <div class="w-full flex items-center text-sm mt-4 mb-2 py-2">
-                        <p class="w-[12%]">27.11.2024 14:00</p>
-                        <p class="w-[8%]">1</p>
-                        <div class="w-[33%]">
-                            <p>Game Design IL</p>
-                            <p class="text-xs">IL_Game Design_ENG</p>
-                        </div>
-                        <p class="w-[7%]">Wed</p>
-                        <p class="w-[20%]">TICAR MA ALMIRA</p>
-                        <p class="w-fit bg-blue-400 px-2 py-1 rounded-sm text-xs font-semibold">Introductory Lesson</p>
-                    </div>
-                    <hr>
-                    <div class="w-full flex items-center text-sm mt-4 mb-2 py-2">
-                        <p class="w-[12%]">29.11.2024 17:00</p>
-                        <p class="w-[8%]">3</p>
-                        <div class="w-[33%]">
-                            <p>M1 L3 My first real 3D game ENG</p>
-                            <p class="text-xs">Game Design 2021/2022 M1 L3</p>
-                        </div>
-                        <p class="w-[7%]">Fri</p>
-                        <p class="w-[20%]">TICAR MA ALMIRA</p>
-                        <p class="w-fit bg-green-400 px-2 py-1 rounded-sm text-xs font-semibold">Regular</p>
-                    </div>
+                    @php
+                        function getTime($time){
+                            if ($time == "first"){
+                                return "11:00 AM to 12:30 PM";
+                            } elseif ($time == "second") {
+                                return "1:00 PM to 2:30 PM";
+                            } elseif ($time == "third") {
+                                return "3:00 PM to 4:30 PM";
+                            } elseif ($time == "fourth") {
+                                return "5:00 PM to 6:30 PM";
+                            } elseif ($time == "fifth") {
+                                return "7:00 PM to 8:30 PM";
+                            }
+                        }
+                    @endphp
+                    @foreach ($subjects as $subject)
+                        <button onclick="window.location.href='class/{{$subject->course_ID}}'" class="w-full flex items-center text-sm mt-4 mb-2 py-2 text-left">
+                            <p class="w-[27%]">{{$subject->day}} - {{getTime($subject->time_slot)}}</p>
+                            <div class="w-[33%]">
+                                <p id="">{{$subject->course_name}}</p>
+                                <p class="text-xs font-medium text-blue-500">CID:{{$subject->course_ID}}</p>
+                            </div>
+                            <p class="w-[20%] text-left">{{$subject->teacher}}</p>
+                            <p class="w-[10%] uppercase">12</p>
+                            <p class="w-fit bg-blue-400 px-2 py-1 rounded-md text-xs font-semibold">Face-to-face</p>
+                        </button>
+                        <hr>
+                    @endforeach
                 </div>
                 
             </div>

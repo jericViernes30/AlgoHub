@@ -6,6 +6,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="{{ asset('js/scripts.js') }}"></script>
   @vite('resources/css/app.css')
   <style>
@@ -68,7 +69,7 @@
                         </div>
                         <div id="courses" class="hidden">
                             <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="" class="py-2">Overview</a>
+                                <a href="{{route('teacher.dashboard')}}" class="py-2">Overview</a>
                             </div>
                         </div>
                     </div>
@@ -76,44 +77,117 @@
             </div>
             <div class="w-full p-4">
                 <div class="w-full bg-white rounded-lg p-4 mb-8">
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            // Safely pass the PHP variable to JavaScript
+                            var timeSlot = {!! json_encode($class->time_slot) !!};
+                            var time = '';
+                    
+                            switch (timeSlot) {
+                                case 'first':
+                                    time = "11:00";
+                                    break;
+                                case 'second':
+                                    time = "13:00";
+                                    break;
+                                case 'third':
+                                    time = "15:00";
+                                    break;
+                                case 'fourth':
+                                    time = "17:00";
+                                    break;
+                                default:
+                                    time = "Unknown Time";
+                                    break;
+                            }
+                            console.log("Time Slot:", timeSlot);
+                            console.log("Time:", time);
+                            document.getElementById('timeLesson').textContent = time;
+                        });
+                    </script>
+                    
                     <div class="flex gap-10 items-center mb-10">
                         <div>
                             <p class="w-fit py-1 px-6 text-sm bg-gray-500 rounded-md text-white font-light mb-2">Group</p>
-                            <p class="w-fit py-1 px-5 text-sm bg-gray-500 rounded-md text-white font-light">Regular</p>
+                            <p class="w-fit py-1 px-5 text-sm bg-gray-500 rounded-md text-white font-light">Face-to-face</p>
                         </div>
                         <div>
-                            <p class="py-1 mb-1 text-lg">Game Design Group</p>
-                            <p class="py-1 text-xs text-gray-600">Game Design Group MONDAY 5:00 PM</p>
+                            <p class="py-1 mb-1 text-lg">{{$class->course_name}}</p>
+                            <p class="py-1 text-xs text-gray-600">{{$class->course_name}} Group <span class="uppercase">{{$class->day}}</span> {{$class->slot}}</p>
                         </div>
                     </div>
                     <div class="w-full flex gap-24 text-xs text-gray-500">
                         <div>
                             <div class="flex gap-5 mb-2">
-                                <p class="text-right w-[80px]">Group Start</p>
-                                <p class="">25.11.2024 17:00</p>
+                                <p id="" class="text-right w-[80px]">Group Start</p>
+                                <p class="text-gray-900 font-medium">{{ \Carbon\Carbon::parse($class->start_date)->format('d.m.Y') }} <span id="timeLesson"></span></p>
+                                
                             </div>
                             <div class="flex gap-5 mb-2">
                                 <p class="text-right w-[80px]">Next Lesson</p>
-                                <p class="">25.11.2024 17:00</p>
+                                <p class="text-gray-900 font-medium" id="nextLesson"></p>
                             </div>
+                            
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    // Pass PHP variables to JavaScript
+                                    const startDate = {!! json_encode($class->start_date) !!};
+                                    const timeSlot = {!! json_encode($class->time_slot) !!};
+                            
+                                    // Map the time slot to corresponding times
+                                    let time = '';
+                                    switch (timeSlot) {
+                                        case 'first': time = "11:00"; break;
+                                        case 'second': time = "13:00"; break;
+                                        case 'third': time = "15:00"; break;
+                                        case 'fourth': time = "17:00"; break;
+                                        default: time = "Unknown Time"; break;
+                                    }
+                            
+                                    // Parse start date and today's date
+                                    let currentDate = new Date();
+                                    let lessonDate = new Date(startDate);
+                            
+                                    // If today's date is >= lesson date, increment by 7 days until it's in the future
+                                    while (currentDate >= lessonDate) {
+                                        lessonDate.setDate(lessonDate.getDate() + 7);
+                                    }
+                                    const formattedDate = lessonDate.toLocaleDateString('en-GB', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric',
+                                    }).replace(/\//g, '.'); // Replace slashes with dots
+                                    const nextLesson = `${formattedDate} ${time}`;
+
+                            
+                                    // Update the #nextLesson element with the calculated date
+                                    document.getElementById('nextLesson').textContent = nextLesson;
+                            
+                                    // Debugging
+                                    console.log("Start Date:", startDate);
+                                    console.log("Current Date:", currentDate);
+                                    console.log("Next Lesson Date:", lessonDate);
+                                });
+                            </script>
+                            
                             <div class="flex gap-5 mb-2">
                                 <p class="text-right w-[80px]">Lessons Had</p>
-                                <p class="">1 of 36</p>
+                                <p class="text-gray-900 font-medium">1 of 36</p>
                             </div>
                             <div class="flex gap-5 mb-2">
                                 <p class="text-right w-[80px]">Students</p>
-                                <p class="">2</p>
+                                <p class="text-gray-900 font-medium">{{$students->count()}}</p>
                             </div>
                             <div class="flex gap-5 mb-2">
                                 <p class="text-right w-[80px]">Course</p>
-                                <p class="">Game Design ENG</p>
+                                <p class="text-gray-900 font-medium">{{$class->course_name}} ENG</p>
                             </div>
                         </div>
                         <div>
-                            <p class="text-blue-950 text-base">TICAR MA ALMIRA</p>
+                            <p class="text-blue-950 text-base uppercase">{{$teacher->last_name}} {{$teacher->first_name}}</p>
                             <p class="text-xs text-blue-700 mb-3">Teacher</p>
-                            <p class="mb-1">+63 (992) 649-2698</p>
-                            <p>ticarmaalmira@gmail.com</p>
+                            <p class="mb-1">{{$teacher->contact_number}}</p>
+                            <p>{{$teacher->email_address}}</p>
                         </div>
                     </div>
                 </div>
@@ -123,28 +197,19 @@
                     <p class="w-fit p-2 text-sm">Lesson and Schedule</p>
                 </div>
                 <div class="w-full bg-white rounded-bl-lg rounded-br-lg rounded-tr-lg p-4">
-                    <div class="flex items-center font-medium text-blue-950 text-sm mb-4">
-                        <p class="w-[35%]">Last Name</p>
-                        <p class="w-[35%]">First Name</p>
-                        <p class="w-[10%]">Age</p>
-                        <p class="w-[20%]">Inquiry Date</p>
+                    <div class="flex items-center font-medium text-blue-950 text-sm mb-4 pt-5">
+                        <p class="w-[35%]">Student Name</p>
+                        <p class="w-[20%]">Enrollment Date</p>
                     </div>
                     <hr>
-                    <div class="flex items-center my-4">
-                        <p class="w-[35%] text-blue-800">Doelett</p>
-                        <p class="w-[35%] text-blue-800">Johny</p>
-                        <p class="w-[10%]">9</p>
-                        <p class="w-[20%]">08/11/2024</p>
-                    </div>
-                    <hr>
-                    <div class="flex items-center mt-4">
-                        <p class="w-[35%] text-blue-800">William</p>
-                        <p class="w-[35%] text-blue-800">Bruce</p>
-                        <p class="w-[10%]">10</p>
-                        <p class="w-[20%]">13/11/2024</p>
-                    </div>
+                    @foreach ($students as $student)
+                        <div class="flex items-center my-4">
+                            <p class="w-[35%] text-blue-800">{{$student->student_name}}</p>
+                            <p class="w-[20%]">{{$student->created_at->format('F d, Y h:i a')}}</p>
+                        </div>
+                        <hr>
+                    @endforeach
                 </div>
-                
             </div>
         </div>
     </div>

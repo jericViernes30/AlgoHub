@@ -239,7 +239,7 @@
                                     @endif
 
                                     @if ($sched->day === "Monday" && $sched->time_slot === "fourth")
-                                        <a href="admin/schedules/class_enrollees/Monday/fourth/{{ $sched->course_name }}" id="" class="div_course flex w-[200px] items-center absolute top-0 left-[760px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/{{ $sched->course_name }}" id="" class="div_course flex w-[200px] items-center absolute top-0 left-[760px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>
@@ -290,7 +290,7 @@
                                     @endif
 
                                     @if ($sched->day === "Tuesday" && $sched->time_slot === "fourth")
-                                        <a href="admin/schedules/class_enrollees/{{ $sched->day }}/{{ $sched->time_slot }}/{{ $sched->course_name }}" id="" class="div_course flex w-[200px] items-center absolute top-0 left-[760px] rounded-2xl px-1 py-1 text-sm">
+                                        <a href="admin/schedules/class_enrollees/{{ $sched->course_ID }}" id="" class="div_course flex w-[200px] items-center absolute top-0 left-[760px] rounded-2xl px-1 py-1 text-sm">
                                             <div class="w-full">
                                                 <p class="text-center" id="course">{{ $sched->course_name }}</p>
                                                 <p class="text-xs font-semibold text-center">{{ $sched->teacher }}</p>

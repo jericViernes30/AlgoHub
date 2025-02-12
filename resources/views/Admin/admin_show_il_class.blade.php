@@ -55,108 +55,84 @@
                 
                 <form action="{{ route('admin.add_to_sched') }}" method="GET">
                     <script>
-                        $(document).ready(function(){
-                            var course = "{{$il_schedule->course}}"
+                        $(document).ready(function () {
+                            var course = "{{$il_schedule->course}}";
                             $.ajax({
                                 url: '{{ route("admin.get_course_sched", ":course") }}'.replace(':course', course),
-                                type:"GET",
+                                type: "GET",
                                 dataType: 'json',
-                                success: function(data){
-                                    var selectSchedule = $('select[name="day"]')
-                                    selectSchedule.empty()
-                                    if($.isEmptyObject(data)){
-                                        selectSchedule.append('<option disabled selected>No schedule yet</option>')
+                                success: function (data) {
+                                    console.log("Data:", data);
+                                    var selectSchedule = $('select[name="course_ID"]');
+                                    selectSchedule.empty();
+
+                                    if ($.isEmptyObject(data)) {
+                                        selectSchedule.append('<option disabled selected>No schedule yet</option>');
                                     } else {
-                                        $.each(data, function(time_slot, day) {
-                                            var time = ''
-                                            switch(time_slot){
+                                        $.each(data, function (index, schedule) {
+                                            console.log("Schedule:", schedule);
+
+                                            var timeSlot = schedule.time_slot;
+                                            var day = schedule.day;
+                                            var courseID = schedule.course_ID;
+
+                                            // Map the time_slot to human-readable times
+                                            var time = '';
+                                            switch (timeSlot) {
                                                 case 'first':
-                                                    time = "11:00 AM to 1:00 PM"
-                                                    break
+                                                    time = "11:00 AM to 1:00 PM";
+                                                    break;
                                                 case 'second':
-                                                    time = "1:00 PM to 3:00 PM"
-                                                    break
+                                                    time = "1:00 PM to 3:00 PM";
+                                                    break;
                                                 case 'third':
-                                                    time = "3:00 PM to 5:00 PM"
-                                                    break
+                                                    time = "3:00 PM to 5:00 PM";
+                                                    break;
                                                 case 'fourth':
-                                                    time = "5:00 PM to 7:00 PM"
-                                                    break
+                                                    time = "5:00 PM to 7:00 PM";
+                                                    break;
+                                                case 'fifth':
+                                                    time = "7:00 PM to 9:00 PM";
+                                                    break;
                                                 default:
-                                                    time = 'Unknown Day';
+                                                    time = "Unknown Time";
                                                     break;
                                             }
-                                            selectSchedule.append('<option value="' + day  + '">' + day + ' - ' + time  + '</option>');
+
+                                            // Append the option to the select element
+                                            selectSchedule.append(
+                                                '<option value="' + courseID + '">' + courseID + ' - ' + day + ' (' + time + ')</option>'
+                                            );
                                         });
                                     }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error("Error fetching schedule:", error);
                                 }
-                            })
-                        })
+                            });
+                        });
+
                     </script>
                     @csrf
                     <div class="w-full flex flex-col gap-1 mb-4">
                         <label for="">Select schedule</label>
-                        <select name="day" id="" class="w-full px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none text-center">
+                        <select name="course_ID" id="" class="w-full px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none text-center">
                             <option disabled selected>-- Select schedule --</option>
                         </select>
                     </div>
-                    <input type="hidden" name="course_name" value="{{$il_schedule->course}}">
+                    <input type="hidden" name="student_ID">
                     <input type="hidden" name="student_name">
                     <input type="checkbox" name="completed" id=""> <label for="completed">Completed</label>
                     <button class="float-right w-1/4 py-2 bg-[#833ae0] text-white rounded-md">
                         Proceed
                     </button>
                 </form>
-                {{-- <form action="" method="GET">
-                    <script>
-                        $(document).ready(function(){
-                            var course = "{{$il_schedule->course}}";
-                            $.ajax({
-                                url: '{{ route("admin.get_course_sched", ":course") }}'.replace(':course', course),
-                                type: "GET",
-                                dataType: 'json',
-                                success: function(data){
-                                    var selectSchedule = $('select[name="sched"]');
-                                    selectSchedule.empty();
-                                    if($.isEmptyObject(data)){
-                                        selectSchedule.append('<option disabled selected>No schedule yet</option>');
-                                    } else {
-                                        $.each(data, function(day, time) {
-                                            selectSchedule.append('<option value="' + time + '">' + day + ' - ' + time + '</option>');
-                                        });
-                                    }
-                                }
-                            });
-                        });
-                    </script>
-                    @csrf
-                    <div class="w-full flex flex-col gap-1 mb-4">
-                        <label for="">Select schedule</label>
-                        <select name="sched" id="" class="w-full px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none text-center">
-                            <option disabled selected>-- Select schedule --</option>
-                        </select>
-                    </div>
-                    <button type="submit">
-                        PROCEED
-                    </button>
-                </form> --}}
                 
             </div>
         </div>
     </div>
     <div id="body" class="w-full h-screen flex flex-col">
         <div class="w-full bg-[#833ae0] flex py-7">
-            {{-- <div class="w-4/5 mx-auto flex justify-between">
-                <input type="search" name="search" placeholder="Search" class="px-2 py-1 rounded-xl w-1/3">
-                <div class="flex items-center justify-center">
-                    <button class="rounded-xl px-2 py-1 bg-[#F2EBFB] flex gap-1 items-center justify-center">
-                        <p>Hi, Admin!</p>
-                        <span>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="12" height="12"><path d="M201.4 342.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 274.7 86.6 137.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
-                        </span>
-                    </button>
-                </div>
-            </div> --}}
         </div>
         <div class="w-full flex h-screen bg-[#F2EBFB]">
             <div class="w-1/6 h-full bg-[#f9f9f9] text-sm">
@@ -177,7 +153,7 @@
                     </div>
 
                     <div onclick="studentsDropdown()">
-                        <a href="{{route('admin.student_list')}}" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
+                        <a href="" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
                             <p id="students_dd" class=" w-full py-2 text-[#48494b]">Students</p>
                         </a>
                     </div>
@@ -305,6 +281,25 @@
                 }
             });
         });
+
+        
+        function proceedToEnrollment(data){
+            var proceed = document.getElementById('proceed');
+            var body = document.getElementById('body');
+            proceed.classList.toggle('hidden')
+
+            if(!proceed.classList.contains('hidden')){
+                body.style.filter = 'blur(2px)'
+            } else {
+                body.style.filter = 'blur(0px)' 
+            }
+
+            const rowData = JSON.parse(data);
+            const proceedDiv = document.getElementById('proceed');
+            
+            proceedDiv.querySelector('input[name="student_name"]').value = rowData.student_name;
+            proceedDiv.querySelector('input[name="student_ID"]').value = rowData.id;
+        }
     </script>
 </body>
 </html>

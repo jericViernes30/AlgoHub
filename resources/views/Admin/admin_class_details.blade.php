@@ -130,13 +130,14 @@
                                     <p class="font-semibold mb-2">Course Name</p>
                                     <p class="font-semibold mb-2">Teacher:</p>
                                     <p class="font-semibold mb-2">Scheduled Day:</p>
-                                    <p class="font-semibold">Time Slot:</p>
+                                    <p class="font-semibold mb-2">Time Slot:</p>
+                                    <p class="font-semibold">Start Date:</p>
                                 </div>
                                 <div>
                                     <p class="mb-2">: {{ $courses->course_name }}</p>
                                     <p class="mb-2">: {{ $courses->teacher }}</p>
                                     <p class="mb-2">: {{ $courses->day }}</p>
-                                    <p id="time" class=""></p>
+                                    <p id="time" class="mb-2"></p>
                                     <script>
                                         var time = ''
                                         console.log('{{$courses->time_slot}}');
@@ -163,6 +164,27 @@
                                             timeElement.innerHTML = time;
                                         }
                                     </script>
+                                    <div class="flex items-center gap-2">
+                                        @if ($courses->start_date == null)
+                                            <span>No Start Date</span>
+                                    
+                                            <!-- Form to edit start date -->
+                                            <form action="{{ route('admin.edit_start_date', $courses->course_ID) }}" method="POST">
+                                                @csrf
+                                                <input 
+                                                    type="date" 
+                                                    name="start_date" 
+                                                    id="start_date" 
+                                                    min="{{ date('Y-m-d') }}" 
+                                                    required
+                                                >
+                                                <button type="submit">Update</button>
+                                            </form>
+                                        @else
+                                            <span>: {{ \Carbon\Carbon::parse($courses->start_date)->format('F d, Y') }}</span>
+                                        @endif
+                                    </div>
+                                    
                                 </div>
                             </div>
                             <div class="w-full">
