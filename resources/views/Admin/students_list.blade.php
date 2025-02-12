@@ -42,72 +42,6 @@
   </style>
 </head>
 <body class="bg-[#ececec]">
-    {{-- PROCEED FORM --}}
-    <div id="proceed" class="hidden w-2/6 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm z-10">
-        <div class="w-full flex flex-col bg-[#f9f7fc] rounded-xl">
-            <div class="w-full flex justify-between bg-[#833ae0] p-4 rounded-tl-xl rounded-tr-xl">
-                <p class="text-white">Select course and teacher for Introductory Lesson</p>
-                <button onclick="closeProceedForm()" class="text-white flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="14" height="14" fill="#f9f9f9"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
-                </button>
-            </div>
-            <div class="w-full px-16 py-4">
-                <form action="{{route('admin.proceed')}}" method="POST">
-                    @csrf
-                    <div class="w-full flex flex-col gap-1 mb-4">
-                        <label for="" class="font-medium">Choose a Subject</label>
-                        <select name="course" id="course_select" class="w-full px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none text-center">
-                            <option disabled selected>-- Select a course --</option>
-                            @foreach ($course as $c)
-                                <option value="{{$c->course_name}}">{{$c->course_name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <script>
-                        $(document).ready(function() {
-                            $('#course_select').on('change', function() {
-                                var course = $(this).val();
-                                if (course) {
-                                    $.ajax({
-                                        url: '{{ route("admin.get_schedules", ":course") }}'.replace(':course', course),
-                                        type: "GET",
-                                        dataType: "json",
-                                        success: function(data) {
-                                            var selectCode = $('select[name="code"]');
-                                            selectCode.empty();
-                                            if ($.isEmptyObject(data)) {
-                                                selectCode.append('<option disabled selected>No schedule yet</option>');
-                                            } else {
-                                                $.each(data, function(time_slot, code) {
-                                                    selectCode.append('<option value="' + code + '">' + time_slot + '</option>');
-                                                });
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    $('select[name="code"]').empty().append('<option disabled selected>Select a Schedule</option>');
-                                }
-                            });
-                        });
-                    </script>                    
-                    <div class="w-full flex flex-col gap-1 mb-4">
-                        <label for="" class="font-medium">Select Schedule</label>
-                        <select name="code" id="" class="w-full px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none text-center">
-                            <option disabled selected>Select a Schedule</option>
-                        </select>
-                    </div>
-                    <input type="hidden" name="student_name">
-                    <input type="hidden" name="parent_name">
-                    <input type="hidden" name="age">
-                    <input type="hidden" name="contact_number">
-                    <input type="hidden" name="email_address">
-                    <div class="w-full flex items-center gap-3 justify-end">
-                        <button type="submit" class="w-1/4 py-2 bg-[#833ae0] text-white rounded-md">Continue</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
     <div id="edit_schedule" class="hidden w-2/6 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm z-10">
         <div class="w-full flex flex-col bg-[#f9f7fc] rounded-xl">
             <div class="w-full flex justify-between bg-[#833ae0] p-4 rounded-tl-xl rounded-tr-xl">
@@ -248,28 +182,6 @@
                             <p>Add new</p>
                         </button>
                     </div>
-                    {{-- <div class="w-1/2 mb-2 flex items-center">
-                        <p class="w-1/4">Data Displayed:</p>
-                        <div class="w-full flex items-center gap-4">
-                            <div class="w-fit flex items-center gap-1">
-                                <input type="radio" name="status" id="all" value="all">
-                                <label for="all">All</label>
-                            </div>
-                            <div class="w-fit flex items-center gap-1">
-                                <input type="radio" name="status" id="pending" value="pending">
-                                <label for="pending">Pending</label>
-                            </div>
-                            <div class="w-fit flex items-center gap-1">
-                                <input type="radio" name="status" id="completed" value="completed">
-                                <label for="completed">Completed</label>
-                            </div>
-                            <div class="w-fit flex items-center gap-1">
-                                <input type="radio" name="status" id="completed" value="enrolled">
-                                <label for="completed">Enrolled</label>
-                            </div>
-                            
-                        </div>
-                    </div> --}}
 
                     <table class="w-full border-collapse mt-10">
                         <tr class="bg-[#F2EBFB] text-left">
@@ -298,6 +210,9 @@
                                         case "Enrolled":
                                             statusDiv.classList.add("bg-green-300");
                                             break;
+                                        case "DNA":
+                                            statusDiv.classList.add('bg-red-500', 'text-white', 'text-xs', 'text-center');
+                                            break;
                                         default:
                                             // Do nothing or add default behavior
                                             break;
@@ -305,38 +220,46 @@
                                 });
                             });
                         </script>
-                        @foreach ($scheduling as $for_scheduling)
+                        @foreach ($students as $student)
                             <tr class="border-b border-[#d8d8d8]">
-                                <td class="w-1/5 py-4 px-2"> {{$for_scheduling->parents_name}} </td>
-                                <td class="w-1/5 py-2">{{$for_scheduling->childs_name}}</td>
-                                <td class="w-[5%] py-2">{{$for_scheduling->age}}</td>
-                                <td class="w-[11%] py-2">{{$for_scheduling->contact_number}}</td>
-                                <td class="w-1/5 py-2">{{$for_scheduling->email_address}}</td>
+                                <td class="w-1/5 py-4 px-2"> {{$student->parent_name}} </td>
+                                <td class="w-1/5 py-2">{{$student->student_name}}</td>
+                                <td class="w-[5%] py-2">{{$student->age}}</td>
+                                <td class="w-[11%] py-2">{{$student->contact_number}}</td>
+                                <td class="w-1/5 py-2">{{$student->email_address}}</td>
                                 <td class="w-1/5 py-2 text-center">
-                                    <div class="status w-1/2 mx-auto flex items-center justify-center rounded-full text-xs py-1">
-                                        <p id="status">{{$for_scheduling->status}}</p>
+                                    <div class="status w-1/2 flex mx-auto items-center justify-center rounded-full text-xs py-1">
+                                        <p id="status">
+                                            @php
+                                                if($student->status == 'Did not attend'){
+                                                    echo 'DNA';
+                                                } else {
+                                                    echo $student->status;
+                                                }
+                                            @endphp
+                                        </p>
                                     </div>
                                 </td>
                                 <td class="w-1/5 p-2 text-center">
                                     <div class="flex items-center justify-center gap-3">
-                                        <button onclick="proceed('{{ json_encode($for_scheduling) }}')" class="
+                                        <button onclick="proceed('{{ json_encode($students) }}')" class="
                                             @php
-                                                if($for_scheduling->status == 'Scheduled'){
+                                                if($student->status == 'Scheduled' || $student->status == 'Enrolled'){
                                                     echo 'cursor-not-allowed';
                                                 }
                                             @endphp"
                                             @php
-                                                if($for_scheduling->status == 'Scheduled'){
+                                                if($student->status == 'Scheduled' || $student->status == 'Enrolled'){
                                                     echo 'disabled';
                                                 }
                                             @endphp
                                             >
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="13" height="13"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>
                                         </button>
-                                        <a href="#" onclick="editSchedule('{{ json_encode($for_scheduling) }}')">
+                                        <a href="#" onclick="editSchedule('{{ json_encode($student) }}')">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="13" height="13"><path d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z"/></svg>
                                         </a>
-                                        <a href="{{route('admin.delete_client', ['parent_name' => $for_scheduling->parents_name])}}">
+                                        <a href="{{route('admin.delete_client', ['parent_name' => $student->parent_name])}}">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="13" height="13"><path d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z"/></svg>
                                         </a>
                                     </div>

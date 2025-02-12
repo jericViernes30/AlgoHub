@@ -73,14 +73,14 @@
                                 <a href="{{route('teacher.dashboard')}}" class="py-2">Regular Class</a>
                             </div>
                             <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{route('teacher.il_schedule')}}" class="py-2">Introductory Lesson</a>
+                                <a href="#" class="py-2">Introductory Lesson</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="w-full p-4">
-                <p class="text-lg font-light mb-2">Regular Class Schedule</p>
+                <p class="text-lg font-light mb-2">Introductory Lesson Class Schedule</p>
                 <div class="w-full bg-white rounded-lg p-4">
                     <div class="mb-4">
                         <p class="text-xs">Showing items <span class="text-blue-900 font-bold">1 - 3 </span> of <span class="text-blue-900 font-bold">3</span></p>
@@ -88,19 +88,19 @@
                     <div class="w-full flex items-center text-sm mb-2 py-2 font-semibold text-blue-950">
                         <p class="w-[27%]">Schedule</p>
                         <p class="w-[33%]">Course</p>
-                        <p class="w-[20%]">Lesson Teacher</p>
+                        <p class="w-[20%]">IL Teacher</p>
                         <p class="w-[10%]">Students</p>
                         <p class="w-[10%]">Type</p>
                     </div>
                     <hr>
                     @foreach ($subjects as $subject)
-                        <button onclick="window.location.href='class/{{$subject->course_ID}}'" class="w-full flex items-center text-sm mt-4 mb-2 py-2 text-left">
-                            <p class="w-[27%]">{{$subject->day}} - {{$subject->formatted_time}}</p>
+                        <button onclick="window.location.href='il/{{$subject->code}}'" class="w-full flex items-center text-sm mt-4 mb-2 py-2 text-left">
+                            <p class="w-[27%]">{{$subject->day}} - {{$subject->from}}</p>
                             <div class="w-[33%]">
-                                <p id="">{{$subject->course_name}}</p>
-                                <p class="text-xs font-medium text-blue-500">CID:{{$subject->course_ID}}</p>
+                                <p id="">{{$subject->course}}</p>
+                                <p class="text-xs font-medium text-blue-500">IL_ID:{{$subject->code}}</p>
                             </div>
-                            <p class="w-[20%] text-left">{{$subject->teacher}}</p>
+                            <p class="w-[20%] text-left">{{$teacher->first_name}}</p>
                             <p class="w-[10%] uppercase">{{$students->count()}}</p>
                             <p class="w-fit bg-blue-400 px-2 py-1 rounded-md text-xs font-semibold">Face-to-face</p>
                         </button>

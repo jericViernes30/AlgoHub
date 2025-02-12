@@ -42,40 +42,23 @@
 </head>
 <body class="bg-[#ececec]">
     <div class="w-full h-screen flex flex-col">
-        <div class="w-full bg-[#833ae0] flex py-2">
-            <div class="w-4/5 mx-auto flex justify-between">
-                <input type="search" name="search" placeholder="Search" class="px-2 py-1 rounded-xl w-1/3">
-                <div class="flex items-center justify-center">
-                    <button class="rounded-xl px-2 py-1 bg-[#F2EBFB] flex gap-1 items-center justify-center">
-                        <p>Hi, Jeric James!</p>
-                        <span>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="12" height="12"><path d="M201.4 342.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 274.7 86.6 137.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
-                        </span>
-                    </button>
-                </div>
-            </div>
+        <div class="w-full bg-[#833ae0] flex py-5">
         </div>
         <div class="w-full flex h-screen bg-[#F2EBFB]">
             <div class="w-1/6 h-full bg-[#f9f9f9] text-sm">
-                <div class="w-full mx-auto flex gap-5 items-center mt-28">
-                    <a href="" class="text-[#48494b] px-5 bg-[#F2EBFB] border-l-4 rounded-sm border-[#833ae0] w-full py-2">Dashboard</a>
+                <div class="w-full mx-auto flex gap-5 items-center hover:bg-[#F2EBFB] mt-28">
+                    <a href="{{route('admin.dashboard')}}" class="text-[#48494b] px-5 w-full py-2">Dashboard</a>
                 </div>
                 <div>
                     <div onclick="courseDropdown()">
-                        <div class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                            <p href="" class=" w-full py-2">Courses</p>
-                        </div>
+                        <a href="{{route('admin.courses')}}" class="w-full flex items-center justify-around px-5 relative hover:cursor-pointer bg-[#F2EBFB] border-l-4 rounded-sm border-[#833ae0]">
+                            <p class=" w-full py-2">Courses</p>
+                        </a>
                     </div>
 
                     <div onclick="studentsDropdown()">
                         <div class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
                             <p href="" class=" w-full py-2">Students</p>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
-                        </div>
-                        <div id="students" class="hidden">
-                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="" class="py-2">Enrolled</a>
-                            </div>
                         </div>
                     </div>
 

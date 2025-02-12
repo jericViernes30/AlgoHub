@@ -105,11 +105,6 @@
     </div>
     <div id="body" class="w-full h-screen flex flex-col">
         <div class="w-full bg-[#833ae0] flex py-5">
-            {{-- <div class="w-4/5 mx-auto flex justify-between">
-                <input type="search" name="search" placeholder="Search" class="px-2 py-1 rounded-xl w-1/3">
-                <div class="flex items-center justify-center">
-                </div>
-            </div> --}}
         </div>
         <div class="w-full flex h-screen bg-[#F2EBFB]">
             <div class="w-1/6 h-full bg-[#f9f9f9] text-sm">

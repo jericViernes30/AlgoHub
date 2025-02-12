@@ -64,12 +64,15 @@
                 <div>
                     <div onclick="courseDropdown()">
                         <div class="w-full flex items-center justify-around px-5 bg-[#F2EBFB] border-l-4 border-[#833ae0] relative hover:cursor-pointer">
-                            <p href="" class=" w-full py-2">My Classes</p>
-                            {{-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg> --}}
+                            <p class=" w-full py-2">My Classes</p>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
                         </div>
                         <div id="courses" class="hidden">
                             <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{route('teacher.dashboard')}}" class="py-2">Overview</a>
+                                <a href="{{route('teacher.dashboard')}}" class="py-2">Regular Class</a>
+                            </div>
+                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
+                                <a href="{{route('teacher.il_schedule')}}" class="py-2">Introductory Lesson</a>
                             </div>
                         </div>
                     </div>

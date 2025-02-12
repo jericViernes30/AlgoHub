@@ -6,6 +6,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="{{ asset('js/scripts.js') }}"></script>
   @vite('resources/css/app.css')
   <style>
@@ -63,12 +64,15 @@
                 <div>
                     <div onclick="courseDropdown()">
                         <div class="w-full flex items-center justify-around px-5 bg-[#F2EBFB] border-l-4 border-[#833ae0] relative hover:cursor-pointer">
-                            <p href="" class=" w-full py-2">My Classes</p>
-                            {{-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg> --}}
+                            <p class=" w-full py-2">My Classes</p>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
                         </div>
                         <div id="courses" class="hidden">
                             <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="" class="py-2">Overview</a>
+                                <a href="{{route('teacher.dashboard')}}" class="py-2">Regular Class</a>
+                            </div>
+                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
+                                <a href="{{route('teacher.il_schedule')}}" class="py-2">Introductory Lesson</a>
                             </div>
                         </div>
                     </div>
@@ -76,82 +80,125 @@
             </div>
             <div class="w-full p-4">
                 <div class="w-full bg-white rounded-lg p-4 mb-8">
+                    
                     <div class="flex gap-10 items-center mb-10">
                         <div>
-                            <p class="w-fit py-1 px-6 text-sm bg-gray-500 rounded-md text-white font-light mb-2">Group</p>
-                            <p class="w-fit py-1 px-5 text-sm bg-gray-500 rounded-md text-white font-light">Regular</p>
+                            <p class="w-fit py-1 px-6 text-sm bg-gray-500 rounded-md text-white font-light mb-2">IL Group</p>
+                            <p class="w-fit py-1 px-5 text-sm bg-gray-500 rounded-md text-white font-light">Face-to-face</p>
                         </div>
                         <div>
-                            <p class="py-1 mb-1 text-lg">Game Design Group - IL</p>
-                            <p class="py-1 text-xs text-gray-600">Game Design Group MONDAY 5:00 PM</p>
+                            <p class="py-1 mb-1 text-lg">{{$il->course}}</p>
+                            <p class="py-1 text-xs text-gray-600">{{$il->course}} Introductory Lesson <span class="uppercase">{{$il->day}}</span> {{$il->from}}</p>
                         </div>
                     </div>
                     <div class="w-full flex gap-24 text-xs text-gray-500">
                         <div>
                             <div class="flex gap-5 mb-2">
-                                <p class="text-right w-[80px]">IL Start</p>
-                                <p class="">25.11.2024 17:00</p>
-                            </div>
-                            <div class="flex gap-5 mb-2">
-                                <p class="text-right w-[80px]">Lessons</p>
-                                <p class="">1 of 1</p>
-                            </div>
-                            <div class="flex gap-5 mb-2">
                                 <p class="text-right w-[80px]">Students</p>
-                                <p class="">2</p>
+                                <p class="text-gray-900 font-medium">{{$students->count()}}</p>
                             </div>
                             <div class="flex gap-5 mb-2">
                                 <p class="text-right w-[80px]">Course</p>
-                                <p class="">Game Design ENG</p>
+                                <p class="text-gray-900 font-medium">{{$il->course}} ENG</p>
                             </div>
                         </div>
                         <div>
-                            <p class="text-blue-950 text-base">TICAR MA ALMIRA</p>
+                            <p class="text-blue-950 text-base uppercase">{{$teacher->last_name}} {{$teacher->first_name}}</p>
                             <p class="text-xs text-blue-700 mb-3">Teacher</p>
-                            <p class="mb-1">+63 (992) 649-2698</p>
-                            <p>ticarmaalmira@gmail.com</p>
+                            <p class="mb-1">{{$teacher->contact_number}}</p>
+                            <p>{{$teacher->email_address}}</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="w-full flex items-center">
                     <p class="w-fit p-2 bg-white rounded-tr-md rounded-tl-md text-sm text-gray-700">Students</p>
-                    <p class="w-fit p-2 text-sm">Lesson and Schedule</p>
                 </div>
                 <div class="w-full bg-white rounded-bl-lg rounded-br-lg rounded-tr-lg p-4">
-                    <div class="flex items-center font-medium text-blue-950 text-sm mb-4">
-                        <p class="w-[30%]">Last Name</p>
-                        <p class="w-[30%]">First Name</p>
-                        <p class="w-[10%]">Age</p>
-                        <p class="w-[20%]">Inquiry Date</p>
-                        <div></div>
+                    <div class="flex items-center font-medium text-blue-950 text-sm mb-4 pt-5">
+                        <p class="w-[30%]">Student Name</p>
+                        <p class="w-[25%]">Scheduled Date</p>
+                        <p class="w-[20%]">Status</p>
+                        <p class="w-[10%]">Actions</p>
                     </div>
                     <hr>
-                    <div class="flex items-center my-4">
-                        <p class="w-[30%] text-blue-800">Doelett</p>
-                        <p class="w-[30%] text-blue-800">Johny</p>
-                        <p class="w-[10%]">9</p>
-                        <p class="w-[20%]">08/11/2024</p>
-                        <select name="action" id="" class="w-[10%] py-1 border-2 border-gray-300 rounded-md outline-none">
-                            <option disabled selected class="text-center">Action</option>
-                            <option value="complete">Complete</option>
-                            <option value="absent">Absent</option>
-                        </select>
-                    </div>
-                    <hr>
-                    <div class="flex items-center mt-4">
-                        <p class="w-[30%] text-blue-800">William</p>
-                        <p class="w-[30%] text-blue-800">Bruce</p>
-                        <p class="w-[10%]">10</p>
-                        <p class="w-[20%]">13/11/2024</p>
-                        <select name="action" id="" class="w-[10%] py-1 border-2 border-gray-300 rounded-md outline-none">
-                            <option disabled selected class="text-center">Action</option>
-                            <option value="complete">Complete</option>
-                            <option value="absent">Absent</option>
-                        </select>
-                    </div>
+                    @foreach ($students as $student)
+                        <div class="flex items-center my-3">
+                            <p class="w-[30%] text-blue-800 student-name">{{$student->student_name}}</p>
+                            <p class="w-[25%]">{{$student->created_at->format('F d, Y h:i a')}}</p>
+                            <div class="w-[20%]">
+                                @php
+                                    $statusClass = '';
+                                    switch ($student->status) {
+                                        case 'Pending':
+                                            $statusClass = 'bg-yellow-300';
+                                            break;
+                                        case 'Completed':
+                                            $statusClass = 'bg-blue-300 text-white';
+                                            break;
+                                        case 'Enrolled':
+                                            $statusClass = 'bg-green-300 text-black';
+                                            break;
+                                        case 'Did not attend':
+                                            $statusClass = 'bg-red-500 text-white text-xs';
+                                            break;
+                                    }
+                                @endphp
+                                <p class="status w-1/2 px-5 py-1 text-center rounded-full text-sm {{ $statusClass }}">
+                                    {{$student->status}}
+                                </p>
+                            </div>
+                            <select name="actions" 
+                                    class="action-select outline-none border-2 rounded-md py-1 px-2 border-gray-400 focus:border-[#833ae0]
+                                    @if ($student->status != 'Pending') cursor-not-allowed bg-gray-400 border-none @endif"
+                                    @if ($student->status != 'Pending') disabled @endif
+                            >
+                                <option selected disabled>Select</option>
+                                <option value="completed">Completed</option>
+                                <option value="dna">Did not attend</option>
+                            </select>
+                        </div>
+                        <hr>
+                    @endforeach
+
+                    <script>
+                        // Use event delegation to handle multiple selects dynamically
+                        $(document).on('change', '.action-select', function() {
+                            var action = $(this).val();
+                            var row = $(this).closest('.flex'); // Target the specific row
+                            var studentName = row.find('.student-name').text();
+                            var statusElement = row.find('.status');
+                            var il = '{{$il->code}}';
+                            var teacher = '{{$teacher->id}}';
+                            var token = '{{csrf_token()}}';
+
+                            $.ajax({
+                                url: '/teacher/il_details/update/',
+                                type: 'GET',
+                                data: {
+                                    action: action,
+                                    student: studentName,
+                                    il: il,
+                                    teacher: teacher,
+                                    _token: token
+                                },
+                                success: function(data) {
+                                    if (action === 'completed') {
+                                        alert('Status changed to: Completed');
+                                        statusElement.text('Completed').removeClass().addClass('status w-1/2 px-5 py-1 text-center rounded-full text-sm bg-blue-300 text-white');
+                                    } else if (action === 'dna') {
+                                        alert('Status changed to: Did not attend');
+                                        statusElement.text('Did not attend').removeClass().addClass('status w-1/2 px-5 py-1 text-center rounded-full text-sm bg-red-300 text-white');
+                                    }
+                                },
+                                error: function(error) {
+                                    alert('Error! Status not changed');
+                                }
+                            });
+                        });
+                    </script>
+
                 </div>
-                
             </div>
         </div>
     </div>

@@ -9,14 +9,16 @@
     <div class="w-3/4 h-3/4 flex shadow-2xl rounded-3xl ">
         <div class="w-3/12 rounded-tl-3xl rounded-bl-3xl flex-col items-center p-5 relative bg-white">
             <img src="{{asset('images/logo.png')}}" alt="Algohub Logo" class="w-24 h-auto">
-            <form action="" method="POST" class="w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-5">
+            <form action="{{route('admin.login.post')}}" method="POST" class="w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-5">
                 @csrf
-                <p class="text-2xl font-bold">Login for admin</p>
-                <label for="Login">Login</label>
-                <br>
-                <input type="text" name="username" class="border border-slate-300 mt-3 w-full rounded-lg py-1 px-2 outline-none focus:border-[#833ae0]">
-                <button class="bg-[#833ae0] border border-slate-300 mt-2 w-full rounded-lg py-1 px-2 text-white">Next</button>
-                <a class="text-[#833ae0] text-center w-full inline-block" href="{{route('teacher.login')}}">Sign in as teacher</a>
+                <p class="text-2xl font-bold mb-2">Login for admin</p>
+                <label for="Login">Admin</label>
+                <input type="text" name="username" class="border border-slate-300 mt-1 mb-3 w-full rounded-lg py-1 px-2 outline-none focus:border-[#833ae0]">
+                
+                <label for="Login">Password</label>
+                <input type="password" name="password" class="border border-slate-300 mt-1 mb-3 w-full rounded-lg py-1 px-2 outline-none focus:border-[#833ae0]">
+                <button class="bg-[#833ae0] border border-slate-300 mt-2 w-full rounded-lg py-1 px-2 text-white">Login</button>
+                <a class="text-[#833ae0] text-center w-full inline-block" href="{{route('welcome')}}">Sign in as teacher</a>
             </form>
         </div>
         <div class="w-3/4 rounded-tr-3xl rounded-br-3xl bg-[#833ae0] flex items-center justify-center">

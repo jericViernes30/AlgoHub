@@ -60,23 +60,14 @@
                             @endforeach
                         </select>
                         <label for="" class="font-medium">Teacher</label>
-                        <input type="text" name="teacher" class="mt-1 mb-4 w-full text-center px-1 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none">
+                        <select name="teacher" class="mt-1 mb-4 w-full text-center px-1 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none">
+                            <option selected disabled>-- Select a teacher --</option>
+                            @foreach ($teachers as $teacher)
+                                <option value="{{$teacher->id}}">{{$teacher->first_name}}</option>
+                            @endforeach
+                        </select>
                         <div class="w-full flex justify-evenly gap-1 mb-4">
-                            <div class="flex flex-col w-1/2">
-                                <label for="" class="mb-1">Month</label>
-                                <select name="mm" id="" class="w-full text-center px-1 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none">
-                                    <option value="January">January</option>
-                                    <option value="February">February</option>
-                                    <option value="March">March</option>
-                                    <option value="April">April</option>
-                                    <option value="May">May</option>
-                                </select>
-                            </div>
-                            <div class="flex flex-col w-1/6">
-                                <label for="" class="mb-1">Date</label>
-                                <input type="number" name="dd" class="w-full text-center px-1 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none">
-                            </div>
-                            <div class="flex flex-col w-1/3">
+                            <div class="flex flex-col w-full">
                                 <label for="" class="mb-1">Day</label>
                                 <select name="day" id="" class="w-full text-center px-1 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none">
                                     <option value="Monday">Monday</option>
@@ -157,18 +148,7 @@
         </div>
     </div>
     <div id="body" class="w-full h-screen flex flex-col z-0">
-        <div class="w-full bg-[#833ae0] flex py-6">
-            {{-- <div class="w-4/5 mx-auto flex justify-between">
-                <input type="search" name="search" placeholder="Search" class="px-2 py-1 rounded-xl w-1/3">
-                <div class="flex items-center justify-center">
-                    <button class="rounded-xl px-2 py-1 bg-[#F2EBFB] flex gap-1 items-center justify-center">
-                        <p>Hi, Admin!</p>
-                        <span>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="12" height="12"><path d="M201.4 342.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 274.7 86.6 137.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
-                        </span>
-                    </button>
-                </div>
-            </div> --}}
+        <div class="w-full bg-[#833ae0] flex py-5">
         </div>
         <div class="w-full flex h-screen bg-[#F2EBFB]">
             <div class="w-1/6 h-full bg-[#f9f9f9] text-sm">
@@ -177,26 +157,14 @@
                 </div>
                 <div>
                     <div onclick="courseDropdown()">
-                        <div class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] ">
+                        <a href="{{route('admin.courses')}}" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] ">
                             <p id="course_dd" href="" class="w-full py-2 text-[#48494b] hover:cursor-pointer">Courses</p>
-                            <svg id="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
-                        </div>
-                        <div id="courses" class="hidden">
-                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="" class="py-2 text-[#48494b]">Overview</a>
-                            </div>
-                        </div>
+                        </a>
                     </div>
 
                     <div onclick="studentsDropdown()">
                         <div class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
                             <p id="students_dd" class=" w-full py-2 text-[#48494b]">Students</p>
-                            <svg id="arrow1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
-                        </div>
-                        <div id="students" class="hidden">
-                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="" class="py-2 text-[#48494b]">Enrolled</a>
-                            </div>
                         </div>
                     </div>
 
@@ -254,9 +222,6 @@
                                     </div>
                                     <!-- Second Column -->
                                     <div class="w-1/3 flex font-semibold gap-2 items-center justify-center">
-                                        <p class="text-md">{{ $s->mm }}</p>
-                                        <p class="text-md">{{ $s->dd }}</p>
-                                        <p>-</p>
                                         <p class="text-md">{{ $s->day }}</p>
                                     </div>
                                     <!-- Third Column -->

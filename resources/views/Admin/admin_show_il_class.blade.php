@@ -122,7 +122,6 @@
                     </div>
                     <input type="hidden" name="student_ID">
                     <input type="hidden" name="student_name">
-                    <input type="checkbox" name="completed" id=""> <label for="completed">Completed</label>
                     <button class="float-right w-1/4 py-2 bg-[#833ae0] text-white rounded-md">
                         Proceed
                     </button>
@@ -132,7 +131,7 @@
         </div>
     </div>
     <div id="body" class="w-full h-screen flex flex-col">
-        <div class="w-full bg-[#833ae0] flex py-7">
+        <div class="w-full bg-[#833ae0] flex py-5">
         </div>
         <div class="w-full flex h-screen bg-[#F2EBFB]">
             <div class="w-1/6 h-full bg-[#f9f9f9] text-sm">
@@ -141,15 +140,9 @@
                 </div>
                 <div>
                     <div onclick="courseDropdown()">
-                        <div class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] ">
+                        <a href="{{route('admin.courses')}}" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] ">
                             <p id="course_dd" href="" class="w-full py-2 text-[#48494b] hover:cursor-pointer">Courses</p>
-                            <svg id="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
-                        </div>
-                        <div id="courses" class="hidden">
-                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="" class="py-2 text-[#48494b]">Overview</a>
-                            </div>
-                        </div>
+                        </a>
                     </div>
 
                     <div onclick="studentsDropdown()">
@@ -182,7 +175,7 @@
                     <p class="text-lg font-semibold text-center mb-4">IL Details</p>
 
                         <div id="schedule_card" class="w-full border border-[#a9a9a9] rounded-lg p-4 mb-5">
-                            <div class="w-full flex items-center gap-2 mb-4">
+                            <div class="w-full flex items-center gap-2 mb-10">
                                 <div class="w-1/3">
                                     <div class="w-full flex items-center gap-2 mb-3">
                                         <p class="font-semibold text-md">Course:</p>
@@ -194,9 +187,6 @@
                                     </div>
                                 </div>
                                 <div class="w-1/3 flex font-semibold gap-2 items-center justify-center">
-                                    <p class="text-md">{{$il_schedule->mm}}</p>
-                                    <p class="text-md">{{$il_schedule->dd}}</p>
-                                    <p>-</p>
                                     <p class="text-md">{{$il_schedule->day}}</p>
                                 </div>
                                 <div class="w-1/3">
@@ -238,6 +228,10 @@
                                                     case "Enrolled":
                                                         statusDiv.classList.add("bg-green-300");
                                                         break;
+                                                    case "DNA":
+                                                        statusDiv.classList.add('bg-red-500', 'text-white', 'text-xs', 'text-center');
+                                                        break;
+                                                    
                                                     statusDiv.classList.add("bg-green-300");
                                                     break;
                                                     default:
@@ -256,7 +250,15 @@
                                             <td class="w-1/5 py-2">{{$student->email_address}}</td>
                                             <td class="w-1/6 py-2">
                                                 <div class="status w-1/2 flex mx-auto items-center justify-center rounded-full text-xs py-1">
-                                                    <p id="status">{{$student->status}}</p>
+                                                    <p id="status">
+                                                        @php
+                                                            if($student->status == 'Did not attend'){
+                                                                echo 'DNA';
+                                                            } else {
+                                                                echo $student->status;
+                                                            }
+                                                        @endphp
+                                                    </p>
                                                 </div>
                                             </td>
                                             <td class="w-1/5 p-2">
@@ -276,9 +278,11 @@
         $(document).ready(function() {
             $('table tr').each(function() {
                 var status = $(this).find('#status').text().trim();
-                if (status !== 'Pending') {
+                // alert(status)
+                if (status == 'Enrolled' || status == 'DNA') {
                     $(this).find('button').prop('disabled', true).addClass('bg-gray-400 cursor-not-allowed');
                 }
+
             });
         });
 
