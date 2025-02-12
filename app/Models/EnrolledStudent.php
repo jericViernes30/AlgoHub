@@ -13,22 +13,6 @@ class EnrolledStudent extends Model
 
     protected $fillable = [
         'student_name',
-        'course_name',
-        'day',
-        'time_slot',
-        'enrollment_date'
+        'classID',
     ];
-
-    public static function create(array $attributes = [])
-    {
-        $model = new static($attributes);
-        $model->enrollment_date = now(); // Set the created_date value
-        $model->fill($attributes);
-        $model->save();
-        
-
-        return $model;
-    }
-
-    public $timestamps = false;
 }
