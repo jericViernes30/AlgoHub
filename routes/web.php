@@ -55,11 +55,15 @@ Route::get('admin/get_course_sched/{course}', [ActivityController::class, 'showC
 
 Route::GET('admin/add_to_schedule', [ActivityController::class, 'addToSched'])->name('admin.add_to_sched');
 
-Route::get('admin/schedules/class_enrollees/{course}/{sched}/{time_slot}', [ActivityController::class, 'viewClassEnrollees'])->name('admin.view_class_enrollees');
+Route::get('admin/schedules/class_enrollees/{courseID}', [ActivityController::class, 'viewClassEnrollees'])->name('admin.view_class_enrollees');
+
+Route::POST('admin/edit-start-date/{courseID}', [ActivityController::class, 'editStartDate'])->name('admin.edit_start_date');
 
 
-Route::get('teacher/dashboard', [ActivityController::class, 'teacherDashboard'])->name('teacher.dashboard');
-Route::get('/teacher/class', [ActivityController::class, 'classDetail'])->name('teacher.classDetail');
+
+
+Route::get('teacher/dashboard', [TeacherController::class, 'teacherDashboard'])->name('teacher.dashboard');
+Route::get('/teacher/class/{code}', [TeacherController::class, 'classDetail'])->name('teacher.classDetail');
 Route::get('/teacher/create', [TeacherController::class, 'createTeacher'])->name('teacher.create');
 Route::post('/teacher/login', [TeacherController::class, 'loginTeacher'])->name('teacher.login.post');
 Route::get('/teacher/logout', [TeacherController::class, 'logoutTeacher'])->name('teacher.logout');
