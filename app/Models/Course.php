@@ -11,12 +11,12 @@ class Course extends Model
     protected $table = 'course';
 
     protected $fillable = [
+        'course_ID',
         'course_name',
         'teacher',
         'teacher_id',
         'day',
-        'time_slot'
+        'time_slot',
+        'start_date'
     ];
-
-    public $timestamps = false;
 }
