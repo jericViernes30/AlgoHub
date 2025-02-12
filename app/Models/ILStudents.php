@@ -21,8 +21,6 @@ class ILStudents extends Model
         'status'
     ];
 
-    public $timestamps = false;
-
     public function il_schedule()
     {
         return $this->belongsTo(ILSchedule::class, 'code', 'code');
