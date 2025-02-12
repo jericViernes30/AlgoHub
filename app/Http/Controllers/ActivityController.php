@@ -75,11 +75,6 @@ class ActivityController extends Controller
     //     return view('Admin/il_schedule', ['classes' => $students, 'schedule' => $sched]);
     // }
 
-    public function teacher_login()
-    {
-        return view('welcome');
-    }
-
     public function for_scheduling()
     {
         $course = AvailableCourse::all();
@@ -282,47 +277,49 @@ class ActivityController extends Controller
     }
 
     public function showClassSched($course)
-    {
-        $courses = Course::where('course_name', $course)->get(['day', 'time_slot']);
+{
+    // Retrieve courses matching the given course name
+    $courses = Course::where('course_name', $course)->get(['day', 'time_slot', 'course_ID']);
 
-        $plucked_schedules = $courses->pluck('day', 'time_slot');
+    // Transform the data to include all required fields
+    $schedules = $courses->map(function ($course) {
+        return [
+            'day' => $course->day,
+            'time_slot' => $course->time_slot,
+            'course_ID' => $course->course_ID,
+        ];
+    });
 
-        return response()->json($plucked_schedules);
-    }
+    return response()->json($schedules);
+}
+
 
     public function addToSched(Request $request)
     {
+        // dd($request->all());
 
-        $time_slot = Course::where('course_name', $request->input('course_name'))
-            ->where('day', $request->input('day'))
-            ->value('time_slot');
         // dd($time_slot);
-        $data = $request->validate([
-            'student_name' => 'required',
-            'course_name' => 'required',
-            'day' => 'required',
-            'time_slot' => 'nullable',
-            'enrollment_date' => 'nullable'
-        ]);
+        $student_ID = $request->input('student_ID');
 
-        $data['time_slot'] = $time_slot;
+        $data = [
+            'student_name' => $request->input('student_name'),
+            'classID' => $request->input('course_ID'),
+        ];
+
+        ILStudents::where('id', $student_ID)->update(['status' => 'Enrolled']);
 
         EnrolledStudent::create($data);
 
         return Redirect::back();
     }
 
-    public function viewClassEnrollees($day, $time_slot, $course) {
+    public function viewClassEnrollees($courseID) {
         // get the course details
-        $course_details = Course::where('day', $day)
-            ->where('time_slot', $time_slot)
-            ->where('course_name', $course)
+        $course_details = Course::where('course_ID', $courseID)
             ->first();
 
         // get the enrolled students name from a specific course
-        $enrolled_students = EnrolledStudent::where('day', $day)
-            ->where('time_slot', $time_slot)
-            ->where('course_name', $course)
+        $enrolled_students = EnrolledStudent::where('classID', $courseID)
             ->get();
 
         $student_details = []; // array for storing students name of a class
@@ -351,16 +348,19 @@ class ActivityController extends Controller
         return view('Admin.subjects.visual_programming');
     }
 
-    public function teacherDashboard(Request $request){
-        if (!$request->session()->has('teacher_id')) {
-            return redirect('/teacher/login');
-        }
-        return view('Teacher/dashboard');
-    }
+    public function editStartDate($courseID, Request $request)
+{
+    $course = Course::where('course_ID', $courseID)->first();
 
-    public function classDetail(){
-        return view('Teacher/il_details');
-    }
+    $start_date = $request->input('start_date');
+    $course->update(['start_date' => $start_date]);
+
+    // Redirect back to the previous page
+    return redirect()->back()->with('success', 'Start date updated successfully!');
+}
+
+
+    
 
 
 }
