@@ -18,10 +18,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Route::get('/admin-create', [ActivityController::class, 'createAdmin'])->name('admin.create');
 Route::get('/admin_login', [ActivityController::class, 'admin_login'])->name('admin.login');
+Route::post('/admin/login-post', [ActivityController::class, 'adminLoginPost'])->name('admin.login.post');
+Route::get('/admin/logout', [ActivityController::class, 'logoutAdmin'])->name('admin.logout');
 Route::get('/admin_dashboard', [ActivityController::class, 'admin_dashboard'])->name('admin.dashboard');
 Route::get('/admin_schedule', [ActivityController::class, 'admin_schedule'])->name('admin.schedule');
 Route::get('/admin_schedule/il_schedule', [ActivityController::class, 'il_schedule'])->name('admin.il_schedule');
@@ -59,11 +61,16 @@ Route::get('admin/schedules/class_enrollees/{courseID}', [ActivityController::cl
 
 Route::POST('admin/edit-start-date/{courseID}', [ActivityController::class, 'editStartDate'])->name('admin.edit_start_date');
 
+Route::get('admin/students', [ActivityController::class, 'studentsList'])->name('admin.students');
+
 
 
 
 Route::get('teacher/dashboard', [TeacherController::class, 'teacherDashboard'])->name('teacher.dashboard');
 Route::get('/teacher/class/{code}', [TeacherController::class, 'classDetail'])->name('teacher.classDetail');
+Route::get('/teacher/il/{code}', [TeacherController::class, 'ILDetails'])->name('teacher.ILDetails');
 Route::get('/teacher/create', [TeacherController::class, 'createTeacher'])->name('teacher.create');
 Route::post('/teacher/login', [TeacherController::class, 'loginTeacher'])->name('teacher.login.post');
 Route::get('/teacher/logout', [TeacherController::class, 'logoutTeacher'])->name('teacher.logout');
+Route::get('/teacher/il_schedule', [TeacherController::class, 'ILSchedule'])->name('teacher.il_schedule');
+Route::get('/teacher/il_details/update', [TeacherController::class, 'updateIlDetails'])->name('teacher.update_il_details');
