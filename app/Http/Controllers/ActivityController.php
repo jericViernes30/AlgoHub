@@ -21,6 +21,45 @@ class ActivityController extends Controller
         return view('Admin/admin_login');
     }
 
+    public function adminLoginPost(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        $admin = Admin::where('name', $request->username)->first();
+
+        if ($admin && Hash::check($request->password, $admin->password)) {
+            // Save the admin ID in the session
+            session(['admin_id' => $admin->id]);
+
+            // Redirect to the admin dashboard
+            return redirect()->route('admin.dashboard');
+        }
+
+        // Return a response for invalid login
+        return response()->json([
+            'message' => 'Invalid username or password',
+        ], 401);
+    }
+
+    public function logoutAdmin(Request $request){
+        $request->session()->flush();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('admin.login');
+    }
+
+
+    public function admin_dashboard()
+    {
+        $schedule = Course::all();
+        return view('Admin/admin_dashboard', ['schedule' => $schedule]);
+    }
+
     public function createAdmin(Request $request){
         $password = 'Admin001';
         $hashedPassword = Hash::make($password);
@@ -36,12 +75,6 @@ class ActivityController extends Controller
         }
     }
 
-    public function admin_dashboard()
-    {
-        $schedule = Course::all();
-        return view('Admin/admin_dashboard', ['schedule' => $schedule]);
-    }
-
     public function admin_schedule()
     {
         $schedule = Course::all();
@@ -53,7 +86,7 @@ class ActivityController extends Controller
     public function il_schedule()
     {
         $sched = ILSchedule::all();
-
+        $teachers = Teacher::all();
         $courses = AvailableCourse::all();
         $sched->transform(function ($time) {
             $time_slot = "{$time->from} to {$time->to}";
@@ -62,7 +95,7 @@ class ActivityController extends Controller
             return $time;
         });
 
-        return view('Admin/il_schedule', ['schedule' => $sched], ['courses' => $courses]);
+        return view('Admin/il_schedule', ['schedule' => $sched, 'courses' => $courses, 'teachers' => $teachers]);
     }
 
     // public function il_schedule(){
@@ -131,11 +164,9 @@ class ActivityController extends Controller
 
     public function getSchedules($course)
     {
-        $schedules = ILSchedule::where('course', $course)->get(['code', 'to', 'from', 'day', 'mm', 'dd']);
+        $schedules = ILSchedule::where('course', $course)->get();
 
-        // Create a new variable $time_slot to store formatted 'from' and 'to' times
         $schedules->transform(function ($schedule) {
-            // Format 'from' and 'to' times as "12:30 PM" and "1:30 PM" (assuming they are already in the correct format)
             $time_slot = "{$schedule->from} to {$schedule->to} | {$schedule->mm} {$schedule->dd} - {$schedule->day}";
             $schedule->time_slot = $time_slot;
 
@@ -250,8 +281,6 @@ class ActivityController extends Controller
             'code' => 'nullable',
             'course' => 'required',
             'teacher' => 'required',
-            'mm' => 'required',
-            'dd' => 'required',
             'day' => 'required',
             'from' => 'nullable',
             'to' => 'nullable',
@@ -357,6 +386,11 @@ class ActivityController extends Controller
 
     // Redirect back to the previous page
     return redirect()->back()->with('success', 'Start date updated successfully!');
+}
+
+public function studentsList(){
+    $students = ILStudents::whereNotIn('status', ['Did not attend', 'Pending'])->get();
+    return view('Admin.students_list', ['students' => $students]);
 }
 
 
