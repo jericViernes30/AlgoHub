@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 class TeacherController extends Controller
 {
     public function createTeacher(Request $request){
-        $password = 'Jj_101820';
+        $password = 'mira01';
         $hashedPassword = Hash::make($password);
         
         // $data = [
@@ -28,11 +28,11 @@ class TeacherController extends Controller
         // ];
 
         $data = [
-            'first_name' => 'Jeric James',
-            'last_name' => 'Viernes',
-            'email_address' => 'jericviernes06@gmail.com',
-            'contact_number' => '+63 997 658 9181',
-            'username' => 'viernesm',
+            'first_name' => 'Ma Almira',
+            'last_name' => 'Ticar',
+            'email_address' => 'maalmiraticar01@gmail.com',
+            'contact_number' => '+63 992 131 7519',
+            'username' => 'ticarm',
             'password' => $hashedPassword,
         ];
 
