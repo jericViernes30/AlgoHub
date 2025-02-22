@@ -57,7 +57,15 @@ class ActivityController extends Controller
     public function admin_dashboard()
     {
         $schedule = Course::all();
-        return view('Admin/admin_dashboard', ['schedule' => $schedule]);
+        $enrolled = EnrolledStudent::all()->count();
+        $walkIn = SchedulesList::all()->count();
+        $il = ILStudents::where('status', '!=', 'Pending')->count();
+        return view('Admin/admin_dashboard', [
+            'schedule' => $schedule,
+            'enrolled_count' => $enrolled,
+            'walkin_count' => $walkIn,
+            'il_count' => $il
+        ]);
     }
 
     public function createAdmin(Request $request){
@@ -388,10 +396,82 @@ class ActivityController extends Controller
     return redirect()->back()->with('success', 'Start date updated successfully!');
 }
 
-public function studentsList(){
-    $students = ILStudents::whereNotIn('status', ['Did not attend', 'Pending'])->get();
-    return view('Admin.students_list', ['students' => $students]);
+public function studentsList()
+{
+    $students = EnrolledStudent::all()->map(function ($student) {
+        $classPrefix = substr($student->classID, 0, 2); // Get first 2 letters of classID
+
+        // Determine the course based on classPrefix
+        $courseMapping = [
+            'PS' => 'Python Start',
+            'VP' => 'Visual Programming',
+            'CK' => 'Coding Knight',
+        ];
+
+        $course = $courseMapping[$classPrefix] ?? 'Unknown Course'; // Default if no match
+
+        // Find matching student in ILStudents
+        $ilStudent = ILStudents::where('student_name', $student->student_name)->first();
+
+        return $ilStudent ? (object) [
+            'id'              => $student->id, // Ensure 'id' is included
+            'student_name'    => $ilStudent->student_name,
+            'course'          => $course,
+            'age'             => $ilStudent->age,
+            'contact_number'  => $ilStudent->contact_number,
+            'email_address'   => $ilStudent->email_address,
+            'status'          => $ilStudent->status
+        ] : null; // Return null if no match
+    })->filter(); // Remove null values
+
+    return view('Admin.students_list', compact('students'));
 }
+
+public function studentsPerCourse()
+{
+    $courseMapping = [
+        'PS' => 'Python Start',
+        'PP' => 'Python Pro',
+        'CK' => 'Coding Knight',
+        'UD' => 'Unity Development',
+        'VP' => 'Visual Programming',
+        'DL' => 'Digital Literacy',
+        'GD' => 'Game Design',
+        'FD' => 'Frontend Development',
+        'CW' => 'Creating Websites'
+    ];
+
+    // Initialize all courses with a count of 0
+    $courseCounts = collect($courseMapping)->map(fn($name) => ['course' => $name, 'count' => 0]);
+
+    // Fetch all enrolled students and group them by course
+    $enrolledCourses = EnrolledStudent::all()->groupBy(function ($student) use ($courseMapping) {
+        $classPrefix = substr($student->classID, 0, 2); // Extract course prefix
+        return $courseMapping[$classPrefix] ?? 'Unknown Course';
+    })->map(function ($students, $course) {
+        return ['course' => $course, 'count' => $students->count()];
+    });
+
+    // Merge the counts, keeping zeros where there are no students
+    $courses = $courseCounts->map(function ($course) use ($enrolledCourses) {
+        return [
+            'course' => $course['course'],
+            'count' => $enrolledCourses[$course['course']]['count'] ?? 0
+        ];
+    })->values();
+
+    return response()->json($courses);
+}
+
+public function teachersList(){
+    $teachers = Teacher::all();
+
+    return view('Admin.teachers', ['teachers' => $teachers]);
+}
+
+
+
+
 
 
     
