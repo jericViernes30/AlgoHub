@@ -62,7 +62,9 @@ Route::get('admin/schedules/class_enrollees/{courseID}', [ActivityController::cl
 Route::POST('admin/edit-start-date/{courseID}', [ActivityController::class, 'editStartDate'])->name('admin.edit_start_date');
 
 Route::get('admin/students', [ActivityController::class, 'studentsList'])->name('admin.students');
+Route::get('/admin/students-per-course', [ActivityController::class, 'studentsPerCourse'])->name('admin.students_per_course');
 
+Route::get('/admin/teachers-list', [ActivityController::class, 'teachersList'])->name('admin.teachers_list');
 
 
 
