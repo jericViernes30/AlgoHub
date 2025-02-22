@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('email_address');
             $table->string('contact_number');
+            $table->string('certified_courses');
             $table->string('username');
             $table->string('password');
             $table->timestamps();
