@@ -92,11 +92,13 @@ function editSchedule(data) {
     
     // Update the content of the edit_schedule div with rowData
     // For example, you can update input fields with rowData values
-    editScheduleDiv.querySelector('input[name="parents_name"]').value = rowData.parents_name;
+    editScheduleDiv.querySelector('input[name="parents_first_name"]').value = rowData.parents_first_name;
+    editScheduleDiv.querySelector('input[name="parents_last_name"]').value = rowData.parents_last_name;
     editScheduleDiv.querySelector('input[name="childs_name"]').value = rowData.childs_name;
     editScheduleDiv.querySelector('input[name="age"]').value = rowData.age;
     editScheduleDiv.querySelector('input[name="contact_number"]').value = rowData.contact_number;
     editScheduleDiv.querySelector('input[name="email_address"]').value = rowData.email_address;
+    editScheduleDiv.querySelector('input[name="id"]').value = rowData.id;
     
     // Show the edit_schedule div
     editScheduleDiv.classList.remove('hidden');
