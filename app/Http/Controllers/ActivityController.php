@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Models\AvailableCourse;
 use App\Models\Course;
 use App\Models\EnrolledStudent;
+use App\Models\ExpelledStudent;
 use App\Models\ILSchedule;
 use App\Models\ILStudents;
 use App\Models\SchedulesList;
@@ -13,6 +14,7 @@ use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Log;
 
 class ActivityController extends Controller
 {
@@ -59,12 +61,32 @@ class ActivityController extends Controller
         $schedule = Course::all();
         $enrolled = EnrolledStudent::all()->count();
         $walkIn = SchedulesList::all()->count();
+        $courses = [];
+
+        // Get all the inquired_courses per row
+        $inquiredCourses = SchedulesList::pluck('inquired_courses')->toArray();
+        
+        foreach ($inquiredCourses as $courseList) {
+            if ($courseList) {
+                // Separate comma-separated courses and trim spaces
+                $separatedCourses = array_map('trim', explode(',', $courseList));
+                
+                // Push each course into the courses array
+                foreach ($separatedCourses as $course) {
+                    $courses[] = $course;
+                }
+            }
+        }
+        
+        // Count occurrences of each course
+        $courseCounts = array_count_values($courses);
         $il = ILStudents::where('status', '!=', 'Pending')->count();
         return view('Admin/admin_dashboard', [
             'schedule' => $schedule,
             'enrolled_count' => $enrolled,
             'walkin_count' => $walkIn,
-            'il_count' => $il
+            'il_count' => $il,
+            'courseCounts' => $courseCounts,
         ]);
     }
 
@@ -119,38 +141,60 @@ class ActivityController extends Controller
     public function for_scheduling()
     {
         $course = AvailableCourse::all();
-        $scheduling = SchedulesList::all();
-        return view('Admin/for_scheduling', ['scheduling' => $scheduling, 'course' => $course]);
+        $scheduling = SchedulesList::take(8)->get();
+        $scheduledCount = SchedulesList::all()->count();
+        return view('Admin/for_scheduling', ['scheduling' => $scheduling, 'course' => $course, 'scheduled' => $scheduledCount]);
     }
 
     public function add_client(Request $request)
     {
+        // Check if child's name already exists
+        if (SchedulesList::where('childs_name', $request->input('childs_name'))->exists()) {
+            return redirect()->back()->with('addClientError', 'Child name already exists. Please enter a unique name.');
+        }
+
+        // Validate input
         $data = $request->validate([
-            'parents_name' => 'required',
-            'childs_name' => 'required',
-            'age' => 'required',
-            'contact_number' => 'required',
-            'email_address' => 'required',
-            'status' => 'nullable',
+            'parents_first_name' => 'required|string|max:255',
+            'parents_last_name' => 'required|string|max:255',
+            'childs_name' => 'required|string|max:255',
+            'age' => 'required|integer|min:0',
+            'contact_number' => 'required|string|max:20',
+            'email_address' => 'required|email|max:255',
+            'inquired_courses' => 'nullable|array',
+            'status' => 'nullable|string',
         ]);
 
+        // Convert inquired courses to a comma-separated string
+        $data['inquired_courses'] = isset($data['inquired_courses']) ? implode(', ', $data['inquired_courses']) : null;
+
+        // Set default status
         $data['status'] = $request->input('status', 'Pending');
 
-        SchedulesList::create($data);
-
-        return redirect()->route('admin.schedule.for_scheduling');
+        try {
+            $client = SchedulesList::create($data);
+            session()->flash('succees', 'Client added successfully.');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Log::error('Error adding client: ' . $e->getMessage()); // I-log ang error
+            session()->flash('addError', 'Failed to add client. Please try again.');
+            return redirect()->back();
+        }
+        
     }
 
     public function update_client(Request $request)
     {
-        $client = SchedulesList::where('parents_name', $request->input('parents_name'))->first();
+        $client = SchedulesList::where('id', $request->input('id'))->first();
         if ($client) {
             $client->update([
+                'parents_first_name' => $request->input('parents_first_name'),
+                'parents_last_name' => $request->input('parents_last_name'),
                 'childs_name' => $request->input('childs_name'),
                 'age' => $request->input('age'),
                 'contact_number' => $request->input('contact_number'),
                 'email_address' => $request->input('email_address'),
-                'status' => $request->input('status'),
+                'status' => 'Pending',
             ]);
 
             // Optionally, you can return a response indicating success
@@ -161,13 +205,13 @@ class ActivityController extends Controller
         }
     }
 
-    public function delete_client($parent_name)
+    public function delete_client($id)
     {
         // Delete the data
-        SchedulesList::where('parents_name', $parent_name)->delete();
+        SchedulesList::where('id', $id)->delete();
 
         // Redirect back to the current page
-        return redirect()->route('admin.schedule.for_scheduling');
+        return redirect()->route('admin.schedule.for_scheduling')->with('success', 'Client deleted succesfully.');
     }
 
     public function getSchedules($course)
@@ -216,7 +260,7 @@ class ActivityController extends Controller
 
         ILStudents::create($student);
 
-        return redirect()->route('admin.schedule.for_scheduling');
+        return redirect()->route('admin.schedule.for_scheduling')->with('success', 'Status updated succesfully.');
     }
 
     public function openIl($code)
@@ -398,21 +442,23 @@ class ActivityController extends Controller
 
 public function studentsList()
 {
+    $enrolledCount = EnrolledStudent::all()->count();
     $students = EnrolledStudent::all()->map(function ($student) {
         $classPrefix = substr($student->classID, 0, 2); // Get first 2 letters of classID
-
+    
         // Determine the course based on classPrefix
         $courseMapping = [
             'PS' => 'Python Start',
+            'PP' => 'Python Pro',
             'VP' => 'Visual Programming',
             'CK' => 'Coding Knight',
         ];
-
+    
         $course = $courseMapping[$classPrefix] ?? 'Unknown Course'; // Default if no match
-
+    
         // Find matching student in ILStudents
         $ilStudent = ILStudents::where('student_name', $student->student_name)->first();
-
+    
         return $ilStudent ? (object) [
             'id'              => $student->id, // Ensure 'id' is included
             'student_name'    => $ilStudent->student_name,
@@ -422,9 +468,10 @@ public function studentsList()
             'email_address'   => $ilStudent->email_address,
             'status'          => $ilStudent->status
         ] : null; // Return null if no match
-    })->filter(); // Remove null values
+    })->filter()->take(8); // Remove null values and limit to 10 results
+    $buttons = ceil($enrolledCount / 8); // Ensure it's rounded up to the nearest whole number
 
-    return view('Admin.students_list', compact('students'));
+    return view('Admin.students_list', ['students' => $students, 'enrolledCount' => $enrolledCount]);
 }
 
 public function studentsPerCourse()
@@ -467,6 +514,88 @@ public function teachersList(){
     $teachers = Teacher::all();
 
     return view('Admin.teachers', ['teachers' => $teachers]);
+}
+
+
+public function paginate($page)
+{
+    $perPage = 8;
+    $fetch = $page * $perPage;
+    $offset = ($fetch - $perPage); // Start from ($fetch - $perPage)
+
+    $enrolledCount = ILSchedule::count();
+
+    // Fetch only the required students for pagination
+    $students = EnrolledStudent::skip($offset)->take($perPage)->get()->map(function ($student) {
+        $classPrefix = substr($student->classID, 0, 2); // Get first 2 letters of classID
+
+        // Determine the course based on classPrefix
+        $courseMapping = [
+            'PS' => 'Python Start',
+            'PP' => 'Python Pro',
+            'VP' => 'Visual Programming',
+            'CK' => 'Coding Knight',
+        ];
+
+        $course = $courseMapping[$classPrefix] ?? 'Unknown Course'; // Default if no match
+
+        // Find matching student in ILStudents
+        $ilStudent = ILStudents::where('student_name', $student->student_name)->first();
+
+        return $ilStudent ? (object) [
+            'id'              => $student->id,
+            'student_name'    => $ilStudent->student_name,
+            'course'          => $course,
+            'age'             => $ilStudent->age,
+            'contact_number'  => $ilStudent->contact_number,
+            'email_address'   => $ilStudent->email_address,
+            'status'          => $ilStudent->status
+        ] : null;
+    })->filter(); // Remove null values
+
+    return response()->json([
+        'students' => $students->values(),
+        'total' => $enrolledCount,
+        'page' => $page,
+        'perPage' => $perPage,
+        'fetch' => $fetch,
+        'offset' => $offset
+    ]);
+}
+
+public function paginateWalkIn($page)
+{
+    $perPage = 8;
+    $fetch = $page * $perPage;
+    $offset = ($fetch - $perPage); // Start from ($fetch - $perPage)
+
+    $enrolledCount = SchedulesList::count();
+
+    // Fetch only the required students for pagination
+    $students = SchedulesList::skip($offset)->take($perPage)->get();
+
+    return response()->json([
+        'students' => $students->values(),
+        'total' => $enrolledCount,
+        'page' => $page,
+        'perPage' => $perPage,
+        'fetch' => $fetch,
+        'offset' => $offset
+    ]);
+}
+
+public function expelStudent($studentName, $course){
+    $data = [
+        'student_name' => $studentName,
+        'course' => $course,
+    ];
+
+    ExpelledStudent::create($data);
+    $student = ILStudents::where('student_name', $studentName)->first();
+    $student->status = 'Expelled';
+    $student->save();
+
+    return redirect()->route('admin.students')->with('success', 'Student expelled successfully.');
 }
 
 
