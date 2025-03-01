@@ -3,7 +3,8 @@
 <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/5bf9be4e76.js" crossorigin="anonymous"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="{{ asset('js/scripts.js') }}"></script>
@@ -42,96 +43,83 @@
 </head>
 <body class="bg-[#ececec]">
     <div class="w-full h-screen flex flex-col">
-        <div class="w-full bg-[#833ae0] flex py-5">
+        <div class="w-full bg-[#632c7d] flex justify-end items-center py-2">
+            <a href="{{route('admin.logout')}}" class="text-white px-10">Logout</a>
         </div>
         <div class="w-full flex h-screen bg-[#F2EBFB]">
             <div class="w-1/6 h-full bg-[#f9f9f9] text-sm">
-                <div class="w-full mx-auto flex gap-5 items-center hover:bg-[#F2EBFB] mt-28">
-                    <a href="{{route('admin.dashboard')}}" class="text-[#48494b] px-5 w-full py-2">Dashboard</a>
+                <div class="w-full mb-8 mt-10">
+                    <img src="https://lms.alg.academy/auth/v3/img/logo.d1092e37.svg" alt="Lesson Logo" class="w-3/4 block mx-auto">
+                </div>
+                <div class="w-full mx-auto flex gap-5 items-center">
+                    <a href="{{route('admin.dashboard')}}" class="text-[#48494b] px-5 hover:bg-[#F2EBFB] w-full py-2">Dashboard</a>
                 </div>
                 <div>
                     <div onclick="courseDropdown()">
-                        <a href="{{route('admin.courses')}}" class="w-full flex items-center justify-around px-5 relative hover:cursor-pointer bg-[#F2EBFB] border-l-4 rounded-sm border-[#833ae0]">
-                            <p class=" w-full py-2">Courses</p>
+                        <a href="{{route('admin.courses')}}" class="w-full flex items-center justify-around px-5 relative bg-[#F2EBFB] border-l-4 rounded-sm border-[#632c7d]">
+                            <p id="course_dd" href="" class="w-full py-2 text-[#48494b] hover:cursor-pointer">Courses</p>
                         </a>
                     </div>
 
                     <div onclick="studentsDropdown()">
-                        <div class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                            <p href="" class=" w-full py-2">Students</p>
-                        </div>
+                        <a href="{{route('admin.students')}}" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
+                            <p id="students_dd" class=" w-full py-2 text-[#48494b]">Students</p>
+                        </a>
+                    </div>
+
+                    <div onclick="">
+                        <a href="{{route('admin.teachers_list')}}" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
+                            <p id="students_dd" class=" w-full py-2 text-[#48494b]">Teachers</p>
+                        </a>
                     </div>
 
                     <div onclick="scheduleDropdown()">
-                        <div class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                            <p href="" class=" w-full py-2">Schedule</p>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+                        <div class="w-full flex items-center justify-around px-5 relative py-2 hover:bg-[#F2EBFB] hover:cursor-pointer">
+                            <p id="sched_dd" class=" w-full text-[#48494b]">Schedule</p>
+                            <svg id="arrow2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
                         </div>
                         <div id="schedules" class="hidden mb-5">
                             <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{route('admin.schedule')}}" class="py-2">Classes</a>
+                                <a href="{{ route('admin.schedule') }}" class="py-2 text-[#48494b] hover:cursor-pointer">Classes</a>
                             </div>
                             <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{route('admin.schedule')}}" class="py-2">Intro Lessons</a>
+                                <a href="{{route('admin.il_schedule')}}" class="py-2 text-[#48494b] hover:cursor-pointer">Intro Lessons</a>
+                            </div>
+                            <div class="w-full flex items-center px-10 relative mb-4 hover:bg-[#F2EBFB] hover:cursor-pointer">
+                                <a href="{{route('admin.schedule.for_scheduling')}}" class="py-2 text-[#48494b] hover:cursor-pointer">For Scheduling</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="w-full p-7">
+                <div class="w-fit flex gap-2 items-center justify-center mb-5 text-sm">
+                    <a class="text-[#632c7d]" href="{{route('admin.courses')}}">Courses</a>
+                    <i class="fa-solid fa-angle-right pt-[2px]"></i>
+                    <p class="pt-[1px]">The Coding Knight</p>
+                </div>
                 <p class="text-2xl font-medium">Course Details - The Coding Knight</p>
+                <p class="text-sm italic">32 lessons</p>
+                
                 <div class="w-full h-[550px] overflow-auto mt-5">
-                    {{-- module 1 --}}
-                    <p class="w-full px-6 text-sm py-4 bg-[#e7e7e7] text-[#888] uppercase rounded-tl-md rounded-tr-md">Module 1: Linear Algorithms</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 1. Executor and Algorithms ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 2. Programs and memory blocks ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 3. Learning to read and execute programs ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 4. Composing linear algorithms ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 5. Composing linear algorithms ENG</p>
-                    {{-- module 2 --}}
-                    <p class="w-full px-6 text-sm py-4 bg-[#e7e7e7] text-[#888] uppercase">MODULE 2. Loops</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 6. Getting acquainted with loops ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 7. Composing looped algorithms ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 8. Composing looped algorithms ENG</p>
-                    {{-- module 3 --}}
-                    <p class="w-full px-6 text-sm py-4 bg-[#e7e7e7] text-[#888] uppercase">MODULE 3. Getting aquaired with scratch jr</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 9. Introduction to the Scratch Jr environment ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 10. Scratch Jr. Events ("When the sprite is pressed down") and commands in the "Movement" section ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 11. Commands of the "Appearance" section ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 12. Loops. Review. Interactive project ENG</p>
-                    {{-- module 4 --}}
-                    <p class="w-full px-6 text-sm py-4 bg-[#e7e7e7] text-[#888] uppercase">MODULE 4. Events. Animation</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 13. Events. Programming of parallel (simultaneous) actions when running a project. ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 14. Programming automatic changes in scenes when running a project. ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 15. Creating animation (beginning). The appearance of characters at the start. Recording and using sounds in Scratch. ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 16. Creating animation (finalizing), demonstration of projects, reviewing the module topics. ENG</p>
-                    {{-- module 5 --}}
-                    <p class="w-full px-6 text-sm py-4 bg-[#e7e7e7] text-[#888] uppercase">MODULE 5. Messages</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 17. Messages. ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 18. Using messages in a game. ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 19. Programming buttons using messages. ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 20. Programming buttons to control the character. ENG</p>
+                    @if($lessons->isNotEmpty())
+                        @php
+                            $modules = $lessons->groupBy('topic');
+                        @endphp
 
-                    {{-- module 6 --}}
-                    <p class="w-full px-6 text-sm py-4 bg-[#e7e7e7] text-[#888] uppercase">MODULE 6. Condition (Touch) as an Event</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 21. Touching conditions. ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 22. Sending a message when touching ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 23. Creating a game with animation. Start ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 24. Creating a game with animation. Finalizing ENG</p>
-
-                    {{-- module 7 --}}
-                    <p class="w-full px-6 text-sm py-4 bg-[#e7e7e7] text-[#888] uppercase">MODULE 7. Implementation of Game Mechanics in a Group Choice Project</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 25. Selection and start of implementing a large group project. ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 26. Continuing the implementation of the group's large project. ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 27. Continuing the implementation of the group's project ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 28. Projects presentation ENG</p>
-
-                    {{-- module 8 --}}
-                    <p class="w-full px-6 text-sm py-4 bg-[#e7e7e7] text-[#888] uppercase">Module 8. Selection and Implementation of the Final Project</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 29. Selection and start of work on the final individual project of the course. ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 30. Creating the students' individual projects according to their choice ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 31. Creating the students' individual projects according to their choice ENG</p>
-                    <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">Lesson 32. Presentation of final projects. Awarding ENG</p>
+                        @foreach($modules as $moduleName => $moduleLessons)
+                            <p class="w-full px-6 text-sm py-4 bg-[#e7e7e7] text-[#888] uppercase rounded-tl-md rounded-tr-md">
+                                {{ $moduleName }}
+                            </p>
+                            @foreach($moduleLessons as $lesson)
+                                <p class="w-full px-6 text-sm py-4 bg-white border-b-2 border-[#e7e7e7]">
+                                    {{$lesson->code}} {{ $lesson->lesson }}
+                                </p>
+                            @endforeach
+                        @endforeach
+                    @else
+                        <p class="text-center text-gray-500">No lessons available for this course.</p>
+                    @endif
                 </div>
             </div>
         </div>
