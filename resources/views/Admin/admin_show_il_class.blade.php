@@ -8,6 +8,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="{{ asset('js/scripts.js') }}"></script>
+  <title>Introductory Class Details | AlgoHub</title>
+    <link rel="shortcut icon" href="{{asset('images/algo-logo.png')}}" type="image/x-icon">
   @vite('resources/css/app.css')
   <style>
     .slidedown {
@@ -45,7 +47,7 @@
     {{-- PROCEED --}}
     <div id="proceed" class="hidden w-2/6 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm z-10">
         <div class="w-full flex flex-col bg-[#f9f7fc] rounded-xl">
-            <div class="w-full flex justify-between bg-[#833ae0] p-4 rounded-tl-xl rounded-tr-xl">
+            <div class="w-full flex justify-between bg-[#632c7d] p-4 rounded-tl-xl rounded-tr-xl">
                 <p class="text-white">Select schedule for Enrollment</p>
                 <button onclick="closeProceedForm()" class="text-white flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="14" height="14" fill="#f9f9f9"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
@@ -116,13 +118,13 @@
                     @csrf
                     <div class="w-full flex flex-col gap-1 mb-4">
                         <label for="">Select schedule</label>
-                        <select name="course_ID" id="" class="w-full px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#833ae0] outline-none text-center">
+                        <select name="course_ID" id="" class="w-full px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#632c7d] outline-none text-center">
                             <option disabled selected>-- Select schedule --</option>
                         </select>
                     </div>
                     <input type="hidden" name="student_ID">
                     <input type="hidden" name="student_name">
-                    <button class="float-right w-1/4 py-2 bg-[#833ae0] text-white rounded-md">
+                    <button class="float-right w-1/4 py-2 bg-[#632c7d] text-white rounded-md">
                         Proceed
                     </button>
                 </form>
@@ -131,11 +133,14 @@
         </div>
     </div>
     <div id="body" class="w-full h-screen flex flex-col">
-        <div class="w-full bg-[#833ae0] flex py-5">
+        <div class="w-full bg-[#632c7d] flex py-5">
         </div>
         <div class="w-full flex h-screen bg-[#F2EBFB]">
             <div class="w-1/6 h-full bg-[#f9f9f9] text-sm">
-                <div class="w-full mx-auto flex gap-5 items-center mt-28">
+                <div class="w-full mb-8 mt-10">
+                    <img src="https://lms.alg.academy/auth/v3/img/logo.d1092e37.svg" alt="Lesson Logo" class="w-3/4 block mx-auto">
+                </div>
+                <div class="w-full mx-auto flex gap-5 items-center">
                     <a href="{{route('admin.dashboard')}}" class="text-[#48494b] px-5 w-full py-2">Dashboard</a>
                 </div>
                 <div>
@@ -148,6 +153,12 @@
                     <div onclick="studentsDropdown()">
                         <a href="" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
                             <p id="students_dd" class=" w-full py-2 text-[#48494b]">Students</p>
+                        </a>
+                    </div>
+
+                    <div onclick="">
+                        <a href="{{route('admin.teachers_list')}}" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
+                            <p id="students_dd" class=" w-full py-2 text-[#48494b]">Teachers</p>
                         </a>
                     </div>
 
@@ -262,7 +273,7 @@
                                                 </div>
                                             </td>
                                             <td class="w-1/5 p-2">
-                                                <button onclick="proceedToEnrollment('{{ json_encode($student) }}')" class="px-2 py-1 bg-[#833ae0] text-white rounded-sm text-xs">Proceed</button>
+                                                <button onclick="proceedToEnrollment('{{ json_encode($student) }}')" class="px-2 py-1 bg-[#632c7d] text-white rounded-sm text-xs">Proceed</button>
                                             </td>
                                         </tr>
                                     @endforeach
