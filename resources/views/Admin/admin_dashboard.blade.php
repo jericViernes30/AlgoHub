@@ -12,6 +12,8 @@
   <script src="https://kit.fontawesome.com/5bf9be4e76.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="{{ asset('js/scripts.js') }}"></script>
+    <title>AlgoHub</title>
+    <link rel="shortcut icon" href="{{asset('images/algo-logo.png')}}" type="image/x-icon">
   @vite('resources/css/app.css')
   <style>
     .slidedown {
@@ -47,12 +49,15 @@
 </head>
 <body class="bg-[#ececec]">
     <div class="w-full h-screen flex flex-col">
-        <div class="w-full bg-[#833ae0] flex justify-end items-center py-2">
+        <div class="w-full bg-[#632c7d] flex justify-end items-center py-2">
             <a href="{{route('admin.logout')}}" class="text-white px-10">Logout</a>
         </div>
-        <div class="w-full flex h-screen bg-[#F2EBFB]">
+        <div class="w-full flex h-[1300px]  bg-[#F2EBFB]">
             <div class="w-1/6 h-full bg-[#f9f9f9] text-sm">
-                <div class="w-full mx-auto flex gap-5 items-center mt-28 bg-[#F2EBFB] border-l-4 rounded-sm border-[#833ae0]">
+                <div class="w-full mb-8 mt-10">
+                    <img src="https://lms.alg.academy/auth/v3/img/logo.d1092e37.svg" alt="Lesson Logo" class="w-3/4 block mx-auto">
+                </div>
+                <div class="w-full mx-auto flex gap-5 items-center bg-[#F2EBFB] border-l-4 rounded-sm border-[#632c7d]">
                     <a href="{{route('admin.dashboard')}}" class="text-[#48494b] px-5 py-2 w-full">Dashboard</a>
                 </div>
                 {{-- navigations --}}
@@ -94,25 +99,25 @@
                     </div>
                 </div>
             </div>
-            <div class="w-full p-10">
+            <div class="w-full h-[1300px] overflow-auto p-10">
                 <p class="mb-10">Dashboard</p>
                 
                 <div class="w-full flex items-center justify-between gap-5">
-                    <div class="w-1/4 bg-white p-5 rounded-lg shadow-lg">
+                    <div onclick="window.location.href='{{route('admin.schedule.for_scheduling')}}'" class="w-1/4 bg-white p-5 rounded-lg shadow-lg hover:bg-[#d5c9e6] hover:cursor-pointer transition duration-200">
                         <p class="text-sm font-semibold">Walk-in clients</p>
-                        <p class="text-4xl pt-5 text-center font-medium text-[#833ae0]">{{$walkin_count}}</p>
+                        <p class="text-4xl pt-5 text-center font-medium text-[#632c7d]">{{$walkin_count}}</p>
                     </div>
-                    <div class="w-1/4 bg-white p-5 rounded-lg shadow-lg">
+                    <div class="w-1/4 bg-white p-5 rounded-lg shadow-lg hover:bg-[#d5c9e6] hover:cursor-pointer transition duration-200">
                         <p class="text-sm font-semibold">IL'ed students</p>
-                        <p class="text-4xl pt-5 text-center font-medium text-[#833ae0]">{{$il_count}}</p>
+                        <p class="text-4xl pt-5 text-center font-medium text-[rgb(99,44,125)]">{{$il_count}}</p>
                     </div>
-                    <div class="w-1/4 bg-white p-5 rounded-lg shadow-lg">
+                    <div onclick="window.location.href='{{route('admin.students')}}'" class="w-1/4 bg-white p-5 rounded-lg shadow-lg hover:bg-[#d5c9e6] hover:cursor-pointer transition duration-200">
                         <p class="text-sm font-semibold">Currently enrolled students</p>
-                        <p class="text-4xl pt-5 text-center font-medium text-[#833ae0]">{{$enrolled_count}}</p>
+                        <p class="text-4xl pt-5 text-center font-medium text-[#632c7d]">{{$enrolled_count}}</p>
                     </div>
-                    <div class="w-1/4 bg-white p-5 rounded-lg shadow-lg">
+                    <div class="w-1/4 bg-white p-5 rounded-lg shadow-lg hover:bg-[#d5c9e6] hover:cursor-pointer transition duration-200">
                         <p class="text-sm font-semibold">Total enrolled students</p>
-                        <p class="text-4xl pt-5 text-center font-medium text-[#833ae0]">{{$enrolled_count}}</p>
+                        <p class="text-4xl pt-5 text-center font-medium text-[#632c7d]">{{$enrolled_count}}</p>
                     </div>
                 </div>
 
@@ -182,26 +187,34 @@
                         <p class="text-center mb-2">Course inquiry rate</p>
                         <canvas id="courseInquiry" class="w-full"></canvas>
                         <script>
+                            // Fetch course data from PHP
+                            var courseCounts = <?php echo json_encode($courseCounts); ?>;
+                        
+                            // Extract labels (course names) and data (counts)
+                            var labels = Object.keys(courseCounts);
+                            var data = Object.values(courseCounts);
+                        
                             var ctx1 = document.getElementById('courseInquiry').getContext('2d');
                             var myChart1 = new Chart(ctx1, {
                                 type: 'doughnut',
                                 data: {
-                                    labels: ['The Coding Knight', 'Digital Literacy', 'Visual Programming', 'Game Design', 'Building Websites', 'Python Start', 'Python Pro', 'Unity Game Development', 'Front-end Development'],
+                                    labels: labels, // Use dynamic course names
                                     datasets: [{
                                         label: 'Enrollees',
-                                        data: [10, 4, 28, 16, 3, 27, 8, 5, 4],
+                                        data: data, // Use dynamic course counts
                                         borderWidth: 1
                                     }]
                                 },
                                 options: {
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true
+                                    plugins: {
+                                        legend: {
+                                            position: 'bottom'
                                         }
                                     }
                                 }
                             });
                         </script>
+                        
                     </div>
                 </div>
             </div>
