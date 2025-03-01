@@ -12,6 +12,8 @@
   <script src="https://kit.fontawesome.com/5bf9be4e76.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="{{ asset('js/scripts.js') }}"></script>
+  <title>Teacher | AlgoHub</title>
+    <link rel="shortcut icon" href="{{asset('images/algo-logo.png')}}" type="image/x-icon">
   @vite('resources/css/app.css')
   <style>
     .slidedown {
@@ -46,13 +48,190 @@
   </style>
 </head>
 <body class="bg-[#ececec]">
+    <div id="overlay" class="hidden absolute top-0 w-full h-screen z-10 bg-black opacity-70"></div>
+    <div id="edit_teacher" class="hidden w-2/6 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm z-20">
+        <div class="w-full flex flex-col bg-[#f9f7fc] rounded-xl">
+            <div class="w-full flex justify-between bg-[#632c7d] p-4 rounded-tl-xl rounded-tr-xl">
+                <p class="text-white">Add new Teacher</p>
+                <button id="close_form_edit" class="text-white flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="14" height="14" fill="#f9f9f9"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                </button>
+            </div>
+            <div class="w-full px-16 py-4">
+                <form action="{{route('teacher.edit')}}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="w-full flex gap-4">
+                        <div class="w-1/2 flex flex-col">
+                            <label for="" class="mb-1">First name</label>
+                            <input type="text" name="edit_first_name" class="w-full rounded-md px-2 py-1 mb-3 border border-[#a9a9a9] focus:border-[#632c7d] outline-none">
+                        </div>
+                        <div class="w-1/2 flex flex-col">
+                            <label for="" class="mb-1">Last name</label>
+                            <input type="text" name="edit_last_name" class="w-full rounded-md px-2 py-1 mb-3 border border-[#a9a9a9] focus:border-[#632c7d] outline-none">
+                        </div>
+                    </div>
+                    <div class="w-full flex flex-col mb-1">
+                        <label for="" class="mb-1">Contact Number</label>
+                        <input type="text" name="edit_contact_number" class="text-center w-full rounded-md px-2 py-1 mb-3 border border-[#a9a9a9] focus:border-[#632c7d] outline-none">
+                    </div>
+                    <div class="w-full flex flex-col mb-1">
+                        <label for="" class="mb-1">Email Address</label>
+                        <input type="email" name="edit_email_address" class="text-center w-full rounded-md px-2 py-1 mb-3 border border-[#a9a9a9] focus:border-[#632c7d] outline-none">
+                    </div>
+                    <p class="mb-2">Certified Courses: <span class="text-gray-500 text-sm">(Check all applies)</span></p>
+                    <div class="w-full h-fit flex flex-wrap gap-2 mb-4">
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="edit_certified_courses[]" id="course1" value="Coding Knight">
+                            <label for="" class="">Coding Knight</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="edit_certified_courses[]" id="course2" value="Digital Literacy">
+                            <label for="" class="">Digital Literacy</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="edit_certified_courses[]" id="course3" value="Visual Programming">
+                            <label for="" class="">Visual Programming</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="edit_certified_courses[]" id="course4" value="Game Design">
+                            <label for="" class="">Game Design</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="edit_certified_courses[]" id="course5" value="Graphic Design">
+                            <label for="" class="">Graphic Design</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="edit_certified_courses[]" id="course6" value="Creating Websites">
+                            <label for="" class="">Creating Websites</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="edit_certified_courses[]" id="course7" value="Unity Game Development">
+                            <label for="" class="">Unity Game Development</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="edit_certified_courses[]" id="course8" value="Frontend Development">
+                            <label for="" class="">Frontend Development</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="edit_certified_courses[]" id="course9" value="Python Start">
+                            <label for="" class="">Python Start</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="edit_certified_courses[]" id="course10" value="Python Pro">
+                            <label for="" class="">Python Pro</label>
+                        </div>
+                    </div>
+                    <input type="hidden" name="id" value="">
+                    <div class="w-full flex justify-end">
+                        <button type="submit" class="w-1/4 py-2 bg-[#632c7d] text-white rounded-md">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="add_teacher" class="hidden w-2/6 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm z-20">
+        <div class="w-full flex flex-col bg-[#f9f7fc] rounded-xl">
+            <div class="w-full flex justify-between bg-[#632c7d] p-4 rounded-tl-xl rounded-tr-xl">
+                <p class="text-white">Add new Teacher</p>
+                <button id="close_form_add" class="text-white flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="14" height="14" fill="#f9f9f9"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                </button>
+            </div>
+            <div class="w-full px-16 py-4">
+                <form action="{{route('teacher.create')}}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="w-full flex gap-4">
+                        <div class="w-1/2 flex flex-col">
+                            <label for="" class="mb-1">First name</label>
+                            <input type="text" name="first_name" class="w-full rounded-md px-2 py-1 mb-3 border border-[#a9a9a9] focus:border-[#632c7d] outline-none">
+                        </div>
+                        <div class="w-1/2 flex flex-col">
+                            <label for="" class="mb-1">Last name</label>
+                            <input type="text" name="last_name" class="w-full rounded-md px-2 py-1 mb-3 border border-[#a9a9a9] focus:border-[#632c7d] outline-none">
+                        </div>
+                    </div>
+                    <div class="w-full flex flex-col mb-1">
+                        <label for="" class="mb-1">Contact Number</label>
+                        <input type="text" name="contact_number" class="text-center w-full rounded-md px-2 py-1 mb-3 border border-[#a9a9a9] focus:border-[#632c7d] outline-none">
+                    </div>
+                    <div class="w-full flex flex-col mb-1">
+                        <label for="" class="mb-1">Email Address</label>
+                        <input type="email" name="email_address" class="text-center w-full rounded-md px-2 py-1 mb-3 border border-[#a9a9a9] focus:border-[#632c7d] outline-none">
+                    </div>
+                    <div class="w-full flex items-center gap-2">
+                        <div class="w-1/2 flex flex-col">
+                            <label for="" class="mb-1">Username</label>
+                            <input type="text" name="username" class="w-full rounded-md px-2 py-1 mb-3 border border-[#a9a9a9] focus:border-[#632c7d] outline-none">
+                        </div>
+                        <div class="w-1/2 flex flex-col">
+                            <label for="" class="mb-1">Password</label>
+                            <input type="text" name="password" class="w-full rounded-md px-2 py-1 mb-3 border border-[#a9a9a9] focus:border-[#632c7d] outline-none">
+                        </div>
+                    </div>
+                    <p class="mb-2">Certified Courses: <span class="text-gray-500 text-sm">(Check all applies)</span></p>
+                    <div class="w-full h-fit flex flex-wrap gap-2 mb-4">
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="certified_courses[]" id="course1" value="Coding Knight">
+                            <label for="" class="">Coding Knight</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="certified_courses[]" id="course2" value="Digital Literacy">
+                            <label for="" class="">Digital Literacy</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="certified_courses[]" id="course3" value="Visual Programming">
+                            <label for="" class="">Visual Programming</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="certified_courses[]" id="course4" value="Game Design">
+                            <label for="" class="">Game Design</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="certified_courses[]" id="course5" value="Graphic Design">
+                            <label for="" class="">Graphic Design</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="certified_courses[]" id="course6" value="Creating Websites">
+                            <label for="" class="">Creating Websites</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="certified_courses[]" id="course7" value="Unity Game Development">
+                            <label for="" class="">Unity Game Development</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="certified_courses[]" id="course8" value="Frontend Development">
+                            <label for="" class="">Frontend Development</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="certified_courses[]" id="course9" value="Python Start">
+                            <label for="" class="">Python Start</label>
+                        </div>
+                        <div class="w-fit flex gap-1 items-center">
+                            <input type="checkbox" name="certified_courses[]" id="course10" value="Python Pro">
+                            <label for="" class="">Python Pro</label>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <p class="mb-1">Select Picture:</p>
+                        <input type="file" name="profile" id="">
+                    </div>
+                    <div class="w-full flex justify-end">
+                        <button type="submit" class="w-1/4 py-2 bg-[#632c7d] text-white rounded-md">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <div class="w-full h-screen flex flex-col">
-        <div class="w-full bg-[#833ae0] flex justify-end items-center py-2">
+        <div class="w-full bg-[#632c7d] flex justify-end items-center py-2">
             <a href="{{route('admin.logout')}}" class="text-white px-10">Logout</a>
         </div>
         <div class="w-full flex h-screen bg-[#F2EBFB]">
             <div class="w-1/6 h-full bg-[#f9f9f9] text-sm">
-                <div class="w-full mx-auto flex gap-5 items-center mt-28">
+                <div class="w-full mb-8 mt-10">
+                    <img src="https://lms.alg.academy/auth/v3/img/logo.d1092e37.svg" alt="Lesson Logo" class="w-3/4 block mx-auto">
+                </div>
+                <div class="w-full mx-auto flex gap-5 items-center">
                     <a href="{{route('admin.dashboard')}}" class="text-[#48494b] px-5 py-2 w-full">Dashboard</a>
                 </div>
                 {{-- navigations --}}
@@ -70,7 +249,7 @@
                     </div>
 
                     <div onclick="">
-                        <a href="" class="w-full flex items-center justify-around px-5 relative bg-[#F2EBFB] border-l-4 rounded-sm border-[#833ae0] hover:cursor-pointer">
+                        <a href="" class="w-full flex items-center justify-around px-5 relative bg-[#F2EBFB] border-l-4 rounded-sm border-[#632c7d] hover:cursor-pointer">
                             <p id="students_dd" class=" w-full py-2 text-[#48494b]">Teachers</p>
                         </a>
                     </div>
@@ -97,15 +276,15 @@
             <div class="w-full p-10">
                 <div class="w-full">
                     <div class="w-full mx-auto bg-[#f9f9f9] rounded-xl p-4 text-sm">
-                        <p class="text-lg font-medium mb-4">Teachers List</p>
-                        <div class="w-full flex justify-end mb-3">
-                            {{-- <button onclick="showAddClient()" class="px-4 bg-[#833ae0] rounded-sm py-1 text-white flex items-center justify-center gap-2">
+                        <p class="text-lg font-medium mb-2">Teachers List</p>
+                        <div class="w-full flex justify-end">
+                            <button id="add_teacher_btn" class="px-4 bg-[#632c7d] rounded-sm py-1 text-white flex items-center justify-center gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="14" height="14" fill="white"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
                                 <p>Add new</p>
-                            </button> --}}
+                            </button>
                         </div>
     
-                        <table class="w-full border-collapse mt-10">
+                        <table class="w-full border-collapse mt-5">
                             <tr class="bg-[#F2EBFB] text-left">
                                 <th class="w-1/12 p-2">Image</th>
                                 <th class="w-[12%] py-2">First name</th>
@@ -118,7 +297,8 @@
                             @foreach ($teachers as $teacher)
                                 <tr class="border-b border-[#d8d8d8]">
                                     <td class="w-1/12 py-2 px-2">
-                                        <img src="{{asset('images/account_test.png')}}" alt="" class="w-[45px] h-auto rounded-full bg-contain border-2 border-gray-700">
+                                        <img src="{{ asset('images/' . $teacher->profile) }}" alt="" class="w-[45px] h-auto rounded-full bg-contain border-2 border-gray-700">
+
                                     </td>
                                     <td class="w-[12%] py-2">{{$teacher->first_name}}</td>
                                     <td class="w-[12%] py-2">{{$teacher->last_name}}</td>
@@ -130,7 +310,7 @@
                                         @endphp
                                         {{$contact}}
                                     </td>
-                                    <td class="w-[18%] py-2">jericviernes06@gmail.com</td>
+                                    <td class="w-[18%] py-2">{{$teacher->email_address}}</td>
                                     <td class="w-[26.67] py-2 text-center">
                                         @php
                                             $courses = explode(',', $teacher->certified_courses);
@@ -144,10 +324,12 @@
                                                         case 'Python Start': $bgColor = 'bg-red-500'; break;
                                                         case 'Python Pro': $bgColor = 'bg-[#800000] text-white'; break;
                                                         case 'Visual Programming': $bgColor = 'bg-yellow-500'; break;
+                                                        case 'Graphic Design': $bgColor = 'bg-teal-500'; break;
                                                         case 'Coding Knight': $bgColor = 'bg-green-500'; break;
                                                         case 'Digital Literacy': $bgColor = 'bg-sky-500'; break;
                                                         case 'Game Design': $bgColor = 'bg-orange-500'; break;
-                                                        case 'Website Creation': $bgColor = 'bg-purple-500'; break;
+                                                        case 'Unity Game Development': $bgColor = 'bg-purple-700 text-white'; break;
+                                                        case 'Creating Websites': $bgColor = 'bg-purple-500'; break;
                                                         case 'Frontend Development': $bgColor = 'bg-blue-800 text-white'; break;
                                                         default: $bgColor = 'bg-gray-500';
                                                     }
@@ -160,23 +342,19 @@
                                     </td>
                                     <td class="w-[10%] p-2 text-center">
                                         <div class="flex items-center justify-center gap-3">
-                                            <button onclick="" class="
-                                                {{-- @php
-                                                    if($student->status == 'Scheduled' || $student->status == 'Enrolled'){
-                                                        echo 'cursor-not-allowed';
-                                                    }
-                                                @endphp"
-                                                @php
-                                                    if($student->status == 'Scheduled' || $student->status == 'Enrolled'){
-                                                        echo 'disabled';
-                                                    }
-                                                @endphp --}}
-                                                ">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="13" height="13"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>
-                                            </button>
-                                            <a href="#">
+                                            <a href="#" 
+                                                id="edit" 
+                                                class="edit-teacher"
+                                                data-id="{{ $teacher->id }}"
+                                                data-firstname="{{ $teacher->first_name }}"
+                                                data-lastname="{{ $teacher->last_name }}"
+                                                data-contact="{{ $teacher->contact_number }}"
+                                                data-email="{{ $teacher->email_address }}"
+                                                data-username="{{ $teacher->username }}"
+                                                data-courses="{{ $teacher->certified_courses }}"
+                                                data-profile="{{ asset('images/' . $teacher->profile) }}">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="13" height="13"><path d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z"/></svg>
-                                            </a>
+                                        </a>
                                             <a href="">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="13" height="13"><path d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z"/></svg>
                                             </a>
@@ -184,12 +362,65 @@
                                     </td>
                                 </tr>
                             @endforeach
-                                
                         </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function(){
+    $('#add_teacher_btn').on('click', function(){
+        $('#add_teacher').removeClass('hidden');
+        $('#overlay').removeClass('hidden');
+    });
+
+    $('#close_form_add').on('click', function(){
+        $('#add_teacher').addClass('hidden');
+        $('#overlay').addClass('hidden');
+    });
+    $('#close_form_edit').on('click', function(){
+        $('#edit_teacher').addClass('hidden');
+        $('#overlay').addClass('hidden');
+    });
+
+    // Use event delegation for dynamically added elements
+    $(document).on("click", ".edit-teacher", function() {
+        $('#edit_teacher').removeClass('hidden')
+        $('#overlay').removeClass('hidden')
+        let teacherId = $(this).data("id");
+        let firstName = $(this).data("firstname");
+        let lastName = $(this).data("lastname");
+        let contact = $(this).data("contact");
+        let email = $(this).data("email");
+        let username = $(this).data("username");
+        let courses = $(this).data("courses").toString().split(",");
+        let profile = $(this).data("profile");
+
+        // Populate form fields
+        $("input[name='edit_first_name']").val(firstName);
+        $("input[name='id']").val(teacherId);
+        $("input[name='edit_last_name']").val(lastName);
+        $("input[name='edit_contact_number']").val(contact);
+        $("input[name='edit_email_address']").val(email);
+
+        // Uncheck all checkboxes first
+        $("input[name='edit_certified_courses[]']").prop("checked", false);
+
+        // Check the relevant courses
+        courses.forEach(course => {
+            $(`input[name='edit_certified_courses[]'][value='${course.trim()}']`).prop("checked", true);
+        });
+
+        // Show profile image if available
+        if (profile) {
+            $("#profilePreview").attr("src", profile).show();
+        } else {
+            $("#profilePreview").hide(); // Hide if no image
+        }
+    });
+});
+
+    </script>
 </body>
 </html>
