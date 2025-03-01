@@ -12,13 +12,13 @@ class SchedulesList extends Model
     protected $table = 'scheduling_lists';
 
     protected $fillable = [
-        'parents_name',
+        'parents_first_name',
+        'parents_last_name',
         'childs_name',
         'age',
         'contact_number',
         'email_address',
+        'inquired_courses',
         'status'
     ];
-
-    public $timestamps = false;
 }
