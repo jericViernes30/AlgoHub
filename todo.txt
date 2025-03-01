@@ -1,2 +1,5 @@
-- delete clients
-- 
+- report daily monthly
+- print schedule
+- expel
+- multiple courses of student
+- staff account
