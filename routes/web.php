@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,8 +39,15 @@ Route::get('admin/get-schedules/{course}', [ActivityController::class, 'getSched
 Route::post('/admin/proceed-to-il', [ActivityController::class, 'proceedToIl'])->name('admin.proceed');
 Route::get('/admin/courses', [ActivityController::class, 'courses'])->name('admin.courses');
 
-Route::get('admin/course/The-Coding-Knight', [ActivityController::class, 'TheCodingKnight'])->name('admin.coding_knight');
-Route::get('admin/course/Visual-Programming', [ActivityController::class, 'VisualProgramming'])->name('admin.visual_programming');
+Route::get('admin/course/The-Coding-Knight', [CourseController::class, 'codingKnight'])->name('admin.coding_knight');
+Route::get('admin/course/Visual-Programming', [CourseController::class, 'visualProgramming'])->name('admin.visual_programming');
+Route::get('admin/course/Python-Start-1', [CourseController::class, 'pythonStart1'])->name('admin.python_start1');
+Route::get('admin/course/Python-Start-2', [CourseController::class, 'pythonStart2'])->name('admin.python_start2');
+Route::get('admin/course/Python-Pro-1', [CourseController::class, 'pythonPro1'])->name('admin.python_pro1');
+Route::get('admin/course/Python-Pro-2', [CourseController::class, 'pythonPro2'])->name('admin.python_pro2');
+Route::get('admin/course/Building-Websites', [CourseController::class, 'buildingWebsites'])->name('admin.building_websites');
+Route::get('admin/course/Game-Design', [CourseController::class, 'gameDesign'])->name('admin.game_design');
+Route::get('admin/course/Digital-Literacy', [CourseController::class, 'digitalLiteracy'])->name('admin.digital_literacy');
 
 Route::get('/admin/open_il/{code}', [
     ActivityController::class, 'openIl',
@@ -66,13 +74,32 @@ Route::get('/admin/students-per-course', [ActivityController::class, 'studentsPe
 
 Route::get('/admin/teachers-list', [ActivityController::class, 'teachersList'])->name('admin.teachers_list');
 
+Route::get('/admin/students/paginate/{page}', [ActivityController::class, 'paginate'])->name('admin.paginate_students');
+Route::get('/admin/students/paginate-walkin/{page}', [ActivityController::class, 'paginateWalkIn'])->name('admin.paginate_walkin');
+
+Route::get('/admin/students/expel/{student}/{course}', [ActivityController::class, 'expelStudent'])->name('admin.expel_student');
+
 
 
 Route::get('teacher/dashboard', [TeacherController::class, 'teacherDashboard'])->name('teacher.dashboard');
 Route::get('/teacher/class/{code}', [TeacherController::class, 'classDetail'])->name('teacher.classDetail');
 Route::get('/teacher/il/{code}', [TeacherController::class, 'ILDetails'])->name('teacher.ILDetails');
-Route::get('/teacher/create', [TeacherController::class, 'createTeacher'])->name('teacher.create');
+Route::POST('/teacher/create', [TeacherController::class, 'createTeacher'])->name('teacher.create');
+Route::POST('/teacher/edit', [TeacherController::class, 'editTeacher'])->name('teacher.edit');
 Route::post('/teacher/login', [TeacherController::class, 'loginTeacher'])->name('teacher.login.post');
 Route::get('/teacher/logout', [TeacherController::class, 'logoutTeacher'])->name('teacher.logout');
 Route::get('/teacher/il_schedule', [TeacherController::class, 'ILSchedule'])->name('teacher.il_schedule');
 Route::get('/teacher/il_details/update', [TeacherController::class, 'updateIlDetails'])->name('teacher.update_il_details');
+
+Route::get('teacher/course/{name}', [TeacherController::class, 'getCourse'])->name('teacher.get_course');
+
+Route::get('teacher/profile', [TeacherController::class, 'profile'])->name('teacher.profile');
+
+Route::post('teacher/update-password', [TeacherController::class, 'updatePassword'])->name('teacher.update_password');
+
+
+
+
+
+Route::get('/reports/daily', [ReportController::class, 'generateDailyReportPDF'])->name('report.daily');
+Route::get('/reports/monthly', [ReportController::class, 'generateMonthlyReportPDF'])->name('report.monthly');
