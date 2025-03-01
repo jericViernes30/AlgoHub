@@ -8,6 +8,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="{{ asset('js/scripts.js') }}"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <title>Class Details | AlgoHub</title>
+    <link rel="shortcut icon" href="{{asset('images/algo-logo.png')}}" type="image/x-icon">
   @vite('resources/css/app.css')
   <style>
     .slidedown {
@@ -43,12 +45,15 @@
 </head>
 <body class="bg-[#ececec] text-sm">
     <div id="body" class="w-full h-screen flex flex-col z-0">
-        <div class="w-full bg-[#833ae0] flex justify-end items-center py-2">
+        <div class="w-full bg-[#632c7d] flex justify-end items-center py-2">
             <a href="{{route('admin.logout')}}" class="text-white px-10">Logout</a>
         </div>
         <div class="w-full flex h-screen bg-[#F2EBFB]">
             <div class="w-1/6 h-full bg-[#f9f9f9] text-sm">
-                <div class="w-full mx-auto flex gap-5 items-center mt-28">
+                <div class="w-full mb-8 mt-10">
+                    <img src="https://lms.alg.academy/auth/v3/img/logo.d1092e37.svg" alt="Lesson Logo" class="w-3/4 block mx-auto">
+                </div>
+                <div class="w-full mx-auto flex gap-5 items-center">
                     <a href="{{route('admin.dashboard')}}" class="text-[#48494b] px-5 w-full py-2">Dashboard</a>
                 </div>
                 <div>
@@ -61,6 +66,11 @@
                     <div onclick="studentsDropdown()">
                         <a href="#" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
                             <p id="students_dd" class=" w-full py-2 text-[#48494b]">Students</p>
+                        </a>
+                    </div>
+                    <div onclick="">
+                        <a href="{{route('admin.teachers_list')}}" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
+                            <p id="students_dd" class=" w-full py-2 text-[#48494b]">Teachers</p>
                         </a>
                     </div>
                     <div onclick="scheduleDropdown()">
