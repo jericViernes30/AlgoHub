@@ -9,5 +9,8 @@ class AvailableCourse extends Model
 {
     use HasFactory;
     protected $table = 'available_courses';
-
+    
+    protected $fillable = [
+        'course_name'
+    ];
 }

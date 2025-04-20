@@ -17,6 +17,7 @@ class Course extends Model
         'teacher_id',
         'day',
         'time_slot',
-        'start_date'
+        'start_date',
+        'status'
     ];
 }

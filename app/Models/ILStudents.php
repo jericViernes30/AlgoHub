@@ -11,6 +11,7 @@ class ILStudents extends Model
 
     protected $table = 'il_students';
     protected $fillable = [
+        'student_number',
         'code',
         'course',
         'student_name',
@@ -22,7 +23,8 @@ class ILStudents extends Model
     ];
 
     public function il_schedule()
-    {
-        return $this->belongsTo(ILSchedule::class, 'code', 'code');
-    }
+{
+    return $this->belongsTo(ILSchedule::class, 'code', 'code');
+}
+
 }

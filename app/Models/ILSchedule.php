@@ -11,15 +11,14 @@ class ILSchedule extends Model
 
     protected $table = 'all_il_schedules';
 
-    public $timestamps = false;
-
     protected $fillable = [
         'code',
         'course',
         'teacher',
         'day',
         'from',
-        'to'
+        'to',
+        'status'
     ];
 
     public function il_students()

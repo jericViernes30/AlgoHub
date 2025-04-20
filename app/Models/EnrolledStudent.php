@@ -12,6 +12,7 @@ class EnrolledStudent extends Model
     protected $table = 'enrolled_students';
 
     protected $fillable = [
+        'student_number',
         'student_name',
         'classID',
     ];

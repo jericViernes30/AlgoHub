@@ -12,6 +12,7 @@ class SchedulesList extends Model
     protected $table = 'scheduling_lists';
 
     protected $fillable = [
+        'transaction_id',
         'parents_first_name',
         'parents_last_name',
         'childs_name',
