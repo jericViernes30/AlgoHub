@@ -2,15 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AvailableCourse;
 use App\Models\Course;
 use App\Models\Lessons;
+use App\Models\Notification;
 use App\Models\SchedulesList;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CourseController extends Controller
 {
     public function add_class(Request $request)
 {
+    // Check if the requested day and time_slot already exist
+    $existingCourse = Course::where('day', $request->input('day'))
+        ->where('time_slot', $request->input('time_slot'))
+        ->where('status', 'Started')
+        ->exists();
+
+    if ($existingCourse) {
+        return redirect()->route('admin.schedule')->with('error', 'A course is already scheduled for this day and time slot.');
+    }
+
     $selectedOption = $request->input('teacher');
     [$teacherId, $firstName] = explode('|', $selectedOption);
 
@@ -18,12 +31,15 @@ class CourseController extends Controller
     $courseName = $request->input('course_name');
     if ($courseName === 'Unity Game Development') {
         $courseInitials = 'UD'; // Special case
+    } elseif ($courseName === 'Graphic Design') {
+        $courseInitials = 'GR'; // Special case
     } else {
         // General logic for extracting initials
         $courseInitials = collect(explode(' ', $courseName))
             ->map(fn($word) => strtoupper($word[0]))
             ->join('');
     }
+    
 
     // Count occurrences of the course name in the database and increment by 1
     $existingCount = Course::where('course_name', $courseName)->count() + 1;
@@ -50,12 +66,58 @@ class CourseController extends Controller
         'teacher_id' => $teacherId,
         'day' => $request->input('day'),
         'time_slot' => $request->input('time_slot'),
+        'status' => 'Started'
     ];
+
+    $notif = [
+        'teacher' => $teacherId,
+        'type' => 'New Class',
+        'course' => $courseName,
+        'code' => $courseID,
+        'date_time' => $request->input('day'),
+        'student_name' => 'N/A',
+        'status' => 'sent'
+    ];
+
+    Notification::create($notif);
 
     // Save the course to the database
     Course::create($data);
 
-    return redirect()->route('admin.schedule');
+    return redirect()->route('admin.schedule')->with('success', 'Course successfully added.');
+}
+
+public function deleteClassSchedule(Request $request)
+{
+    $courseID = $request->input('courseID');
+    Log::info($courseID);
+    // Find the course schedule
+    $schedule = Course::where('course_ID', $courseID)->first();
+    
+    if ($schedule) {
+        $schedule->update(['status' => 'Removed']); // Update status to 'Removed'
+
+        return response()->json(['success' => true, 'message' => 'Schedule marked as Removed.']);
+    }
+
+    return response()->json(['success' => false, 'message' => 'Schedule not found.'], 404);
+}
+
+public function courseDetails($course)
+{
+    $lessons = Lessons::where('course', $course)->where('year', 1)->get();
+    $lessonCount = $lessons->count();
+    return view('Admin.subjects.course', ['lessons' => $lessons, 'course' => $course, 'lessonCount' => $lessonCount]);
+}
+
+public function deleteCourse($course){
+    $lessons = Lessons::where('course', $course)->get();
+    foreach($lessons as $lesson){
+        $lesson->delete();
+    }
+    Course::where('course_name', $course)->delete();
+    AvailableCourse::where('course_name', $course)->delete();
+    return redirect()->route('admin.courses')->with('success', 'Course successfully deleted.');
 }
 
 public function codingKnight(){

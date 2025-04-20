@@ -48,25 +48,19 @@ class ReportController extends Controller
     return $pdf->download('Daily report |' . now()->format('F d, Y') . '.pdf');
 }
 
-public function generateMonthlyReportPDF(Request $request)
+public function generateMonthlyReportPDF($month)
 {
-    $month = Carbon::now();
-    $startOfMonth = $month->copy()->startOfMonth();
-    $endOfMonth = $month->copy()->endOfMonth();
+    $carbonMonth = Carbon::parse($month);
+    $startOfMonth = $carbonMonth->copy()->startOfMonth();
+    $endOfMonth = $carbonMonth->copy()->endOfMonth();
 
-    // Debugging Log
     Log::info("Fetching records from: $startOfMonth to $endOfMonth");
 
-    // Get only this month's scheduling records (walk-in clients)
+    // Get scheduling records for the selected month
     $scheduling = SchedulesList::whereBetween('created_at', [$startOfMonth, $endOfMonth])->get();
 
-    // Count total walk-ins for the month
     $scheduledCount = $scheduling->count();
-
-    // Count course inquiries only for this month
-    $inquiredCourses = SchedulesList::whereBetween('created_at', [$startOfMonth, $endOfMonth])
-        ->pluck('inquired_courses')
-        ->toArray();
+    $inquiredCourses = $scheduling->pluck('inquired_courses')->toArray();
 
     $courses = [];
     foreach ($inquiredCourses as $courseList) {
@@ -79,18 +73,26 @@ public function generateMonthlyReportPDF(Request $request)
     }
     $courseCounts = array_count_values($courses);
 
+    // If no records found, set empty values
+    if ($scheduling->isEmpty()) {
+        Log::info("No records found for $month. Generating a blank report.");
+        $scheduledCount = 0;
+        $courseCounts = [];
+    }
+
     // Debugging Log
     Log::info("Total Walk-ins: $scheduledCount");
     Log::info("Course Inquiries: " . json_encode($courseCounts));
 
-    // Get base64 image data from request (sent via AJAX)
-    $chartImage = $request->input('chart_image');
+    // Generate the PDF
+    $pdf = Pdf::loadView('reports.monthly', compact('scheduling', 'scheduledCount', 'courseCounts'));
 
-    // Pass data to the view
-    $pdf = Pdf::loadView('reports.monthly', compact('scheduling', 'scheduledCount', 'courseCounts', 'chartImage'));
-
-    return $pdf->download('Monthly report | ' . $month->format('F Y') . '.pdf');
+    return $pdf->download("Monthly_Report_{$month}.pdf");
 }
+
+
+
+
 
 
 
