@@ -3,3 +3,22 @@
 - expel
 - multiple courses of student
 - staff account
+
+
+ @php
+    $today = now()->format('l'); // Get today's day (e.g., Monday, Tuesday)
+    $isDisabled = $today !== $il_schedule->day; // Check if today is not the scheduled day
+@endphp
+
+    <select 
+    onchange="handleAction(this, '{{ json_encode($student) }}')" 
+    class="px-2 py-1 bg-[#632c7d] text-white rounded-sm text-xs dropdown"
+    @if($isDisabled) disabled @endif 
+    title="{{ $isDisabled ? 'This action is only available on ' . $il_schedule->day : '' }}"
+    >
+    <option selected disabled class="bg-white">Choose action</option>
+    <option value="proceed" class="bg-white text-black">Proceed</option>
+    <option value="archive" class="bg-white text-black" data-studentName="{{ $student->student_name }}">
+        Archive
+    </option>
+</select>

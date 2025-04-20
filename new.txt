@@ -1,0 +1,64 @@
+
+
+2. Sa teacher list - yung certificate number (wala naman certificate number certificate nalang) 
+
+
+
+
+
+
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    Options -MultiViews
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=u147338841_algohub
+DB_USERNAME=u147338841_algo_user
+DB_PASSWORD=Jj_101820
+https://algorithmics-nuvali.com/
+
+6. tapos yung schedule sa class gusto nya ganon din UI ng sa IL - done
+3. Forget Password need teacher magveverify sa email nila - done
+1. Time availability - yung nakalagay dapat sa  system yung oras lang ng open ng algo at kung hanggang anong oras - done
+4. Classification sa walk in client - done
+8. maglagay ng error message sa input text at message na dapat required lagyan sa tadd teacher - done
+10. mag add ng notif sa teacher na may new schedule hindi lang student - done
+7. session yung bawal makapag open ng same account sa browser - done
+11. Kung ano ang cinlick na course sa inquire course yun lang dapat lalabas na choices kapag magpapa schedule ng IL - done
+5. Yung admin, username lang daw ibibigay sa teacher tapos yung teacher na yung gagawa ng password nila para sa account
+*tapos pwede daw admin yung magreset ng password
+
+
+
+
+
+4. Alisin ang insert picture, gawin automatic icon. Sa teacher account lang pwede mag change icon.
+
+5. Maglagay rin error warning na hindi nag add ang teacher account kasi kulang ang mga nilagay
+
+Fix: Course code (as certification proof): lagyan ng assigned courses under teachers profile para dito na lang magbase kapag mag schedule ng class admin
+
+
+
+Done:
+2. session, yung hindi multiple log in sa browser
+6. Notification sa teacher account na meron sila new schedule 
+7. Fix: hindi na pipindot yung schedule sa regular class
+8. Fix: Nalabas sa teacher "already logged in on another tab" kahit wala naman
+9. IL schedule - non clickable yung action pag wala pa yung scheduled day. Same sa admin side 
+3. Dashboard course enrollees graph dapat kung ano lang
+1. client: transaction code (date of inquiry + initials of name)
+student: student number (date of enrollment + initials of name)
+Fix: same dapat color ng courses sa dashboard "enrollees graph at course inquiry rate"
