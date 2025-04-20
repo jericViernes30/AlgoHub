@@ -46,7 +46,60 @@
 <body class="bg-[#ececec] h-fit">
     <div class="w-full h-screen flex flex-col">
         <div class="w-full bg-[#632c7d] flex py-2">
-            <div class="w-11/12 mx-auto flex justify-end">
+            <div class="w-11/12 mx-auto flex gap-5 justify-end">
+                @include('partials.notifs')
+                <script>
+                    $(document).ready(function () {
+                        function fetchNotifications() {
+                            $.ajax({
+                                url: "{{ route('teacher.notifications') }}", // Replace with your actual route
+                                method: "GET",
+                                dataType: "json",
+                                success: function (data) {
+                                    console.log(data);
+                
+                if (data.message == 'true') {
+                    $("#notifBadge").removeClass('hidden'); // Show badge with count
+                } else {
+                    $("#notifBadge").addClass('hidden'); // Hide badge if no notifications
+                }
+                                },
+                                error: function () {
+                                    console.error("Failed to fetch notifications.");
+                                }
+                            });
+                        }
+                
+                        // Fetch notifications every 1 second
+                        setInterval(fetchNotifications, 1000);
+                    });
+                </script>
+                <script>
+                    $(document).ready(function () {
+                        $('#notifButton').on('click', function () {
+                            $('#notifs').toggleClass('hidden');
+                
+                            // Mark notifications as seen when the panel opens
+                            if (!$('#notifs').hasClass('hidden')) {
+                                var teacherID = $('#notifButton').data('teacherid'); // Get teacher ID dynamically
+                                
+                                $.ajax({
+                                    url: "{{ route('teacher.seenNotif', ':teacher') }}".replace(':teacher', teacherID),
+                                    type: "GET",
+                                    success: function(response) {
+                                        console.log(response.message);
+                                        $('#notifBadge').addClass('hidden'); // Hide the red dot when seen
+                                    },
+                                    error: function(xhr) {
+                                        console.log('Error:', xhr.responseText);
+                                    }
+                                });
+                            }
+                        });
+                    });
+                </script>
+                 
+                
                 <div class="relative w-fit flex gap-4 items-center justify-center">
                     <p class="text-sm font-medium text-white uppercase">{{$teacher->last_name}} {{$teacher->first_name}}</p>
                 </div>
@@ -118,7 +171,11 @@
                         <div>
                             <div class="flex gap-5 mb-2">
                                 <p id="" class="text-right w-[80px]">Group Start</p>
-                                <p id="start" class="text-gray-900 font-medium">{{ \Carbon\Carbon::parse($class->start_date)->format('d.m.Y') }} <span id="timeLesson"></span></p>
+                                <p id="start" class="text-gray-900 font-medium">
+                                    {{ $class->start_date ? \Carbon\Carbon::parse($class->start_date)->format('d.m.Y') : 'No start date' }} 
+                                    <span id="timeLesson" class="{{ $class->start_date ? '' : 'hidden'}}"></span>
+                                </p>
+                                
                                 
                             </div>
                             <div class="flex gap-5 mb-2">
@@ -128,44 +185,57 @@
                             
                             <script>
                                 document.addEventListener('DOMContentLoaded', function () {
-                                    // Pass PHP variables to JavaScript
-                                    const startDate = {!! json_encode($class->start_date) !!};
-                                    const timeSlot = {!! json_encode($class->time_slot) !!};
-                            
-                                    // Map the time slot to corresponding times
-                                    let time = '';
-                                    switch (timeSlot) {
-                                        case 'first': time = "11:00"; break;
-                                        case 'second': time = "13:00"; break;
-                                        case 'third': time = "15:00"; break;
-                                        case 'fourth': time = "17:00"; break;
-                                        default: time = "Unknown Time"; break;
-                                    }
-                            
-                                    // Parse start date and today's date
-                                    let currentDate = new Date();
-                                    let lessonDate = new Date(startDate);
-                            
-                                    // If today's date is >= lesson date, increment by 7 days until it's in the future
-                                    while (currentDate >= lessonDate) {
-                                        lessonDate.setDate(lessonDate.getDate() + 7);
-                                    }
-                                    const formattedDate = lessonDate.toLocaleDateString('en-GB', {
-                                        day: '2-digit',
-                                        month: '2-digit',
-                                        year: 'numeric',
-                                    }).replace(/\//g, '.'); // Replace slashes with dots
-                                    const nextLesson = `${formattedDate} ${time}`;
+    // Pass PHP variables to JavaScript safely
+    const startDate = {!! json_encode($class->start_date) !!} || null;
+    const timeSlot = {!! json_encode($class->time_slot) !!} || '';
 
-                            
-                                    // Update the #nextLesson element with the calculated date
-                                    document.getElementById('nextLesson').textContent = nextLesson;
-                            
-                                    // Debugging
-                                    console.log("Start Date:", startDate);
-                                    console.log("Current Date:", currentDate);
-                                    console.log("Next Lesson Date:", lessonDate);
-                                });
+    // Map the time slot to corresponding times
+    let time = '';
+    switch (timeSlot) {
+        case 'first': time = "11:00"; break;
+        case 'second': time = "13:00"; break;
+        case 'third': time = "15:00"; break;
+        case 'fourth': time = "17:00"; break;
+        default: time = "Unknown Time"; break;
+    }
+
+    if (!startDate) {
+        console.log("Start Date is null. No next lesson calculated.");
+        document.getElementById('nextLesson').textContent = "No scheduled lesson";
+        return;
+    }
+
+    // Parse start date and today's date
+    let currentDate = new Date();
+    let lessonDate = new Date(startDate);
+
+    if (isNaN(lessonDate.getTime())) {
+        console.log("Invalid start date.");
+        document.getElementById('nextLesson').textContent = "Invalid start date";
+        return;
+    }
+
+    // If today's date is >= lesson date, increment by 7 days until it's in the future
+    while (currentDate >= lessonDate) {
+        lessonDate.setDate(lessonDate.getDate() + 7);
+    }
+
+    const formattedDate = lessonDate.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    }).replace(/\//g, '.'); // Replace slashes with dots
+    const nextLesson = `${formattedDate} ${time}`;
+
+    // Update the #nextLesson element
+    document.getElementById('nextLesson').textContent = nextLesson;
+
+    // Debugging
+    console.log("Start Date:", startDate);
+    console.log("Current Date:", currentDate);
+    console.log("Next Lesson Date:", lessonDate);
+});
+
                             </script>
                             
                             <div class="flex gap-5 mb-2">

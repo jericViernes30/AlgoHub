@@ -46,7 +46,60 @@
 <body class="bg-[#ececec]">
     <div class="w-full h-screen flex flex-col">
         <div class="w-full bg-[#632c7d] flex py-2">
-            <div class="w-11/12 mx-auto flex justify-end">
+            <div class="w-11/12 mx-auto flex gap-5 justify-end">
+                @include('partials.notifs')
+                <script>
+                    $(document).ready(function () {
+                        function fetchNotifications() {
+                            $.ajax({
+                                url: "{{ route('teacher.notifications') }}", // Replace with your actual route
+                                method: "GET",
+                                dataType: "json",
+                                success: function (data) {
+                                    console.log(data);
+                
+                if (data.message == 'true') {
+                    $("#notifBadge").removeClass('hidden'); // Show badge with count
+                } else {
+                    $("#notifBadge").addClass('hidden'); // Hide badge if no notifications
+                }
+                                },
+                                error: function () {
+                                    console.error("Failed to fetch notifications.");
+                                }
+                            });
+                        }
+                
+                        // Fetch notifications every 1 second
+                        setInterval(fetchNotifications, 1000);
+                    });
+                </script>
+                <script>
+                    $(document).ready(function () {
+                        $('#notifButton').on('click', function () {
+                            $('#notifs').toggleClass('hidden');
+                
+                            // Mark notifications as seen when the panel opens
+                            if (!$('#notifs').hasClass('hidden')) {
+                                var teacherID = $('#notifButton').data('teacherid'); // Get teacher ID dynamically
+                                
+                                $.ajax({
+                                    url: "{{ route('teacher.seenNotif', ':teacher') }}".replace(':teacher', teacherID),
+                                    type: "GET",
+                                    success: function(response) {
+                                        console.log(response.message);
+                                        $('#notifBadge').addClass('hidden'); // Hide the red dot when seen
+                                    },
+                                    error: function(xhr) {
+                                        console.log('Error:', xhr.responseText);
+                                    }
+                                });
+                            }
+                        });
+                    });
+                </script>
+                 
+                
                 <div class="relative w-fit flex gap-4 items-center justify-center">
                     <p class="text-sm font-medium text-white uppercase">{{$teacher->last_name}} {{$teacher->first_name}}</p>
                 </div>
@@ -108,7 +161,7 @@
                 <div class="w-full flex items-center">
                     <p class="w-fit py-2 px-5 bg-white rounded-tr-md rounded-tl-md text-sm text-gray-700">Students</p>
                 </div>
-                <div class="w-full bg-white rounded-bl-lg rounded-br-lg rounded-tr-lg p-4">
+                <div class="w-full bg-white h-[350px] overflow-auto rounded-bl-lg rounded-br-lg rounded-tr-lg p-4">
                     <div class="flex items-center font-medium text-blue-950 text-sm mb-4 pt-5">
                         <p class="w-[30%]">Student Name</p>
                         <p class="w-[25%]">Scheduled Date</p>
@@ -142,15 +195,19 @@
                                     {{$student->status}}
                                 </p>
                             </div>
-                            <select name="actions" 
-                                    class="action-select outline-none border-2 rounded-md py-1 px-2 border-gray-400 focus:border-[#632c7d]
-                                    @if ($student->status != 'Pending') cursor-not-allowed bg-gray-400 border-none @endif"
-                                    @if ($student->status != 'Pending') disabled @endif
-                            >
-                                <option selected disabled>Select</option>
-                                <option value="completed">Completed</option>
-                                <option value="dna">Did not attend</option>
-                            </select>
+                            @php
+    $isToday = \Carbon\Carbon::parse($il->day)->isToday();
+@endphp
+
+<select name="actions"
+    class="action-select outline-none border-2 rounded-md py-1 px-2 border-gray-400 focus:border-[#632c7d]
+    @if ($student->status != 'Pending' || !$isToday) cursor-not-allowed bg-gray-400 border-none @endif"
+    @if ($student->status != 'Pending' || !$isToday) disabled @endif
+>
+    <option selected disabled>Select</option>
+    <option value="completed">Completed</option>
+    <option value="dna">Did not attend</option>
+</select>
                         </div>
                         <hr>
                     @endforeach
@@ -184,6 +241,7 @@
                                         alert('Status changed to: Did not attend');
                                         statusElement.text('Did not attend').removeClass().addClass('status w-1/2 px-5 py-1 text-center rounded-full text-sm bg-red-300 text-white');
                                     }
+                                    location.reload()
                                 },
                                 error: function(error) {
                                     alert('Error! Status not changed');

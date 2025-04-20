@@ -54,7 +54,7 @@
                 </button>
             </div>
             <div class="w-full px-16 py-4">
-                <form action="{{ route('admin.add_to_new_sched') }}" method="GET">
+                <form action="{{ route('admin.add_to_sched') }}" method="GET">
                     @csrf
                     <p>Select course</p>
                     <select name="course" id="course" class="w-full px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#632c7d] outline-none text-center mb-2">
@@ -134,8 +134,7 @@
                         </select>
                     </div>
                     {{-- <input type="hidden" name="student_ID"> --}}
-                    <input type="hidden" name="student_name">
-                    <input type="hidden" name="student_number">
+                    <input type="text" name="student_name">
                     <button class="float-right w-1/4 py-2 bg-[#632c7d] text-white rounded-md">
                         Proceed
                     </button>
@@ -145,71 +144,13 @@
         </div>
     </div>
     <div id="body" class="w-full h-screen flex flex-col">
-        <div class="w-full bg-[#632c7d] flex items-center justify-end py-2 px-10 gap-5">
-            <p class="text-sm text-white">Hi, admin!</p>
-            <button onclick="window.location.href='{{route('admin.logout')}}'" class="w-fit">
-                <img src="{{asset('images/logout.png')}}" alt="PUTANGINANG IMAGE" class="w-2/3">
-            </button>
+        <div class="w-full bg-[#632c7d] flex justify-end items-center py-2">
+            <a href="{{route('admin.logout')}}" class="text-white px-10">Logout</a>
         </div>
         <div class="w-full flex h-auto bg-[#F2EBFB]">
-            <div class="w-1/6 h-full bg-[#f9f9f9] text-sm">
-                <div class="w-full mb-8 mt-10">
-                    <img src="https://lms.alg.academy/auth/v3/img/logo.d1092e37.svg" alt="Lesson Logo" class="w-3/4 block mx-auto">
-                </div>
-                <div class="w-full mx-auto flex gap-5 items-center hover:bg-[#F2EBFB]">
-                    <a href="{{route('admin.dashboard')}}" class="text-[#48494b] px-5 py-2 w-full">Dashboard</a>
-                </div>
-                {{-- navigations --}}
-                <div>
-                    <div onclick="courseDropdown()">
-                        <a href="{{route('admin.courses')}}" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB]">
-                            <p id="course_dd" href="" class="w-full py-2 text-[#48494b] hover:cursor-pointer">Courses</p>
-                        </a>
-                    </div>
-
-                    <div onclick="studentsDropdown()">
-                        <div class="w-full flex items-center justify-around px-5 relative py-2 hover:cursor-pointer bg-[#F2EBFB] border-l-4 rounded-sm border-[#632c7d]">
-                            <p id="sched_dd" class=" w-full text-[#48494b]">Students</p>
-                            <svg id="arrow2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
-                        </div>
-                        <div id="students" class="hidden">
-                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{ route('admin.students') }}" class="py-2 text-[#48494b] hover:cursor-pointer">Enrolled Students</a>
-                            </div>
-                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{route('admin.expelled')}}" class="py-2 text-[#48494b] hover:cursor-pointer">Expelled Students</a>
-                            </div>
-                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{route('admin.archived')}}" class="py-2 text-[#48494b] hover:cursor-pointer">Archived Students</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div onclick="">
-                        <a href="{{route('admin.teachers_list')}}" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                            <p id="students_dd" class=" w-full py-2 text-[#48494b]">Teachers</p>
-                        </a>
-                    </div>
-
-                    <div onclick="scheduleDropdown()">
-                        <div class="w-full flex items-center justify-around px-5 relative py-2 hover:bg-[#F2EBFB] hover:cursor-pointer">
-                            <p id="sched_dd" class=" w-full text-[#48494b]">Schedule</p>
-                            <svg id="arrow2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
-                        </div>
-                        <div id="schedules" class="hidden mb-5">
-                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{route('admin.schedule.for_scheduling')}}" class="py-2 text-[#48494b] hover:cursor-pointer">Walk In Clients</a>
-                            </div>
-                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{route('admin.il_schedule')}}" class="py-2 text-[#48494b] hover:cursor-pointer">Intro Lessons</a>
-                            </div>
-                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{ route('admin.schedule') }}" class="py-2 text-[#48494b] hover:cursor-pointer">Classes</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
+            @include('partials.header')
+            
             <div class="w-full p-10">
                 <div class="w-full mx-auto h-fit bg-[#f9f9f9] rounded-xl p-4 text-sm">
                     <p class="text-lg font-medium mb-4">Enrolled Students</p>
@@ -252,7 +193,7 @@
                                 <th class="w-1/5 py-2">Course</th>
                                 <th class="w-[17%] py-2">Contact Number</th>
                                 <th class="w-1/5 py-2">Email Address</th>
-                                <th class="w-[15%] p-2 text-center">Actions</th>
+                                <th class="w-[15%] p-2 text-center">Enrolled Date</th>
                             </tr>
                             <script>
                                 document.addEventListener("DOMContentLoaded", function() {
@@ -306,15 +247,7 @@
                                     <td class="w-[17%] py-2">{{$student->contact_number}}</td>
                                     <td class="w-1/5 py-2">{{$student->email_address}}</td>
                                     <td class="w-[15%] p-2 text-center">
-                                        <div class="flex items-center justify-center">
-                                            <button onclick="proceed('{{ json_encode($student) }}')" class="text-blue-500">
-                                                Enroll
-                                            </button>
-                                            <a href='/admin/students/expel/{{$student->id}}/{{$student->student_name}}/{{$student->course}}'
-                                                class="text-sm px-5 py-1 text-red-500">
-                                                Expel
-                                            </a>
-                                        </div>
+                                        {{$student->created_at->format('F d, Y')}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -341,7 +274,6 @@
             const proceedDiv = document.getElementById('proceed');
             
             proceedDiv.querySelector('input[name="student_name"]').value = rowData.student_name;
-            proceedDiv.querySelector('input[name="student_number"]').value = rowData.student_number;
         }
 
 

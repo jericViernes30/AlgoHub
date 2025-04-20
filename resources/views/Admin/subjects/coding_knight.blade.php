@@ -52,22 +52,22 @@
                     <img src="https://lms.alg.academy/auth/v3/img/logo.d1092e37.svg" alt="Lesson Logo" class="w-3/4 block mx-auto">
                 </div>
                 <div class="w-full mx-auto flex gap-5 items-center">
-                    <a href="{{route('admin.dashboard')}}" class="text-[#48494b] px-5 hover:bg-[#F2EBFB] w-full py-2">Dashboard</a>
+                    <a href="{{session('role') === 'admin' ? route('admin.dashboard') : route('staff.dashboard')}}" class="text-[#48494b] px-5 hover:bg-[#F2EBFB] w-full py-2">Dashboard</a>
                 </div>
                 <div>
                     <div onclick="courseDropdown()">
-                        <a href="{{route('admin.courses')}}" class="w-full flex items-center justify-around px-5 relative bg-[#F2EBFB] border-l-4 rounded-sm border-[#632c7d]">
+                        <a href="{{session('role') === 'admin' ? route('admin.courses') : route('staff.courses')}}"  class="w-full flex items-center justify-around px-5 relative bg-[#F2EBFB] border-l-4 rounded-sm border-[#632c7d]">
                             <p id="course_dd" href="" class="w-full py-2 text-[#48494b] hover:cursor-pointer">Courses</p>
                         </a>
                     </div>
 
                     <div onclick="studentsDropdown()">
-                        <a href="{{route('admin.students')}}" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
+                        <a href="{{session('role') === 'admin' ? route('admin.students') : route('staff.students')}}" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
                             <p id="students_dd" class=" w-full py-2 text-[#48494b]">Students</p>
                         </a>
                     </div>
 
-                    <div onclick="">
+                    <div onclick="" class="{{session('role') !== 'admin' ? 'hidden' : ''}}">
                         <a href="{{route('admin.teachers_list')}}" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
                             <p id="students_dd" class=" w-full py-2 text-[#48494b]">Teachers</p>
                         </a>
@@ -80,13 +80,13 @@
                         </div>
                         <div id="schedules" class="hidden mb-5">
                             <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{ route('admin.schedule') }}" class="py-2 text-[#48494b] hover:cursor-pointer">Classes</a>
+                                <a href="{{session('role') === 'admin' ? route('admin.schedule.for_scheduling') : route('staff.walk_in')}}" class="py-2 text-[#48494b] hover:cursor-pointer">Walk In Clients</a>
                             </div>
                             <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{route('admin.il_schedule')}}" class="py-2 text-[#48494b] hover:cursor-pointer">Intro Lessons</a>
+                                <a href="{{session('role') === 'admin' ? route('admin.il_schedule') : route('staff.il_schedule')}}" class="py-2 text-[#48494b] hover:cursor-pointer">Intro Lessons</a>
                             </div>
-                            <div class="w-full flex items-center px-10 relative mb-4 hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{route('admin.schedule.for_scheduling')}}" class="py-2 text-[#48494b] hover:cursor-pointer">For Scheduling</a>
+                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
+                                <a href="{{session('role') === 'admin' ? route('admin.schedule') : route('staff.schedule')}}" class="py-2 text-[#48494b] hover:cursor-pointer">Classes</a>
                             </div>
                         </div>
                     </div>

@@ -45,105 +45,6 @@
   </style>
 </head>
 <body class="bg-[#ececec] overflow-hidden">
-    <div id="proceed" class="hidden w-2/6 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm z-10">
-        <div class="w-full flex flex-col bg-[#f9f7fc] rounded-xl">
-            <div class="w-full flex justify-between bg-[#632c7d] p-4 rounded-tl-xl rounded-tr-xl">
-                <p class="text-white">Select schedule for Enrollment</p>
-                <button onclick="closeProceedForm()" class="text-white flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="14" height="14" fill="#f9f9f9"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
-                </button>
-            </div>
-            <div class="w-full px-16 py-4">
-                <form action="{{ route('admin.add_to_new_sched') }}" method="GET">
-                    @csrf
-                    <p>Select course</p>
-                    <select name="course" id="course" class="w-full px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#632c7d] outline-none text-center mb-2">
-                        @foreach ($courses as $course)
-                            <option value="{{$course->course_name}}">{{$course->course_name}}</option>
-                        @endforeach
-                    </select>
-                    <script>
-                        $(document).ready(function () {
-                            $('#course').change(function() {
-                                let course = $(this).val();
-                                console.log(course); // Logs the selected course
-
-                                $.ajax({
-                                    url: '{{ route("admin.get_course_sched", ":course") }}'.replace(':course', course),
-                                    type: "GET",
-                                    dataType: 'json',
-                                    success: function (data) {
-                                        console.log("Data:", data);
-                                        var selectSchedule = $('select[name="course_ID"]');
-                                        selectSchedule.empty();
-
-                                        if ($.isEmptyObject(data)) {
-                                            selectSchedule.append('<option disabled selected>No schedule yet</option>');
-                                        } else {
-                                            $.each(data, function (index, schedule) {
-                                                console.log("Schedule:", schedule);
-
-                                                var timeSlot = schedule.time_slot;
-                                                var day = schedule.day;
-                                                var courseID = schedule.course_ID;
-
-                                                // Map the time_slot to human-readable times
-                                                var time = '';
-                                                switch (timeSlot) {
-                                                    case 'first':
-                                                        time = "11:00 AM to 1:00 PM";
-                                                        break;
-                                                    case 'second':
-                                                        time = "1:00 PM to 3:00 PM";
-                                                        break;
-                                                    case 'third':
-                                                        time = "3:00 PM to 5:00 PM";
-                                                        break;
-                                                    case 'fourth':
-                                                        time = "5:00 PM to 7:00 PM";
-                                                        break;
-                                                    case 'fifth':
-                                                        time = "7:00 PM to 9:00 PM";
-                                                        break;
-                                                    default:
-                                                        time = "Unknown Time";
-                                                        break;
-                                                }
-
-                                                // Append the option to the select element
-                                                selectSchedule.append(
-                                                    '<option value="' + courseID + '">' + courseID + ' - ' + day + ' (' + time + ')</option>'
-                                                );
-                                            });
-                                        }
-                                    },
-                                    error: function (xhr, status, error) {
-                                        console.error("Error fetching schedule:", error);
-                                    }
-                                });
-                            });
-                            
-                        });
-
-                    </script>
-                    @csrf
-                    <div class="w-full flex flex-col gap-1 mb-4">
-                        <label for="">Select schedule</label>
-                        <select name="course_ID" id="" class="w-full px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#632c7d] outline-none text-center">
-                            <option disabled selected>-- Select schedule --</option>
-                        </select>
-                    </div>
-                    {{-- <input type="hidden" name="student_ID"> --}}
-                    <input type="hidden" name="student_name">
-                    <input type="hidden" name="student_number">
-                    <button class="float-right w-1/4 py-2 bg-[#632c7d] text-white rounded-md">
-                        Proceed
-                    </button>
-                </form>
-                
-            </div>
-        </div>
-    </div>
     <div id="body" class="w-full h-screen flex flex-col">
         <div class="w-full bg-[#632c7d] flex items-center justify-end py-2 px-10 gap-5">
             <p class="text-sm text-white">Hi, admin!</p>
@@ -212,47 +113,20 @@
             </div>
             <div class="w-full p-10">
                 <div class="w-full mx-auto h-fit bg-[#f9f9f9] rounded-xl p-4 text-sm">
-                    <p class="text-lg font-medium mb-4">Enrolled Students</p>
+                    <p class="text-lg font-medium mb-4">Archived Students</p>
                     <div class="w-full flex justify-between mb-3">
                         <div>
 
                         </div>
-                        <div class="w-fit flex flex-col items-end">
-                            <p id="showing" class="text-xs font-medium text-[#632c7d] mb-2">Results: <span id="displayed">1 - {{$enrolledCount < 8 ? $enrolledCount : '8'}} </span> of <span id="total">  {{$enrolledCount}}</span></p>
-                            <div class="w-fit flex gap-2">
-                                <div class="w-full flex gap-1">
-                                    <button id="first" class="w-[30px] h-[30px] rounded-md text-xs text-white bg-[#632c7d]">1</button>
-                                    <button id="second" class="w-[30px] h-[30px] rounded-md bg-gray-300 text-xs text-gray-600 {{$enrolledCount < 8 ? 'hidden' : ''}}">2</button>
-                                    <button id="third" class="paginate-btn w-[30px] h-[30px] rounded-md bg-gray-300 text-xs text-gray-600">3</button>
-                                    <p id="cat" class="text-2xl text-gray-500">...</p>
-                                    <button id="last" class="w-[30px] h-[30px] rounded-md bg-gray-300 text-xs text-gray-600">7</button>
-                                </div>
-                            </div>
-                            <script>
-                                $(document).ready(function () {
-                                    let totalPages = Math.ceil({{$enrolledCount}} / 8); // Get the total number of pages
-                                    if (totalPages < 3) {
-                                        // $("#third").prop("disabled", true).addClass("cursor-not-allowed opacity-50");
-                                        // $("#cat").prop("disabled", true).addClass("cursor-not-allowed opacity-50");
-                                        // $("#last").prop("disabled", true).addClass("cursor-not-allowed opacity-50");
-                                        $("#third").addClass("hidden");
-                                        $("#cat").addClass("hidden");
-                                        $("#last").addClass("hidden");
-                                    }
-                                });
-                            </script>
-                        </div>
-
                     </div>
                     <div class="w-full h-[480px] overflow-auto">
                         <table id="table" class="w-full border-collapse mt-5">
                             <tr class="bg-[#F2EBFB] text-left">
                                 <th class="w-1/5 p-2">Childs Name</th>
-                                <th class="w-[7%] py-2">Age</th>
-                                <th class="w-1/5 py-2">Course</th>
-                                <th class="w-[17%] py-2">Contact Number</th>
+                                <th class="w-[15%] py-2">Course</th>
+                                <th class="w-[15%] py-2">Contact Number</th>
                                 <th class="w-1/5 py-2">Email Address</th>
-                                <th class="w-[15%] p-2 text-center">Actions</th>
+                                <th class="w-[25%] p-2 text-center">Last update</th>
                             </tr>
                             <script>
                                 document.addEventListener("DOMContentLoaded", function() {
@@ -284,7 +158,6 @@
                             @foreach ($students as $student)
                                 <tr class="border-b border-[#d8d8d8]">
                                     <td class="w-1/5 py-4 px-2">{{$student->student_name}}</td>
-                                    <td class="w-[7%] py-2">{{$student->age}}</td>
                                     @php
                                         switch ($student->course) {
                                             case 'Python Start': $bgColor = 'bg-red-500 text-white'; break;
@@ -300,21 +173,13 @@
                                             default: $bgColor = 'bg-gray-500';
                                         }
                                     @endphp
-                                    <td class="w-1/5 py-2">
+                                    <td class="w-[15%] py-2">
                                         <p class="px-4 text-xs w-fit py-1 rounded-full {{$bgColor}}">{{$student->course}}</p>
                                     </td>
-                                    <td class="w-[17%] py-2">{{$student->contact_number}}</td>
+                                    <td class="w-[15%] py-2">{{$student->contact_number}}</td>
                                     <td class="w-1/5 py-2">{{$student->email_address}}</td>
-                                    <td class="w-[15%] p-2 text-center">
-                                        <div class="flex items-center justify-center">
-                                            <button onclick="proceed('{{ json_encode($student) }}')" class="text-blue-500">
-                                                Enroll
-                                            </button>
-                                            <a href='/admin/students/expel/{{$student->id}}/{{$student->student_name}}/{{$student->course}}'
-                                                class="text-sm px-5 py-1 text-red-500">
-                                                Expel
-                                            </a>
-                                        </div>
+                                    <td class="w-[25%] p-2 text-center">
+                                        {{ $student->updated_at->format('F d, Y - h:i a') }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -341,7 +206,6 @@
             const proceedDiv = document.getElementById('proceed');
             
             proceedDiv.querySelector('input[name="student_name"]').value = rowData.student_name;
-            proceedDiv.querySelector('input[name="student_number"]').value = rowData.student_number;
         }
 
 
@@ -353,49 +217,49 @@
 
             function fetchStudents(page) {
                 $.ajax({
-                    url: `/admin/students/paginate/${page}`,
+                    url: `/admin/expelled/paginate/${page}`,
                     type: 'GET',
                     dataType: 'json',
                     success: function (response) {
-                        console.log(response)
-                        $('#total').text(response.total)
-                        if(response.total < response.fetch){
-                            $('#displayed').text((response.offset + 1) + ' - ' + response.total);
-                        } else {
-                            $('#displayed').text((response.offset + 1) + ' - ' + response.fetch);
-                        }
-                        let tableBody = $("#table"); // Replace with the actual table body ID
-                        tableBody.find("tr:not(:first-child)").remove(); // Remove only the rows, keeping the header intact
+                console.log(response);
+                $('#total').text(response.total);
 
-                        response.students.forEach(student => {
-                            let bgColor = getBgColor(student.course); // Function to get background color
+                if (response.total < response.fetch) {
+                    $('#displayed').text((response.offset + 1) + ' - ' + response.total);
+                } else {
+                    $('#displayed').text((response.offset + 1) + ' - ' + response.fetch);
+                }
 
-                            let row = `
-                                <tr class="border-b border-[#d8d8d8]">
-                                    <td class="w-1/5 py-4 px-2">${student.student_name}</td>
-                                    <td class="w-[5%] py-2">${student.age}</td>
-                                    <td class="w-1/5 py-2">
-                                        <p class="px-4 text-xs w-fit py-1 rounded-full ${bgColor}">${student.course}</p>
-                                    </td>
-                                    <td class="w-[14%] py-2">${student.contact_number}</td>
-                                    <td class="w-1/5 py-2">${student.email_address}</td>
-                                    <td class="w-1/5 p-2 text-center">
-                                        <div class="flex items-center justify-center gap-3">
-                                            <button onclick='proceed(${JSON.stringify(student)})' class="text-blue-500">
-                                                Enroll
-                                            </button>
-                                            <a href='/admin/students/expel/${student.student_name}/${student.course}'"
-                                                class="text-sm px-5 py-1 text-red-500">
-                                                Expel
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            `;
+                let tableBody = $("#table"); // Adjust the actual table body ID
+                tableBody.find("tr:not(:first-child)").remove(); // Keep the header, remove rows
 
-                            tableBody.append(row);
-                        });
-                    },
+                response.students.forEach(student => {
+                    let bgColor = getBgColor(student.course); // Function to get background color
+ // Format created_at to "F d, Y - h:i A"
+ let createdAt = new Date(student.created_at);
+    let formattedDate = createdAt.toLocaleString('en-US', {
+        month: 'long', 
+        day: '2-digit', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    });
+                    let row = `
+                        <tr class="border-b border-[#d8d8d8]">
+                            <td class="w-1/5 py-4 px-2">${student.student_name}</td>
+                            <td class="w-[15%] py-2">
+                                <p class="px-4 text-xs w-fit py-1 rounded-full ${bgColor}">${student.course}</p>
+                            </td>
+                            <td class="w-[15%] py-2">${student.il_data.contact_number}</td>
+                            <td class="w-1/5 py-2">${student.il_data.email_address}</td>
+                            <td class="w-[25%] p-2 text-center">${formattedDate}</td>
+                        </tr>
+                    `;
+
+                    tableBody.append(row);
+                });
+            },
                     error: function (xhr, status, error) {
                         console.error("AJAX Error:", status, error);
                     }

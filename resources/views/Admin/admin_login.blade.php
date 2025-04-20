@@ -13,12 +13,12 @@
             <img src="https://lms.alg.academy/auth/v3/img/logo.d1092e37.svg" alt="Algohub Logo" class="w-36 h-auto-left-1 -top-7">
             <form action="{{route('admin.login.post')}}" method="POST" class="w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-5">
                 @csrf
-                <p class="text-2xl font-bold mb-2">Login for admin</p>
-                <label for="Login">Admin</label>
+                <p class="text-2xl font-bold mb-2">Login</p>
+                <label for="Login">Username</label>
                 <input type="text" name="username" class="border border-slate-300 mt-1 mb-3 w-full rounded-lg py-1 px-2 outline-none focus:border-[#632c7d]">
-                
                 <label for="Login">Password</label>
                 <input type="password" name="password" class="border border-slate-300 mt-1 mb-3 w-full rounded-lg py-1 px-2 outline-none focus:border-[#632c7d]">
+                <a href="{{route('admin.reset_password')}}" class="text-sm underline text-[#632c7d]">Forgot password?</a>
                 <button class="bg-[#632c7d] border border-slate-300 mt-2 w-full rounded-lg py-1 px-2 text-white">Login</button>
                 <a class="text-[#632c7d] text-center w-full inline-block" href="{{route('welcome')}}">Sign in as teacher</a>
             </form>

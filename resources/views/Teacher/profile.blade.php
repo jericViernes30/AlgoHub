@@ -3,9 +3,11 @@
 <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/5bf9be4e76.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="{{ asset('js/scripts.js') }}"></script>
@@ -47,7 +49,60 @@
 <body class="bg-[#ececec]">
     <div class="w-full h-screen flex flex-col">
         <div class="w-full bg-[#632c7d] flex py-2">
-            <div class="w-11/12 mx-auto flex justify-end">
+            <div class="w-11/12 mx-auto flex gap-5 justify-end">
+                @include('partials.notifs')
+                <script>
+                    $(document).ready(function () {
+                        function fetchNotifications() {
+                            $.ajax({
+                                url: "{{ route('teacher.notifications') }}", // Replace with your actual route
+                                method: "GET",
+                                dataType: "json",
+                                success: function (data) {
+                                    console.log(data);
+                
+                if (data.message == 'true') {
+                    $("#notifBadge").removeClass('hidden'); // Show badge with count
+                } else {
+                    $("#notifBadge").addClass('hidden'); // Hide badge if no notifications
+                }
+                                },
+                                error: function () {
+                                    console.error("Failed to fetch notifications.");
+                                }
+                            });
+                        }
+                
+                        // Fetch notifications every 1 second
+                        setInterval(fetchNotifications, 1000);
+                    });
+                </script>
+                <script>
+                    $(document).ready(function () {
+                        $('#notifButton').on('click', function () {
+                            $('#notifs').toggleClass('hidden');
+                
+                            // Mark notifications as seen when the panel opens
+                            if (!$('#notifs').hasClass('hidden')) {
+                                var teacherID = $('#notifButton').data('teacherid'); // Get teacher ID dynamically
+                                
+                                $.ajax({
+                                    url: "{{ route('teacher.seenNotif', ':teacher') }}".replace(':teacher', teacherID),
+                                    type: "GET",
+                                    success: function(response) {
+                                        console.log(response.message);
+                                        $('#notifBadge').addClass('hidden'); // Hide the red dot when seen
+                                    },
+                                    error: function(xhr) {
+                                        console.log('Error:', xhr.responseText);
+                                    }
+                                });
+                            }
+                        });
+                    });
+                </script>
+                 
+                
                 <div class="relative w-fit flex gap-4 items-center justify-center">
                     <p class="text-sm font-medium text-white uppercase">{{$teacher->last_name}} {{$teacher->first_name}}</p>
                 </div>
@@ -123,11 +178,58 @@
                         </div>
                     </div>
                     <div class="w-1/4 flex flex-col gap-4">
-                        <div class="w-full h-3/4 bg-white p-4 rounded-md flex items-center justify-center">
+                        <div class="w-full h-3/4 bg-white p-4 rounded-md flex flex-col items-center justify-center">
                             <img src="{{ asset($teacher->profile ? 'images/' . $teacher->profile : 'images/default.png') }}" 
                                  alt="Teacher Profile" 
                                  class="max-h-full w-auto object-contain rounded-md">
+                                 <button id="updateProfileBtn" class="text-xs py-1 px-4 underline">Update Picture</button>
+                                 <input type="file" name="profile" id="profile" class="text-xs" hidden>
+                                 <input type="hidden" id="teacherId" value="{{$teacher->id}}">
+                            <input type="file" name="profile" id="profile" class="text-xs" hidden>
                         </div>
+                        <script>
+                            $(document).ready(function () {
+                                $('#updateProfileBtn').click(function () {
+                                    $('#profile').click();
+                                });
+                        
+                                $('#profile').change(function () {
+                                    alert('Profile picture selected. Click "Update" to save changes.');
+                                    let formData = new FormData();
+                                    let file = $('#profile')[0].files[0];
+                                    let teacherId = $('#teacherId').val();
+                        
+                                    if (file) {
+                                        formData.append('profile', file);
+                                        formData.append('id', teacherId);
+                        
+                                        $.ajax({
+                                            url: "{{ route('teacher.updateProfile') }}",
+                                            type: "POST",
+                                            data: formData,
+                                            contentType: false,
+                                            processData: false,
+                                            headers: {
+                                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                            },
+                                            success: function (response) {
+                                                Swal.fire({
+                                                    title: "Success!",
+                                                    text: response.message,
+                                                    icon: "success",
+                                                    confirmButtonText: "OK"
+                                                }).then(() => {
+                                                    location.reload(); // Reload the page after clicking "OK"
+                                                });
+                                            },
+                                            error: function (xhr) {
+                                                alert('Error updating profile');
+                                            }
+                                        });
+                                    }
+                                });
+                            });
+                        </script>
                         <div class="w-full flex flex-col justify-center h-1/4 bg-white p-4 rounded-md">
                             <p class="text-sm text-[#632c7d] font-medium mb-4">Created on: <span class="text-black font-normal">{{ $teacher->created_at->format('M d, Y h:i A') }}</span></p>
                             <p class="text-sm text-[#632c7d] font-medium">Updated on: <span class="text-black font-normal">{{ $teacher->updated_at->format('M d, Y h:i A') }}</span></p>

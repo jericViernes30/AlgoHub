@@ -5,6 +5,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/5bf9be4e76.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="{{ asset('js/scripts.js') }}"></script>
@@ -46,7 +48,60 @@
 <body class="bg-[#ececec]">
     <div class="w-full h-screen flex flex-col">
         <div class="w-full bg-[#632c7d] flex py-2">
-            <div class="w-11/12 mx-auto flex justify-end">
+            <div class="w-11/12 mx-auto flex gap-5 justify-end">
+                @include('partials.notifs')
+                <script>
+                    $(document).ready(function () {
+                        function fetchNotifications() {
+                            $.ajax({
+                                url: "{{ route('teacher.notifications') }}", // Replace with your actual route
+                                method: "GET",
+                                dataType: "json",
+                                success: function (data) {
+                                    console.log(data);
+                
+                if (data.message == 'true') {
+                    $("#notifBadge").removeClass('hidden'); // Show badge with count
+                } else {
+                    $("#notifBadge").addClass('hidden'); // Hide badge if no notifications
+                }
+                                },
+                                error: function () {
+                                    console.error("Failed to fetch notifications.");
+                                }
+                            });
+                        }
+                
+                        // Fetch notifications every 1 second
+                        setInterval(fetchNotifications, 1000);
+                    });
+                </script>
+                <script>
+                    $(document).ready(function () {
+                        $('#notifButton').on('click', function () {
+                            $('#notifs').toggleClass('hidden');
+                
+                            // Mark notifications as seen when the panel opens
+                            if (!$('#notifs').hasClass('hidden')) {
+                                var teacherID = $('#notifButton').data('teacherid'); // Get teacher ID dynamically
+                                
+                                $.ajax({
+                                    url: "{{ route('teacher.seenNotif', ':teacher') }}".replace(':teacher', teacherID),
+                                    type: "GET",
+                                    success: function(response) {
+                                        console.log(response.message);
+                                        $('#notifBadge').addClass('hidden'); // Hide the red dot when seen
+                                    },
+                                    error: function(xhr) {
+                                        console.log('Error:', xhr.responseText);
+                                    }
+                                });
+                            }
+                        });
+                    });
+                </script>
+                 
+                
                 <div class="relative w-fit flex gap-4 items-center justify-center">
                     <p class="text-sm font-medium text-white uppercase">{{$teacher->last_name}} {{$teacher->first_name}}</p>
                 </div>
@@ -94,7 +149,7 @@
                                 <p class="text-xs font-medium text-blue-500">CID:{{$subject->course_ID}}</p>
                             </div>
                             <p class="w-[20%] text-left">{{$subject->teacher}}</p>
-                            <p class="w-[10%] uppercase">{{$students->count()}}</p>
+                            <p class="w-[10%] uppercase">{{ $students[$subject->course_ID] ?? 0 }}</p>
                             <p class="w-fit bg-blue-400 px-2 py-1 rounded-md text-xs font-semibold">Face-to-face</p>
                         </button>
                         <hr>

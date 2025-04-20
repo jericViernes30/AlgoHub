@@ -54,7 +54,7 @@
                 </button>
             </div>
             <div class="w-full px-16 py-4">
-                <form action="{{ route('admin.add_to_new_sched') }}" method="GET">
+                <form action="{{ route('admin.add_to_sched') }}" method="GET">
                     @csrf
                     <p>Select course</p>
                     <select name="course" id="course" class="w-full px-2 py-1 rounded-md border border-[#a9a9a9] focus:border-[#632c7d] outline-none text-center mb-2">
@@ -134,8 +134,7 @@
                         </select>
                     </div>
                     {{-- <input type="hidden" name="student_ID"> --}}
-                    <input type="hidden" name="student_name">
-                    <input type="hidden" name="student_number">
+                    <input type="text" name="student_name">
                     <button class="float-right w-1/4 py-2 bg-[#632c7d] text-white rounded-md">
                         Proceed
                     </button>
@@ -212,7 +211,7 @@
             </div>
             <div class="w-full p-10">
                 <div class="w-full mx-auto h-fit bg-[#f9f9f9] rounded-xl p-4 text-sm">
-                    <p class="text-lg font-medium mb-4">Enrolled Students</p>
+                    <p class="text-lg font-medium mb-4">Expelled Students</p>
                     <div class="w-full flex justify-between mb-3">
                         <div>
 
@@ -222,7 +221,7 @@
                             <div class="w-fit flex gap-2">
                                 <div class="w-full flex gap-1">
                                     <button id="first" class="w-[30px] h-[30px] rounded-md text-xs text-white bg-[#632c7d]">1</button>
-                                    <button id="second" class="w-[30px] h-[30px] rounded-md bg-gray-300 text-xs text-gray-600 {{$enrolledCount < 8 ? 'hidden' : ''}}">2</button>
+                                    <button id="second" class="w-[30px] h-[30px] rounded-md bg-gray-300 text-xs text-gray-600">2</button>
                                     <button id="third" class="paginate-btn w-[30px] h-[30px] rounded-md bg-gray-300 text-xs text-gray-600">3</button>
                                     <p id="cat" class="text-2xl text-gray-500">...</p>
                                     <button id="last" class="w-[30px] h-[30px] rounded-md bg-gray-300 text-xs text-gray-600">7</button>
@@ -248,11 +247,10 @@
                         <table id="table" class="w-full border-collapse mt-5">
                             <tr class="bg-[#F2EBFB] text-left">
                                 <th class="w-1/5 p-2">Childs Name</th>
-                                <th class="w-[7%] py-2">Age</th>
-                                <th class="w-1/5 py-2">Course</th>
-                                <th class="w-[17%] py-2">Contact Number</th>
+                                <th class="w-[15%] py-2">Course</th>
+                                <th class="w-[15%] py-2">Contact Number</th>
                                 <th class="w-1/5 py-2">Email Address</th>
-                                <th class="w-[15%] p-2 text-center">Actions</th>
+                                <th class="w-[25%] p-2 text-center">Expelled Date</th>
                             </tr>
                             <script>
                                 document.addEventListener("DOMContentLoaded", function() {
@@ -284,7 +282,6 @@
                             @foreach ($students as $student)
                                 <tr class="border-b border-[#d8d8d8]">
                                     <td class="w-1/5 py-4 px-2">{{$student->student_name}}</td>
-                                    <td class="w-[7%] py-2">{{$student->age}}</td>
                                     @php
                                         switch ($student->course) {
                                             case 'Python Start': $bgColor = 'bg-red-500 text-white'; break;
@@ -300,21 +297,13 @@
                                             default: $bgColor = 'bg-gray-500';
                                         }
                                     @endphp
-                                    <td class="w-1/5 py-2">
+                                    <td class="w-[15%] py-2">
                                         <p class="px-4 text-xs w-fit py-1 rounded-full {{$bgColor}}">{{$student->course}}</p>
                                     </td>
-                                    <td class="w-[17%] py-2">{{$student->contact_number}}</td>
-                                    <td class="w-1/5 py-2">{{$student->email_address}}</td>
-                                    <td class="w-[15%] p-2 text-center">
-                                        <div class="flex items-center justify-center">
-                                            <button onclick="proceed('{{ json_encode($student) }}')" class="text-blue-500">
-                                                Enroll
-                                            </button>
-                                            <a href='/admin/students/expel/{{$student->id}}/{{$student->student_name}}/{{$student->course}}'
-                                                class="text-sm px-5 py-1 text-red-500">
-                                                Expel
-                                            </a>
-                                        </div>
+                                    <td class="w-[15%] py-2">{{$student->il_data->contact_number}}</td>
+                                    <td class="w-1/5 py-2">{{$student->il_data->email_address}}</td>
+                                    <td class="w-[25%] p-2 text-center">
+                                        {{ $student->updated_at->format('F d, Y - h:i a') }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -341,7 +330,6 @@
             const proceedDiv = document.getElementById('proceed');
             
             proceedDiv.querySelector('input[name="student_name"]').value = rowData.student_name;
-            proceedDiv.querySelector('input[name="student_number"]').value = rowData.student_number;
         }
 
 
@@ -353,49 +341,49 @@
 
             function fetchStudents(page) {
                 $.ajax({
-                    url: `/admin/students/paginate/${page}`,
+                    url: `/admin/expelled/paginate/${page}`,
                     type: 'GET',
                     dataType: 'json',
                     success: function (response) {
-                        console.log(response)
-                        $('#total').text(response.total)
-                        if(response.total < response.fetch){
-                            $('#displayed').text((response.offset + 1) + ' - ' + response.total);
-                        } else {
-                            $('#displayed').text((response.offset + 1) + ' - ' + response.fetch);
-                        }
-                        let tableBody = $("#table"); // Replace with the actual table body ID
-                        tableBody.find("tr:not(:first-child)").remove(); // Remove only the rows, keeping the header intact
+                console.log(response);
+                $('#total').text(response.total);
 
-                        response.students.forEach(student => {
-                            let bgColor = getBgColor(student.course); // Function to get background color
+                if (response.total < response.fetch) {
+                    $('#displayed').text((response.offset + 1) + ' - ' + response.total);
+                } else {
+                    $('#displayed').text((response.offset + 1) + ' - ' + response.fetch);
+                }
 
-                            let row = `
-                                <tr class="border-b border-[#d8d8d8]">
-                                    <td class="w-1/5 py-4 px-2">${student.student_name}</td>
-                                    <td class="w-[5%] py-2">${student.age}</td>
-                                    <td class="w-1/5 py-2">
-                                        <p class="px-4 text-xs w-fit py-1 rounded-full ${bgColor}">${student.course}</p>
-                                    </td>
-                                    <td class="w-[14%] py-2">${student.contact_number}</td>
-                                    <td class="w-1/5 py-2">${student.email_address}</td>
-                                    <td class="w-1/5 p-2 text-center">
-                                        <div class="flex items-center justify-center gap-3">
-                                            <button onclick='proceed(${JSON.stringify(student)})' class="text-blue-500">
-                                                Enroll
-                                            </button>
-                                            <a href='/admin/students/expel/${student.student_name}/${student.course}'"
-                                                class="text-sm px-5 py-1 text-red-500">
-                                                Expel
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            `;
+                let tableBody = $("#table"); // Adjust the actual table body ID
+                tableBody.find("tr:not(:first-child)").remove(); // Keep the header, remove rows
 
-                            tableBody.append(row);
-                        });
-                    },
+                response.students.forEach(student => {
+                    let bgColor = getBgColor(student.course); // Function to get background color
+ // Format created_at to "F d, Y - h:i A"
+ let createdAt = new Date(student.created_at);
+    let formattedDate = createdAt.toLocaleString('en-US', {
+        month: 'long', 
+        day: '2-digit', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    });
+                    let row = `
+                        <tr class="border-b border-[#d8d8d8]">
+                            <td class="w-1/5 py-4 px-2">${student.student_name}</td>
+                            <td class="w-[15%] py-2">
+                                <p class="px-4 text-xs w-fit py-1 rounded-full ${bgColor}">${student.course}</p>
+                            </td>
+                            <td class="w-[15%] py-2">${student.il_data.contact_number}</td>
+                            <td class="w-1/5 py-2">${student.il_data.email_address}</td>
+                            <td class="w-[25%] p-2 text-center">${formattedDate}</td>
+                        </tr>
+                    `;
+
+                    tableBody.append(row);
+                });
+            },
                     error: function (xhr, status, error) {
                         console.error("AJAX Error:", status, error);
                     }

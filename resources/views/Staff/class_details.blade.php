@@ -45,77 +45,16 @@
 </head>
 <body class="bg-[#ececec] text-sm">
     <div id="body" class="w-full h-screen flex flex-col z-0">
-        <div class="w-full bg-[#632c7d] flex items-center justify-end py-2 px-10 gap-5">
-            <p class="text-sm text-white">Hi, admin!</p>
-            <button onclick="window.location.href='{{route('admin.logout')}}'" class="w-fit">
-                <img src="{{asset('images/logout.png')}}" alt="PUTANGINANG IMAGE" class="w-2/3">
-            </button>
+        <div class="w-full bg-[#632c7d] flex justify-end items-center py-2">
+            <a href="{{route('admin.logout')}}" class="text-white px-10">Logout</a>
         </div>
         <div class="w-full flex h-screen bg-[#F2EBFB]">
-            <div class="w-1/6 h-full bg-[#f9f9f9] text-sm">
-                <div class="w-full mb-8 mt-10">
-                    <img src="https://lms.alg.academy/auth/v3/img/logo.d1092e37.svg" alt="Lesson Logo" class="w-3/4 block mx-auto">
-                </div>
-                <div class="w-full mx-auto flex gap-5 items-center hover:bg-[#F2EBFB]">
-                    <a href="{{route('admin.dashboard')}}" class="text-[#48494b] px-5 py-2 w-full">Dashboard</a>
-                </div>
-                {{-- navigations --}}
-                <div>
-                    <div onclick="courseDropdown()">
-                        <a href="{{route('admin.courses')}}" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB]">
-                            <p id="course_dd" href="" class="w-full py-2 text-[#48494b] hover:cursor-pointer">Courses</p>
-                        </a>
-                    </div>
 
-                    <div onclick="studentsDropdown()">
-                        <div class="w-full flex items-center justify-around px-5 relative py-2 hover:cursor-pointer hover:bg-[#F2EBFB]">
-                            <p id="sched_dd" class=" w-full text-[#48494b]">Students</p>
-                            <svg id="arrow2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
-                        </div>
-                        <div id="students" class="hidden">
-                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{ route('admin.students') }}" class="py-2 text-[#48494b] hover:cursor-pointer">Enrolled Students</a>
-                            </div>
-                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{route('admin.expelled')}}" class="py-2 text-[#48494b] hover:cursor-pointer">Expelled Students</a>
-                            </div>
-                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{route('admin.archived')}}" class="py-2 text-[#48494b] hover:cursor-pointer">Archived Students</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div onclick="">
-                        <a href="{{route('admin.teachers_list')}}" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB]">
-                            <p id="students_dd" class=" w-full py-2 text-[#48494b]">Teachers</p>
-                        </a>
-                    </div>
-
-                    <div onclick="scheduleDropdown()">
-                        <div class="w-full flex items-center justify-around px-5 relative py-2 bg-[#F2EBFB] border-l-4 rounded-sm border-[#632c7d] hover:cursor-pointer">
-                            <p id="sched_dd" class=" w-full text-[#48494b]">Schedule</p>
-                            <svg id="arrow2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
-                        </div>
-                        <div id="schedules" class="hidden mb-5">
-                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{route('admin.schedule.for_scheduling')}}" class="py-2 text-[#48494b] hover:cursor-pointer">Walk In Clients</a>
-                            </div>
-                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{route('admin.il_schedule')}}" class="py-2 text-[#48494b] hover:cursor-pointer">Intro Lessons</a>
-                            </div>
-                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{ route('admin.schedule') }}" class="py-2 text-[#48494b] hover:cursor-pointer">Classes</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @include('partials.header')
+            
             <div class="w-full p-4">
                 <div class="w-full mx-auto bg-[#f9f9f9] rounded-md p-4 text-sm">
                     <p class="text-lg font-semibold text-center mb-4">Course Details</p>
-                    <div class="w-full flex justify-end">
-                        <button data-courseID="{{$courses->course_ID}}" id="deleteSched" class="px-4 py-1 rounded-sm text-white bg-red-500 mb-2">Delete schedule</button>
-                    </div>
                         <div id="schedule_card" class="w-full border border-[#a9a9a9] rounded-lg p-4 mb-5">
                             <div class="flex w-full items-center gap-2 mb-5">
                                 <div class="w-[10%]">
@@ -225,51 +164,5 @@
             </div>
         </div>
     </div>
-    <!-- Include SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<script>
-    $(document).ready(function(){
-        $('#deleteSched').on('click', function(){
-            let courseID = $(this).data('courseid'); // Get courseID from button attribute
-            alert(courseID)
-            Swal.fire({
-                title: "Are you sure?",
-                text: "This schedule will be permanently deleted.",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Yes, delete it!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "{{ route('admin.delete_sched') }}", 
-                        type: "POST",
-                        data: {
-                            courseID: courseID, 
-                            _token: "{{ csrf_token() }}"
-                        },
-                        success: function(response) {
-                            Swal.fire({
-                                title: "Deleted!",
-                                text: "The schedule has been removed.",
-                                icon: "success",
-                                timer: 1000,
-                                showConfirmButton: false
-                            });
-
-                            window.location.href = "{{ route('admin.schedule') }}"
-                        },
-                        error: function(xhr) {
-                            Swal.fire("Error!", "Something went wrong.", "error");
-                        }
-                    });
-                }
-            });
-        });
-    });
-</script>
-
 </body>
 </html>

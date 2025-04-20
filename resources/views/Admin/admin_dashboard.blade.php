@@ -47,13 +47,97 @@
       }
   </style>
 </head>
-<body class="bg-[#ececec]">
+<body class="bg-[#ececec] relative">
+    <div id="overlay" class="hidden absolute top-0 w-full h-screen z-10 bg-black opacity-70"></div>
+    <div id="print_div" class="hidden w-1/4 absolute top-1/2 left-1/2 bg-white transform -translate-x-1/2 -translate-y-1/2 text-sm z-20">
+        <div class="w-full h-auto p-4">
+            <div class="w-full flex justify-end">
+                <button id="closeReport" class="text-sm underline text-[#632c7d]">Close</button>
+            </div>
+           
+            <label for="report_type" class="text-xl font-medium">Select Report:</label>
+            <div class="w-full flex items-center gap-4 my-5">
+                <div class="w-1/2 flex items-center gap-2">
+                    <input type="radio" name="report_type" id="monthly" value="monthly">
+                    <label for="monthly">Monthly Report</label>
+                </div>
+                <div class="w-1/2 flex items-center gap-2">
+                    <input type="radio" name="report_type" id="daily" value="daily">
+                    <label for="daily">Daily Report</label>
+                </div>
+            </div>
+            <div id="monthsContainer" class="mb-5 hidden">
+                <select name="month" id="months" class="w-full py-2 text-center rounded-lg outline-none border">
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                </select>
+            </div>
+            <button id="generate-btn" class="w-full py-2 rounded-lg bg-[#632c7d] text-white hidden">Generate Report</button>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $("#generate-btn").hide();
+                $("#monthsContainer").hide();
+
+                $("input[name='report_type']").on("change", function () {
+                    let selectedReport = $(this).val();
+                    
+                    if (selectedReport === "daily") {
+                        $("#generate-btn").show();
+                        $("#monthsContainer").hide();
+                    } else {
+                        $("#monthsContainer").show();
+                        $("#generate-btn").hide();
+                    }
+                });
+
+                $("#months").on("change", function () {
+                    if ($("input[name='report_type']:checked").val() === "monthly") {
+                        $("#generate-btn").show();
+                    }
+                });
+
+                $("#generate-btn").on("click", function () {
+                    let selectedReport = $("input[name='report_type']:checked").val();
+                    let selectedMonth = $("#months").val();
+
+                    if (selectedReport === "monthly") {
+                        window.location.href = `/reports/monthly/${selectedMonth}`;
+                    } else {
+                        window.location.href = `/reports/daily`;
+                    }
+                });
+
+            });
+        </script>
+    </div>
+    <script>
+        $(document).ready(function(){
+            $(document).on('click', '#closeReport', function(){
+                $('#overlay').hide()
+                $('#print_div').hide()
+            })
+        })
+    </script>
     <div class="w-full h-screen flex flex-col">
-        <div class="w-full bg-[#632c7d] flex justify-end items-center py-2">
-            <a href="{{route('admin.logout')}}" class="text-white px-10">Logout</a>
+        <div class="w-full bg-[#632c7d] flex items-center justify-end py-2 px-10 gap-5">
+            <p class="text-sm text-white">Hi, admin!</p>
+            <button onclick="window.location.href='{{route('admin.logout')}}'" class="w-fit">
+                <img src="{{asset('images/logout.png')}}" alt="PUTANGINANG IMAGE" class="w-2/3">
+            </button>
         </div>
         <div class="w-full flex h-[1300px]  bg-[#F2EBFB]">
-            <div class="w-1/6 h-full bg-[#f9f9f9] text-sm">
+            <div class="w-1/6 h-full flex flex-col bg-[#f9f9f9] text-sm">
                 <div class="w-full mb-8 mt-10">
                     <img src="https://lms.alg.academy/auth/v3/img/logo.d1092e37.svg" alt="Lesson Logo" class="w-3/4 block mx-auto">
                 </div>
@@ -69,9 +153,21 @@
                     </div>
 
                     <div onclick="studentsDropdown()">
-                        <a href="{{route('admin.students')}}" class="w-full flex items-center justify-around px-5 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                            <p id="students_dd" class=" w-full py-2 text-[#48494b]">Students</p>
-                        </a>
+                        <div class="w-full flex items-center justify-around px-5 relative py-2 hover:cursor-pointer hover:bg-[#F2EBFB]">
+                            <p id="sched_dd" class=" w-full text-[#48494b]">Students</p>
+                            <svg id="arrow2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" height="12"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+                        </div>
+                        <div id="students" class="hidden">
+                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
+                                <a href="{{ route('admin.students') }}" class="py-2 text-[#48494b] hover:cursor-pointer">Enrolled Students</a>
+                            </div>
+                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
+                                <a href="{{route('admin.expelled')}}" class="py-2 text-[#48494b] hover:cursor-pointer">Expelled Students</a>
+                            </div>
+                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
+                                <a href="{{route('admin.archived')}}" class="py-2 text-[#48494b] hover:cursor-pointer">Archived Students</a>
+                            </div>
+                        </div>
                     </div>
 
                     <div onclick="">
@@ -87,22 +183,39 @@
                         </div>
                         <div id="schedules" class="hidden mb-5">
                             <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{ route('admin.schedule') }}" class="py-2 text-[#48494b] hover:cursor-pointer">Classes</a>
+                                <a href="{{route('admin.schedule.for_scheduling')}}" class="py-2 text-[#48494b] hover:cursor-pointer">Walk In Clients</a>
                             </div>
                             <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
                                 <a href="{{route('admin.il_schedule')}}" class="py-2 text-[#48494b] hover:cursor-pointer">Intro Lessons</a>
                             </div>
-                            <div class="w-full flex items-center px-10 relative mb-4 hover:bg-[#F2EBFB] hover:cursor-pointer">
-                                <a href="{{route('admin.schedule.for_scheduling')}}" class="py-2 text-[#48494b] hover:cursor-pointer">For Scheduling</a>
+                            <div class="w-full flex items-center px-10 relative hover:bg-[#F2EBFB] hover:cursor-pointer">
+                                <a href="{{ route('admin.schedule') }}" class="py-2 text-[#48494b] hover:cursor-pointer">Classes</a>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="w-full flex-1 flex flex-col justify-end pb-4">
+                    <p class="text-center text-xs text-gray-500">© 2024 Algorithmics.</p>
+                    <p class="text-center text-xs text-gray-500">All rights reserved.</p>
+                </div>
             </div>
-            <div class="w-full h-[1300px] overflow-auto p-10">
+            
+            <div class="w-full h-auto overflow-auto p-10">
                 <p class="mb-10">Dashboard</p>
+                <div class="w-full flex items-center justify-end mb-5">
+                    <button id="print" class="px-10 py-2 rounded-lg text-white bg-[#632c7d] text-xs font-medium">Print Report</button>
+                </div>
                 
-                <div class="w-full flex items-center justify-between gap-5">
+                <script>
+                    $(document).ready(function(){
+                        $('#print').on('click', function(){
+                            $('#overlay').show();
+                            $('#print_div').show();
+                        });
+                    })
+                </script>
+                <div class="w-full flex items-center justify-between gap-5 mb-3">
                     <div onclick="window.location.href='{{route('admin.schedule.for_scheduling')}}'" class="w-1/4 bg-white p-5 rounded-lg shadow-lg hover:bg-[#d5c9e6] hover:cursor-pointer transition duration-200">
                         <p class="text-sm font-semibold">Walk-in clients</p>
                         <p class="text-4xl pt-5 text-center font-medium text-[#632c7d]">{{$walkin_count}}</p>
@@ -121,64 +234,195 @@
                     </div>
                 </div>
 
+                <div class="w-full flex items-center justify-end">
+                    <div class="w-full flex items-center justify-end gap-4">
+                        <select name="year" id="yearSelect" class="px-10 py-2 rounded-lg border text-xs font-medium outline-none">
+                            <option value="">Select Year</option>
+                        </select>
+                        <select name="month" id="monthSelect" class="px-10 py-2 rounded-lg border text-xs font-medium outline-none hidden">
+                            <option value="">Select Month</option>
+                        </select>
+                    </div>
+                    
+                </div>
+
                 <div class="w-full flex gap-5">
                     <div class="w-2/3 bg-white p-5 rounded-lg shadow-lg mt-5">
                         <p class="text-center mb-2">Course enrollees graph</p>
                         <canvas id="courseEnrollees" class="w-full h-1/2"></canvas>
                         <script>
                             $(document).ready(function () {
-                                $.ajax({
-                                    url: "/admin/students-per-course",
-                                    method: "GET",
-                                    dataType: "json",
-                                    success: function (data) {
-                                        console.log("Received Data:", data);
+                            let currentYear = new Date().getFullYear();
+                            let startYear = 2024;
+                            let months = [
+                                { value: 1, name: "January" }, { value: 2, name: "February" },
+                                { value: 3, name: "March" }, { value: 4, name: "April" },
+                                { value: 5, name: "May" }, { value: 6, name: "June" },
+                                { value: 7, name: "July" }, { value: 8, name: "August" },
+                                { value: 9, name: "September" }, { value: 10, name: "October" },
+                                { value: 11, name: "November" }, { value: 12, name: "December" }
+                            ];
 
-                                        // Validate data
-                                        const labels = data.map(item => item.course);
-                                        const counts = data.map(item => item.count || 0);
-                                        const maxCount = Math.max(...counts) + 5; // Set max Y dynamically
+                            let yearSelect = $("#yearSelect");
+                            let monthSelect = $("#monthSelect").hide();
+                            let courseChart = null; // Store the chart instance
 
-                                        const backgroundColors = [
-                                            'rgba(255, 99, 132, 0.6)',  // The Coding Knight
-                                            'rgba(54, 162, 235, 0.6)',  // Digital Literacy
-                                            'rgba(255, 206, 86, 0.6)',  // Visual Programming
-                                            'rgba(75, 192, 192, 0.6)',  // Game Design
-                                            'rgba(153, 102, 255, 0.6)', // Building Websites
-                                            'rgba(255, 159, 64, 0.6)',  // Python Start
-                                            'rgba(201, 203, 207, 0.6)', // Python Pro
-                                            'rgba(99, 132, 255, 0.6)',  // Unity Game Development
-                                            'rgba(255, 99, 64, 0.6)'    // Front-end Development
-                                        ];
+                            // Populate the year dropdown
+                            for (let year = currentYear; year >= startYear; year--) {
+                                yearSelect.append(`<option value="${year}">${year}</option>`);
+                            }
 
-                                        var ctx = $("#courseEnrollees")[0].getContext("2d");
-                                        new Chart(ctx, {
-                                            type: "bar",
-                                            data: {
-                                                labels: labels,
-                                                datasets: [{
-                                                    label: "Course Enrollees",
-                                                    data: counts,
-                                                    backgroundColor: backgroundColors.slice(0, labels.length),
-                                                    borderWidth: 1
-                                                }]
-                                            },
-                                            options: {
-                                                scales: {
-                                                    y: {
-                                                        beginAtZero: true,
-                                                        suggestedMax: maxCount, // Set max dynamically
-                                                        ticks: { stepSize: 1 }
+                            // Show month dropdown when a year is selected
+                            yearSelect.on("change", function () {
+                                let selectedYear = $(this).val();
+                                monthSelect.toggle(!!selectedYear).empty().append('<option value="">Select Month</option>');
+                                
+                                if (selectedYear) {
+                                    months.forEach(month => {
+                                        monthSelect.append(`<option value="${month.value}">${month.name}</option>`);
+                                    });
+                                }
+                            });
+
+                            // Fetch course data when month is selected
+                            monthSelect.on("change", function () {
+                                let selectedYear = yearSelect.val();
+                                let selectedMonth = $(this).val();
+
+                                if (selectedYear && selectedMonth) {
+                                    $.ajax({
+                                        url: "/admin/students-per-course/fetch",
+                                        type: "GET",
+                                        data: { year: selectedYear, month: selectedMonth },
+                                        success: function (data) {
+                                            console.log("Received Data Fetch:", data);
+
+                                            let labels = data.map(item => item.course);
+                                            let counts = data.map(item => item.count || 0);
+                                            let maxCount = Math.max(...counts) + 5;
+
+                                            // Define a color mapping for courses
+                                            let courseColors = {
+                                                "Graphic Design": "rgba(45, 212, 191, 0.6)",  // bg-teal-300
+                                                "Visual Programming": "rgba(253, 230, 138, 0.6)",  // bg-yellow-300
+                                                "Game Design": "rgba(251, 146, 60, 0.6)",  // bg-orange-300
+                                                "Python Start": "rgba(248, 113, 113, 0.6)",  // bg-red-300
+                                                "Python Pro": "rgba(239, 68, 68, 0.8)",  // bg-red-500
+                                                "Coding Knight": "rgba(134, 239, 172, 0.6)",  // bg-green-300
+                                                "Digital Literacy": "rgba(125, 211, 252, 0.6)",  // bg-sky-300
+                                                "Website Creation": "rgba(192, 132, 252, 0.6)",  // bg-purple-300
+                                                "Unity Game Development": "rgba(168, 85, 247, 0.8)",  // bg-purple-500
+                                                "Frontend Development": "rgba(96, 165, 250, 0.6)"  // bg-blue-300
+                                            };
+
+                                            // Assign colors based on course names or use a default color
+                                            let backgroundColors = labels.map(course => courseColors[course] || 'rgba(201, 203, 207, 0.6)'); // Default gray if not found
+
+                                            // Destroy previous chart instance if exists
+                                            if (typeof courseChart !== "undefined" && courseChart !== null) {
+                                                courseChart.destroy();
+                                            }
+
+                                            let ctx = $("#courseEnrollees")[0].getContext("2d");
+                                            courseChart = new Chart(ctx, {
+                                                type: "bar",
+                                                data: {
+                                                    labels: labels,
+                                                    datasets: [{
+                                                        label: "Course Enrollees",
+                                                        data: counts,
+                                                        backgroundColor: backgroundColors,
+                                                        borderWidth: 1
+                                                    }]
+                                                },
+                                                options: {
+                                                    plugins: {
+                                                        legend: {
+                                                            display: false // This hides the legend
+                                                        }
+                                                    },
+                                                    scales: {
+                                                        y: {
+                                                            beginAtZero: true,
+                                                            suggestedMax: maxCount,
+                                                            ticks: { stepSize: 1 }
+                                                        }
                                                     }
                                                 }
-                                            }
-                                        });
-                                    },
-                                    error: function (xhr, status, error) {
-                                        console.error("Error fetching data:", error);
-                                    }
-                                });
+                                            });
+                                        },
+                                    });
+                                }
                             });
+
+                            // Fetch initial data on page load
+                            $.ajax({
+                                url: "/admin/students-per-course",
+                                method: "GET",
+                                dataType: "json",
+                                success: function (data) {
+                                    console.log("Received Data:", data);
+
+                                    let labels = data.map(item => item.course);
+                                    let counts = data.map(item => item.count || 0);
+                                    let maxCount = Math.max(...counts) + 5;
+
+                                    // Define a color mapping for courses
+                                    let courseColors = {
+                                        "Graphic Design": "rgba(45, 212, 191, 0.6)",  // bg-teal-300
+                                        "Visual Programming": "rgba(253, 230, 138, 0.6)",  // bg-yellow-300
+                                        "Game Design": "rgba(251, 146, 60, 0.6)",  // bg-orange-300
+                                        "Python Start": "rgba(248, 113, 113, 0.6)",  // bg-red-300
+                                        "Python Pro": "rgba(239, 68, 68, 0.8)",  // bg-red-500
+                                        "Coding Knight": "rgba(134, 239, 172, 0.6)",  // bg-green-300
+                                        "Digital Literacy": "rgba(125, 211, 252, 0.6)",  // bg-sky-300
+                                        "Website Creation": "rgba(192, 132, 252, 0.6)",  // bg-purple-300
+                                        "Unity Game Development": "rgba(168, 85, 247, 0.8)",  // bg-purple-500
+                                        "Frontend Development": "rgba(96, 165, 250, 0.6)"  // bg-blue-300
+                                    };
+
+                                    // Assign colors based on course names or use a default color
+                                    let backgroundColors = labels.map(course => courseColors[course] || 'rgba(201, 203, 207, 0.6)'); // Default gray if not found
+
+                                    let ctx = $("#courseEnrollees")[0].getContext("2d");
+
+                                    // Destroy existing chart before creating a new one
+                                    if (courseChart !== null) {
+                                        courseChart.destroy();
+                                    }
+
+                                    courseChart = new Chart(ctx, {
+                                        type: "bar",
+                                        data: {
+                                            labels: labels,
+                                            datasets: [{
+                                                label: "Course Enrollees",
+                                                data: counts,
+                                                backgroundColor: backgroundColors,
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            plugins: {
+                                                legend: {
+                                                    display: false // This hides the legend
+                                                }
+                                            },
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true,
+                                                    suggestedMax: maxCount,
+                                                    ticks: { stepSize: 1 }
+                                                }
+                                            }
+                                        }
+                                    });
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error("Error fetching data:", error);
+                                }
+                            });
+                        });
 
                         </script>
                     </div>
@@ -194,14 +438,32 @@
                             var labels = Object.keys(courseCounts);
                             var data = Object.values(courseCounts);
                         
+                            // Define a color mapping for courses
+                            var courseColors = {
+                                "Graphic Design": "rgba(45, 212, 191, 0.6)",  // bg-teal-300
+                                "Visual Programming": "rgba(253, 230, 138, 0.6)",  // bg-yellow-300
+                                "Game Design": "rgba(251, 146, 60, 0.6)",  // bg-orange-300
+                                "Python Start": "rgba(248, 113, 113, 0.6)",  // bg-red-300
+                                "Python Pro": "rgba(239, 68, 68, 0.8)",  // bg-red-500
+                                "Coding Knight": "rgba(134, 239, 172, 0.6)",  // bg-green-300
+                                "Digital Literacy": "rgba(125, 211, 252, 0.6)",  // bg-sky-300
+                                "Website Creation": "rgba(192, 132, 252, 0.6)",  // bg-purple-300
+                                "Unity Game Development": "rgba(168, 85, 247, 0.8)",  // bg-purple-500
+                                "Frontend Development": "rgba(96, 165, 250, 0.6)"  // bg-blue-300
+                            };
+                        
+                            // Assign colors based on course names or use a default color
+                            var backgroundColors = labels.map(course => courseColors[course] || 'rgba(201, 203, 207, 0.6)'); // Default gray if not found
+                        
                             var ctx1 = document.getElementById('courseInquiry').getContext('2d');
                             var myChart1 = new Chart(ctx1, {
                                 type: 'doughnut',
                                 data: {
                                     labels: labels, // Use dynamic course names
                                     datasets: [{
-                                        label: 'Enrollees',
+                                        label: 'Inquiries',
                                         data: data, // Use dynamic course counts
+                                        backgroundColor: backgroundColors,
                                         borderWidth: 1
                                     }]
                                 },
@@ -215,10 +477,12 @@
                             });
                         </script>
                         
+                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
 </body>
 </html>
