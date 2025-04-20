@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('day');
             $table->string('from');
             $table->string('to');
+            $table->string('status');
+            $table->timestamps();
         });
     }
 

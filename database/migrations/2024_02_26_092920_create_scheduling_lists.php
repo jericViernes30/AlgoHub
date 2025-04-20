@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('scheduling_lists', function (Blueprint $table) {
             $table->id();
+            $table->string('transaction_id');
             $table->string('parents_first_name');
             $table->string('parents_last_name');
             $table->string('childs_name');

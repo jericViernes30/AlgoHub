@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('topic');
             $table->string('code');
             $table->string('lesson');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('expelled_students', function (Blueprint $table) {
             $table->id();
+            $table->string('student_number');
             $table->string('student_name');
             $table->string('course');
             $table->timestamps();
